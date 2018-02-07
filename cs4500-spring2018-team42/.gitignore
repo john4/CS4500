@@ -2,6 +2,7 @@
 target/
 *.log
 mvn*
+.mvn/
 
 ### STS ###
 .apt_generated

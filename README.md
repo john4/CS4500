@@ -1,6 +1,10 @@
 # team-42-spring18
 Project repository for team 42
 
+## Jenkins Endpoints
+[Jenkins Instance](http://ec2-52-15-252-244.us-east-2.compute.amazonaws.com:8080/login?from=%2F:8080)
+
+[Spring Boot Application](ec2-18-218-242-189.us-east-2.compute.amazonaws.com)
 
 ## For Developers
 

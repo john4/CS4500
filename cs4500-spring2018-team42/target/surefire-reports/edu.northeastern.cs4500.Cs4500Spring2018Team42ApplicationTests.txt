@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: edu.northeastern.cs4500.Cs4500Spring2018Team42ApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 10.875 sec - in edu.northeastern.cs4500.Cs4500Spring2018Team42ApplicationTests

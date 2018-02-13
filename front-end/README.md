@@ -1,4 +1,12 @@
-#Rotten Tomatillos Front End
+Rotten Tomatillos Front End
+
+Install:
+ - download and install `yarn` (homebrew is easiest)
+ - `yarn install`
+
+Run:
+`yarn start`
+
 
 
 <details>

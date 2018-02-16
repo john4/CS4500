@@ -1,0 +1,17 @@
+pipeline {
+   agent none
+
+   stages {
+      stage ( 'Test' ) {
+	 agent {
+            docker {
+              image 'python:3-alpine' 
+            }
+         }
+         steps {
+            echo  "Testing"
+            sh  'pip install virtualenv && virtualenv venv && . venv/bin/activate && pip install pytest && python -m pytest ./tests --verbose --junit-xml results.xml' 
+         }
+      }
+   }
+}

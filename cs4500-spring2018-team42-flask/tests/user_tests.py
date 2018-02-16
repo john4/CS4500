@@ -1,11 +1,8 @@
 
 import json
-import os
-import sys
 import unittest
 
 from app import app, db
-from pymongo import MongoClient
 
 
 class BasicTests(unittest.TestCase):

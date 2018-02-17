@@ -1,6 +1,6 @@
 from app import app
 from flask import json, make_response, request
-from models.User import User
+from models import User
 
 
 @app.route('/')

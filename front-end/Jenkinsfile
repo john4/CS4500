@@ -1,16 +1,24 @@
 pipeline {
-   agent none
+   agent {
+      docker {
+        image 'node:latest' 
+      }
+   }
 
    stages {
-      stage ( 'Build' ) {
-	 agent {
-            docker {
-              image 'node:latest' 
-            }
+      stage ( 'Test' ) {
+	 environment {
+            CI = 'true'
          }
          steps {
+            echo  "Testing"
+            sh 'cd front-end && yarn install && yarn test'
+         }
+      }
+      stage ( 'Build' ) {
+         steps {
             echo  "Building"
-            sh 'cd front-end && npm install && yarn build'
+            sh 'cd front-end && yarn install && yarn build'
          }
       }
    }

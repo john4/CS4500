@@ -11,6 +11,7 @@ pipeline {
          steps {
             echo  "Testing"
             sh  'pip install virtualenv && virtualenv venv && . venv/bin/activate && pip install -r ./cs4500-spring2018-team42-flask/requirements.txt && pip install pytest && python -m pytest ./cs4500-spring2018-team42-flask/tests/* --verbose --junit-xml results.xml'
+	    deleteDir();
          }
       }
       stage ( 'Lint' ) {

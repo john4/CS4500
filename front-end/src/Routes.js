@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import React, { Component } from 'react';
 
 import App from './App';
-import Search from './components/Search';
+import Search from './components/Search/Search';
 
 class Routes extends Component {
   render() {

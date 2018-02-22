@@ -5,12 +5,15 @@ class Results extends Component {
 
     render() {
       const resultItems = this.props.searchResults.map(function(result) {
+        console.log(result);
         const posterSrc = "https://image.tmdb.org/t/p/w200" + result.poster_path;
         return <ResultItem 
                   key={result.poster_path} 
-                  title={result.title} 
+                  title={result.title}
+                  id={result.id} 
                   posterSrc={posterSrc} 
-                  overview={result.overview}  />
+                  overview={result.overview}
+                  average={result.vote_average}  />
       });
   
     return(

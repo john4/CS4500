@@ -20,13 +20,11 @@ pipeline {
             echo  "Building"
             sh 'cd front-end && yarn install && yarn build'
          }
-      }
-   }
-   post {
-      always {
-	 if(env.BRANCH_NAME == 'master') {
-            archiveArtifacts artifacts: 'front-end/build/**/*'
-	    deleteDir();
+	 post {
+	    always {
+              archiveArtifacts artifacts: 'front-end/build/**/*'
+	      deleteDir();
+	    }
 	 }
       }
    }

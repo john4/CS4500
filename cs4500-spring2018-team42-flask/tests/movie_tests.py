@@ -37,6 +37,8 @@ class GetMovieTests(unittest.TestCase):
 		
 	def test_get_neg1_movie(self):
 		value = self.m.getMovies(-1)
+		
+		print value
 				
 		self.assertEqual(1, value.count())
 		
@@ -44,6 +46,14 @@ class GetMovieTests(unittest.TestCase):
 		value = self.m.getMovies(2)
 		
 		self.assertEqual(1, value.count())
+		
+	def test_api_route_positive(self):
+		value = self.app.get('/movies/1')
+		
+		result = json.loads(value.get_data(as_text=True))
+						
+		self.assertEqual(1, len(result))
+		
 
 class GetMovieDetailTests(unittest.TestCase):
 
@@ -70,3 +80,10 @@ class GetMovieDetailTests(unittest.TestCase):
 		results, response_code = self.m.getMovieDetails(-1)
 		self.assertEqual(response_code, 404)
 		self.assertEqual(results["status_message"], "The resource you requested could not be found.")
+		
+	def test_get_api_route_positive(self):
+		value = self.app.get('/movies/details/8')
+		
+		result = json.loads(value.get_data(as_text=True))
+				
+		self.assertEqual(8, result["id"])

@@ -11,11 +11,13 @@ class Movie(object):
 		self.reviews = []
 		
 	def getMovies(self, total):
-		return db.Movie.find().limit(abs(total))
+		results = db.Movie.find(limit = abs(total))
+
+		return results
 
 	def getMovieDetails(self, movie_id):
 		url = "https://api.themoviedb.org/3/movie/" + str(movie_id) + "?api_key=020a1282ad51b08df67da919fca9f44e&language=en-US"
 		
 		results = requests.get(url)
-				
+						
 		return results.json(), results.status_code

@@ -34,7 +34,6 @@ class Details extends Component {
 		axios.get(URL)
 		.then( res => {
 			const response = res.data;
-			console.log(response);
 			this.showResults(response);
 		})
 	}

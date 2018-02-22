@@ -26,6 +26,63 @@ class BasicTests(unittest.TestCase):
 
     # Tests ########################################
 
+    def test_user_login_does_not_exist(self):
+        login = {
+            'email': 'notarealemail@notarealplace.com',
+            'password': 'ilovepython'
+        }
+
+        response = self.app.post('/user/login/', data=login)
+        data = json.loads(response.get_data(as_text=True))
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(data, {'error': 'no user with this email exists'})
+
+    def test_user_login_success(self):
+        user_one = {
+            'name': 'Test User 1',
+            'email': 'notarealemail1@notarealplace.com',
+            'password': 'password',
+            'age': 22,
+            'genre': ['Mystery', 'Horror']
+        }
+
+        response = self.app.post('/user/register/', data=user_one)
+        data = json.loads(response.get_data(as_text=True))
+        self.assertEqual(response.status_code, 200)
+
+        login = {
+            'email': 'notarealemail1@notarealplace.com',
+            'password': 'password'
+        }
+
+        response = self.app.post('/user/login/', data=login)
+        data = json.loads(response.get_data(as_text=True))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data, {'success': 'user notarealemail1@notarealplace.com password verified'})
+
+    def test_user_login_wrong_pass(self):
+        user_one = {
+            'name': 'Test User 1',
+            'email': 'notarealemail1@notarealplace.com',
+            'password': 'ihatepython',
+            'age': 22,
+            'genre': ['Mystery', 'Horror']
+        }
+
+        response = self.app.post('/user/register/', data=user_one)
+        data = json.loads(response.get_data(as_text=True))
+        self.assertEqual(response.status_code, 200)
+
+        login = {
+            'email': 'notarealemail1@notarealplace.com',
+            'password': 'ilovepython'
+        }
+
+        response = self.app.post('/user/login/', data=login)
+        data = json.loads(response.get_data(as_text=True))
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(data, {"error": "passwords do not match"})
+
     def test_user_register_fail_no_info(self):
         response = self.app.post('/user/register/')
         data = json.loads(response.get_data(as_text=True))

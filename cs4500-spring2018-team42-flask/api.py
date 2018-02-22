@@ -18,8 +18,21 @@ def register_user():
     u.password = request.form.get('password')
     u.genre = request.form.getlist('genre')
 
-    new_user, response_code = u.register()
-    return make_response(new_user, response_code)
+    new_user, response_status = u.register()
+
+    return make_response(new_user, response_status)
+
+@app.route('/user/login/', methods=['POST'])
+def login_user():
+    email = request.form.get('email')
+    password = request.form.get('password')
+
+    if not email or not password:
+        return make_response(json.jsonify({"error": "email and password are required"}), 400)
+
+    login_result, response_status = User.attempt_login(email, password)
+
+    return make_response(login_result, response_status)
 
 @app.route('/movies/<int:count>', methods=['GET'])
 def getMovies(count):

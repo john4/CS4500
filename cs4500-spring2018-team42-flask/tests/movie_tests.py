@@ -37,9 +37,7 @@ class GetMovieTests(unittest.TestCase):
 		
 	def test_get_neg1_movie(self):
 		value = self.m.getMovies(-1)
-		
-		print value
-				
+						
 		self.assertEqual(1, value.count())
 		
 	def test_get_more_movies_than_in_db(self):
@@ -53,6 +51,7 @@ class GetMovieTests(unittest.TestCase):
 		result = json.loads(value.get_data(as_text=True))
 						
 		self.assertEqual(1, len(result))
+		self.assertEqual(3924, result[0]["_id"])
 		
 
 class GetMovieDetailTests(unittest.TestCase):

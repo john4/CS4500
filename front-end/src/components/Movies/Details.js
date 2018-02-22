@@ -19,7 +19,7 @@ class Details extends Component {
 	}
 	
 	getInitialMovies() {
-		var URL = 'http://ec2-54-87-191-69.compute-1.amazonaws.com:8080/movies/10'
+		var URL = 'http://ec2-54-87-191-69.compute-1.amazonaws.com:5000/movies/10'
 		this.getDetails(URL);
 	}
 	

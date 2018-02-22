@@ -4,7 +4,9 @@ Project repository for team 42
 ## Jenkins Endpoints
 [Jenkins Instance](http://ec2-54-152-150-131.compute-1.amazonaws.com:8080)
 
-[Spring Boot Application](http://ec2-54-87-191-69.compute-1.amazonaws.com:8080)
+[Application Back-End](http://ec2-54-87-191-69.compute-1.amazonaws.com:8080)
+
+[Application Front-End](http://spoiled-tomatillos.s3-website-us-east-1.amazonaws.com/)
 
 ## For Developers
 

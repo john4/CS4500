@@ -1,7 +1,6 @@
 from app import db
 from bson.json_util import dumps
 from flask import json
-from models import ResponseCode
 from werkzeug.security import check_password_hash, generate_password_hash
 
 
@@ -20,19 +19,19 @@ class User(object):
         """
 
         if not self.name or not self.email or not self.password or not self.age:
-            return json.jsonify({"error": "missing required fields"}), ResponseCode.BAD_REQUEST
+            return json.jsonify({"error": "missing required fields"}), 400
 
         user_exists = db.User.find_one({"email": self.email})
         if user_exists:
-            return json.jsonify({"error": "a user with this email already exists"}), ResponseCode.BAD_REQUEST
+            return json.jsonify({"error": "a user with this email already exists"}), 400
 
         if len(self.password) < 8:
-            return json.jsonify({"error": "passwords must be at least 8 characters"}), ResponseCode.BAD_REQUEST
+            return json.jsonify({"error": "passwords must be at least 8 characters"}), 400
 
         self.password = generate_password_hash(self.password, method='sha256')
         db.User.insert_one(self.__dict__)
 
-        return dumps(self.__dict__), ResponseCode.OK
+        return dumps(self.__dict__), 200
 
     @staticmethod
     def attempt_login(email, password):
@@ -42,9 +41,9 @@ class User(object):
 
         u = db.User.find_one({"email": email})
         if not u:
-            return json.jsonify({"error": "no user with this email exists"}), ResponseCode.BAD_REQUEST
+            return json.jsonify({"error": "no user with this email exists"}), 400
 
         if not check_password_hash(u.get('password'), password):
-            return json.jsonify({"error": "passwords do not match"}), ResponseCode.BAD_REQUEST
+            return json.jsonify({"error": "passwords do not match"}), 400
 
-        return json.jsonify({"success": "user {email} password verified".format(email=email)}), ResponseCode.OK
+        return json.jsonify({"success": "user {email} password verified".format(email=email)}), 200

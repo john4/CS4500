@@ -1,6 +1,7 @@
 from app import app
-from flask import json, make_response, request
+from flask import json, make_response, request, jsonify
 from models import User
+from models import Movie
 
 
 @app.route('/')
@@ -32,3 +33,19 @@ def login_user():
     login_result, response_status = User.attempt_login(email, password)
 
     return make_response(login_result, response_status)
+
+@app.route('/movies/<int:count>', methods=['GET'])
+def getMovies(count):
+	m = Movie()
+	
+	results = m.getMovies(count)
+		
+	return make_response(jsonify(list(results)), 200)
+	
+@app.route('/movies/details/<int:movie_id>', methods=['GET'])
+def getMovieDetails(movie_id):
+	m = Movie()
+	
+	results, response_code = m.getMovieDetails(movie_id)
+	
+	return make_response(jsonify(results), response_code)

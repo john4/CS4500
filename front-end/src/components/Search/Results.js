@@ -5,7 +5,6 @@ class Results extends Component {
 
     render() {
       const resultItems = this.props.searchResults.map(function(result) {
-        console.log(result);
         const posterSrc = "https://image.tmdb.org/t/p/w200" + result.poster_path;
         return <ResultItem 
                   key={result.poster_path} 

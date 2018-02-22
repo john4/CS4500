@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-const LOGIN_ENDPOINT = "";
+const LOGIN_ENDPOINT = "http://127.0.0.1:5000/user/login";
 
 class Login extends Component {
     constructor(props) {
@@ -12,8 +12,9 @@ class Login extends Component {
     handleLogin() {
       const email    = this.refs.email.value;
       const password = this.refs.password.value;
-      axios.post(LOGIN_ENDPOINT, { email, password })
+      axios.post(LOGIN_ENDPOINT, { form: { email, password } })
       .then(res => {
+        debugger;
         // TODO: save session
       })
     }

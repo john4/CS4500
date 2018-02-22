@@ -10,12 +10,13 @@ def index():
 @app.route('/user/register/', methods=['POST'])
 def register_user():
     u = User()
+    data = json.loads(request.data)
 
-    u.name = request.form.get('name')
-    u.email = request.form.get('email')
-    u.age = request.form.get('age')
-    u.password = request.form.get('password')
-    u.genre = request.form.getlist('genre')
+    u.name = data.get('name')
+    u.email = data.get('email')
+    u.age = data.get('age')
+    u.password = data.get('password')
+    u.genre = data.get('genre')
 
     new_user, response_status = u.register()
 
@@ -23,8 +24,9 @@ def register_user():
 
 @app.route('/user/login/', methods=['POST'])
 def login_user():
-    email = request.form.get('email')
-    password = request.form.get('password')
+    data = json.loads(request.data)
+    email = data.get('email')
+    password = data.get('password')
 
     if not email or not password:
         return make_response(json.jsonify({"error": "email and password are required"}), 400)

@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 
 import App from './App';
 import Search from './components/Search/Search';
+import Register from './components/User/Register';
 import Details from './components/Movies/Details';
 
 class Routes extends Component {

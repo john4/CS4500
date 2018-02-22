@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 
 import App from './App';
 import Search from './components/Search/Search';
+import Login from './components/Login';
 
 class Routes extends Component {
   render() {
@@ -10,6 +11,7 @@ class Routes extends Component {
       <Router>
         <div>
           <Route path="/" component={App} />
+          <Route exact path="/" component={Login} />
           <Route exact path="/search" component={Search} />
         </div>
       </Router>

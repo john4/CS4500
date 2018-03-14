@@ -28,17 +28,17 @@ class GetMovieTests(unittest.TestCase):
     # Tests ##################################
 
     def test_get_1_movie(self):
-        value = Movie.getMovies(1)
+        value = Movie.get_movies(1)
 
         self.assertEqual(1, value.count())
 
     def test_get_neg1_movie(self):
-        value = Movie.getMovies(-1)
+        value = Movie.get_movies(-1)
 
         self.assertEqual(1, value.count())
 
     def test_get_more_movies_than_in_DB(self):
-        value = Movie.getMovies(2)
+        value = Movie.get_movies(2)
 
         self.assertEqual(1, value.count())
 

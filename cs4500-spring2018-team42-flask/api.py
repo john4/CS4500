@@ -48,8 +48,8 @@ def login_user():
 def get_movies(count):
     """get a list of movies from the db"""
 
-    results, response_code = Movie.get_movies(count)
-    return make_response(jsonify(list(results)), response_code)
+    results = Movie.get_movies(count)
+    return make_response(jsonify(list(results)), 200)
 
 @APP.route('/movies/details/<int:movie_id>', methods=['GET'])
 def get_movie_details(movie_id):

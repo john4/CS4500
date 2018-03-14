@@ -19,6 +19,25 @@ pipeline {
             sh 'cd front-end && yarn install && yarn test'
          }
       }
+      stage ( 'Lint' ) {
+	 environment {
+            CI = 'true'
+         }
+         steps {
+            echo  "Linting"
+            sh 'cd front-end && yarn install && ./node_modules/.bin/eslint -c .eslintrc -f checkstyle -o lint-out.xml src/*.js || true'
+	    sh 'cat front-end/lint-out.xml'
+	    step([
+	      $class: 'CheckStylePublisher',
+	      canRunOnFailed: true,
+	      defaultEncoding: '',
+	      healthy: '100',
+	      pattern: 'front-end/lint-out.xml',
+	      unHealthy: '90',
+	      useStableBuildAsReference: true
+	    ])
+         }
+      }
       stage ( 'Build' ) {
          steps {
             echo  "Building"

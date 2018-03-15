@@ -44,9 +44,9 @@ def login_user():
 
     login_result, response_status = User.attempt_login(email, password)
 
-    activeSessions.append("a random string")
+    activeSessions.append(login_result.get('sessionId'))
 
-    return make_response(login_result, response_status)
+    return make_response(jsonify(login_result), response_status)
 
 @APP.route('/user/logout/', methods=['POST'])
 def end_session():

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './SearchBox.css';
 
 
 class SearchBox extends Component {
@@ -15,9 +16,9 @@ class SearchBox extends Component {
   
     render() {
       return (
-          <div>
-              <input type="text" ref="query" />
-              <input type="submit" onClick={this.createAjax} />
+          <div className="SearchBox">
+              <input className="SearchBox-text" type="text" ref="query" placeholder="Batman..."/>
+              <input className="SearchBox-submit" type="submit" onClick={this.createAjax} value="Search"/>
           </div>
       );
     }

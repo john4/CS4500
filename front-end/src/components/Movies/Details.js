@@ -37,6 +37,7 @@ class Details extends Component {
 	render() {
 		
 		return (
+			<div>
 				<DetailResults detailResults={this.state.result}/>
 			</div>
 		);

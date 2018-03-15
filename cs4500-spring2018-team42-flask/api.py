@@ -59,7 +59,7 @@ def end_session():
     else:
         return make_response(jsonify({"sessionId": session_id}), 400)
 
-@APP.route('/user/details/', methods=['GET'])
+@APP.route('/user/detail/', methods=['GET'])
 def user_details():
     """check sensitive user details"""
 
@@ -78,7 +78,7 @@ def get_movies(count):
     results = Movie.get_movies(10)
     return make_response(jsonify(list(results)), 200)
 
-@APP.route('/movie/<int:movie_id>/detail', methods=['GET'])
+@APP.route('/movie/<int:movie_id>/detail/', methods=['GET'])
 def get_movie_details(movie_id):
     """get a movie's details from the db"""
 

@@ -50,6 +50,6 @@ class User(object):
         if not check_password_hash(existing_user.get('password'), password):
             return json.jsonify({"error": "passwords do not match"}), 400
 
-        sessionId = ''f.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(32))
+        sessionId = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(32))
 
         return {"success": "user {email} password verified".format(email=email), "sessionId": sessionId}, 200

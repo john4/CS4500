@@ -45,11 +45,11 @@ class User(object):
 
         existing_user = DB.User.find_one({"email": email})
         if not existing_user:
-            return json.jsonify({"error": "no user with this email exists"}), 400
+            return {"error": "no user with this email exists"}, 400
 
         if not check_password_hash(existing_user.get('password'), password):
-            return json.jsonify({"error": "passwords do not match"}), 400
+            return {"error": "passwords do not match"}, 400
 
-        sessionId = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(32))
+        session_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(32))
 
-        return {"success": "user {email} password verified".format(email=email), "sessionId": sessionId}, 200
+        return {"success": "user {email} password verified".format(email=email), "sessionId": session_id}, 200

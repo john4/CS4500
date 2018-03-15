@@ -1,16 +1,26 @@
 pipeline {
    agent none
 
+   options {
+		buildDiscarder(logRotator(numToKeepStr: '5', artifactNumToKeepStr: '5'))
+   }
+
    stages {
       stage ( 'Test' ) {
 	 agent {
             docker {
-              image 'python:3-alpine' 
+              image 'python:3-alpine'
             }
          }
          steps {
             echo  "Testing"
-            sh  'pip install virtualenv && virtualenv venv && . venv/bin/activate && pip install -r ./cs4500-spring2018-team42-flask/requirements.txt && pip install pytest && python -m pytest ./cs4500-spring2018-team42-flask/tests/* --verbose --junit-xml results.xml'
+            sh  'pip install virtualenv && virtualenv venv && . venv/bin/activate && pip install -r ./cs4500-spring2018-team42-flask/requirements.txt && pip install pytest && pip install pytest-cov && pytest ./cs4500-spring2018-team42-flask/tests/* --verbose --cov=models --cov-report term-missing --cov-report xml --cov-branch --junit-xml results.xml'
+	    step([
+		$class: 'CoberturaPublisher',
+	        coberturaReportFile: 'coverage.xml',
+	        failUnhealthy: true,
+	        failUnstable: true
+	    ])
          }
 	 post {
 	    always {
@@ -21,12 +31,21 @@ pipeline {
       stage ( 'Lint' ) {
 	 agent {
             docker {
-              image 'clburlison/pylint:py3-wheezy' 
+              image 'clburlison/pylint:py3-wheezy'
             }
          }
 	 steps {
 	    //source: https://stackoverflow.com/questions/41875412/use-pylint-on-jenkins-with-warnings-plugin-and-pipleine
 	    sh 'pip install virtualenv && virtualenv venv && . venv/bin/activate && pip install -r ./cs4500-spring2018-team42-flask/requirements.txt && cd cs4500-spring2018-team42-flask && pylint --disable=W1202 --output-format=parseable --reports=no *.py > pylint.log || echo "pylint exited with $?" && cat pylint.log'
+	    step([
+              $class                     : 'WarningsPublisher',
+              parserConfigurations       : [[
+                                              parserName: 'PYLint',
+                                              pattern   : 'cs4500-spring2018-team42-flask/pylint.log'
+                                           ]],
+              unstableTotalAll           : '10',
+              usePreviousBuildAsReference: true
+            ])
 	    deleteDir();
 	 }
       }

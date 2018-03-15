@@ -1,10 +1,12 @@
-from app import db
 from bson.json_util import dumps
 from flask import json
 from werkzeug.security import check_password_hash, generate_password_hash
+from app import DB
 
 
 class User(object):
+    """represents a user on Spoiled Tomatillos"""
+
     def __init__(self):
         self.name = None
         self.email = None
@@ -21,7 +23,7 @@ class User(object):
         if not self.name or not self.email or not self.password or not self.age:
             return json.jsonify({"error": "missing required fields"}), 400
 
-        user_exists = db.User.find_one({"email": self.email})
+        user_exists = DB.User.find_one({"email": self.email})
         if user_exists:
             return json.jsonify({"error": "a user with this email already exists"}), 400
 
@@ -29,7 +31,7 @@ class User(object):
             return json.jsonify({"error": "passwords must be at least 8 characters"}), 400
 
         self.password = generate_password_hash(self.password, method='sha256')
-        db.User.insert_one(self.__dict__)
+        DB.User.insert_one(self.__dict__)
 
         return dumps(self.__dict__), 200
 
@@ -39,11 +41,11 @@ class User(object):
         Check to see if this user exists and passwords match
         """
 
-        u = db.User.find_one({"email": email})
-        if not u:
+        existing_user = DB.User.find_one({"email": email})
+        if not existing_user:
             return json.jsonify({"error": "no user with this email exists"}), 400
 
-        if not check_password_hash(u.get('password'), password):
+        if not check_password_hash(existing_user.get('password'), password):
             return json.jsonify({"error": "passwords do not match"}), 400
 
         return json.jsonify({"success": "user {email} password verified".format(email=email)}), 200

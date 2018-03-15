@@ -19,8 +19,14 @@ export const ApiWrapper = (() => {
         localStorage.setItem("spoiledSessionId", session);
         sessionId = session;
       },
+      removeSession: function () {
+        const LOGOUT_PATH = "/user/logout/";
+        axios.post(API_ENDPOINT + LOGOUT_PATH, { sessionId });
+        localStorage.setItem("spoiledSessionId", null);
+        sessionId = null;
+      },
       getAccountDetails: function () {
-        return axios.get(API_ENDPOINT + `/user/details/?sessionId=${sessionId}`);
+        return axios.get(API_ENDPOINT + `/user/details/?sessionId=something`);
       },
     };
 

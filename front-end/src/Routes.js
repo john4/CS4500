@@ -14,6 +14,7 @@ class Routes extends Component {
           <Route path="/" component={App} />
           <Route exact path="/search" component={Search} />
 		  <Route exact path="/movie/detail/:tmdbid" component={Details} />
+          <Route exact path="/register" component={Register} />
         </div>
       </Router>
     )

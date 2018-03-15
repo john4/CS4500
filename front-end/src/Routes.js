@@ -16,12 +16,12 @@ class Routes extends Component {
         <div>
           <Route path="/" component={App} />
           <Route exact path="/" component={Login} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/logout" component={Logout} />
-          <Route exact path="/register" component={Register} />
-          <Route exact path="/search" component={Search} />
-          <Route exact path="/account" component={Account} />
-          <Route exact path="/movie/detail/:tmdbid" component={Details} />
+          <Route exact path="/login/" component={Login} />
+          <Route exact path="/logout/" component={Logout} />
+          <Route exact path="/register/" component={Register} />
+          <Route exact path="/search/" component={Search} />
+          <Route exact path="/account/" component={Account} />
+          <Route exact path="/movie/:tmdbid/detail/" component={Details} />
         </div>
       </Router>
     )

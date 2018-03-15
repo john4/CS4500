@@ -3,7 +3,7 @@ import './ResultItem.css';
 
 class ResultItem extends Component {
     render() {
-      const detailURL = '/movie/detail/' + this.props.id;
+      const detailURL = '/movie/' + this.props.id + '/detail/';
       return <li className="ResultItem">
         <div><a href={detailURL}><img className="ResultItem-img" src={this.props.posterSrc} href="#"/></a></div>
         <div className="ResultItem-body">

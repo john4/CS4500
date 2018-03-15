@@ -16,10 +16,12 @@ class SearchBox extends Component {
   
     render() {
       return (
-          <div className="SearchBox">
-              <input className="SearchBox-text" type="text" ref="query" placeholder="Batman..."/>
-              <input className="SearchBox-submit" type="submit" onClick={this.createAjax} value="Search"/>
-          </div>
+        <div className="SearchBox input-group">
+            <input className="form-control" type="text" ref="query" placeholder="Batman..."/>
+            <span class="input-group-btn">
+              <button className="btn btn-default" type="button" onClick={this.createAjax} value="Search">Search</button>
+            </span>
+        </div>
       );
     }
   }

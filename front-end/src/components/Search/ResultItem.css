@@ -1,0 +1,13 @@
+.ResultItem {
+  display: flex;
+  margin-bottom: 2rem;
+  color: #6b6b64;
+}
+
+.ResultItem-img {
+  width: 100px;
+}
+
+.ResultItem-body {
+  padding-left: 1rem;
+}

@@ -44,6 +44,14 @@ def login_user():
 
     return make_response(login_result, response_status)
 
+@APP.route('/user/details/', methods=['GET'])
+def user_details():
+    """check sensitive user details"""
+
+    print request, request.data
+
+    return make_response(jsonify({"request": "cool"}), 200)
+
 @APP.route('/movies/<int:count>', methods=['GET'])
 def get_movies(count):
     """get a list of movies from the db"""

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { ApiWrapper } from '../ApiWrapper';
 
-const LOGIN_ENDPOINT = "http://ec2-54-87-191-69.compute-1.amazonaws.com:5000/user/login/";
+const LOGIN_PATH = "/user/login/";
 // const LOGIN_ENDPOINT = "http://127.0.0.1:5000/user/login/";
 
 class Login extends Component {
@@ -13,15 +13,15 @@ class Login extends Component {
     handleLogin(e) {
       const email    = this.refs.email.value;
       const password = this.refs.password.value;
-      axios
-        .post(LOGIN_ENDPOINT, { email, password })
+      ApiWrapper().api()
+        .post(LOGIN_PATH, { email, password })
         .then(res => {
+          ApiWrapper().api().setSession(res.data.session);
           console.log(res.data);
-          debugger;
           // TODO: save session
         })
         .catch(err => {
-          debugger;
+          console.log(err);
         });
       e.preventDefault();
       return false;

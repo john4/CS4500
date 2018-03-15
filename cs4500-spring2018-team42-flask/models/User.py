@@ -2,6 +2,7 @@ from bson.json_util import dumps
 from flask import json
 from werkzeug.security import check_password_hash, generate_password_hash
 from app import DB
+import os
 
 
 class User(object):
@@ -40,12 +41,14 @@ class User(object):
         """
         Check to see if this user exists and passwords match
         """
+        print email, password
+        # existing_user = DB.User.find_one({"email": email})
+        # if not existing_user:
+        #     return json.jsonify({"error": "no user with this email exists"}), 400
+        #
+        # if not check_password_hash(existing_user.get('password'), password):
+        #     return json.jsonify({"error": "passwords do not match"}), 400
 
-        existing_user = DB.User.find_one({"email": email})
-        if not existing_user:
-            return json.jsonify({"error": "no user with this email exists"}), 400
-
-        if not check_password_hash(existing_user.get('password'), password):
-            return json.jsonify({"error": "passwords do not match"}), 400
-
-        return json.jsonify({"success": "user {email} password verified".format(email=email)}), 200
+        session = "a random string"
+        # DB.Sessions.insert_one(session)
+        return json.jsonify({"success": "user {email} password verified".format(email=email), "session": session}), 200

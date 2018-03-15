@@ -8,7 +8,7 @@ class Movie(object):
     """represents a movie in the Spoiled Tomatillos database"""
 
     def __init__(self):
-        self._id = None
+        self.tmdb_id = None
         self.original_title = None
         self.popularity = None
         self.reviews = []
@@ -27,7 +27,7 @@ class Movie(object):
         url = "https://api.themoviedb.org/3/movie/" + \
               str(movie_id) + "?api_key=020a1282ad51b08df67da919fca9f44e&language=en-US"
 
-        # results = DB.Movie.find({"_id": str(movie_id)})
+        # results = DB.Movie.find({"tmdb_id": str(movie_id)})
 
         # Cache Data in our Database
         # if results.count() != 1:
@@ -36,7 +36,7 @@ class Movie(object):
         #
         #
         #     movie = Movie()
-        #     movie._id = results["id"]
+        #     movie.tmdb_id = results["id"]
         #     movie.original_title = results["original_title"]
         #     movie.popularity = results["popularity"]
         #
@@ -45,3 +45,16 @@ class Movie(object):
         results = requests.get(url)
 
         return results.json(), results.status_code
+
+    @staticmethod
+    def get_average_rating(movie_id):
+        reviews = DB.Review.find({'tmdb_id': movie_id})
+        reviews = [review for review in reviews]
+
+        if len(reviews) > 0:
+            reviews = [review.get('rating') for review in reviews]
+            ratings_avg = sum(reviews) / len(reviews)
+        else:
+            ratings_avg = 0
+
+        return json.jsonify({'avg_rating': ratings_avg}), 200

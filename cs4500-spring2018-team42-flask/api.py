@@ -2,8 +2,7 @@
 
 from flask import json, make_response, request, jsonify
 from app import APP
-from models import User
-from models import Movie
+from models import Movie, User, Review
 
 active_sessions = []
 
@@ -60,7 +59,7 @@ def end_session():
     else:
         return make_response(jsonify({"sessionId": session_id}), 400)
 
-@APP.route('/user/details/', methods=['GET'])
+@APP.route('/user/detail/', methods=['GET'])
 def user_details():
     """check sensitive user details"""
 
@@ -71,17 +70,40 @@ def user_details():
     else:
         return make_response(jsonify({"request": "not cool"}), 400)
 
-@APP.route('/movies/<int:count>', methods=['GET'])
+@APP.route('/movies/', methods=['GET'])
 def get_movies(count):
     """get a list of movies from the db"""
 
-    results = Movie.get_movies(count)
+    #TODO: add pagination
+    results = Movie.get_movies(10)
     return make_response(jsonify(list(results)), 200)
 
-@APP.route('/movies/details/<int:movie_id>', methods=['GET'])
+@APP.route('/movie/<int:movie_id>/detail/', methods=['GET'])
 def get_movie_details(movie_id):
     """get a movie's details from the db"""
 
     results, response_code = Movie.get_movie_details(movie_id)
 
     return make_response(jsonify(results), response_code)
+
+@APP.route('/movie/<int:movie_id>/review/', methods=['POST'])
+def review_movie(movie_id):
+    """rate a movie from 1-5 stars (add more later)"""
+    #TODO: handle update
+
+    new_review = Review()
+    data = json.loads(request.data)
+
+    new_review.tmdb_id = movie_id
+    new_review.user_email = data.get('user_email')
+    new_review.rating = data.get('rating')
+
+    results, response_code = new_review.create()
+    return make_response(results, response_code)
+
+@APP.route('/movie/<int:movie_id>/rating/', methods=['GET'])
+def get_movie_avg_rating(movie_id):
+    """get the average rating for a movie"""
+
+    results, response_code = Movie.get_average_rating(movie_id)
+    return make_response(results, response_code)

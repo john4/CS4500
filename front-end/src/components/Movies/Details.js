@@ -11,7 +11,7 @@ class Details extends Component {
 		this.state = {
 			result: {}
 		}
-		this.URL      = 'http://ec2-54-87-191-69.compute-1.amazonaws.com:5000/movies/details/8'
+		this.URL      = 'http://ec2-54-87-191-69.compute-1.amazonaws.com:5000/movies/details/' + this.props.match.params.tmdbid
 
 		this.getDetails = this.getDetails.bind(this);
 		this.showResults = this.showResults.bind(this);

@@ -2,6 +2,8 @@ from bson.json_util import dumps
 from flask import json
 from werkzeug.security import check_password_hash, generate_password_hash
 from app import DB
+import random
+import string
 
 
 class User(object):
@@ -48,4 +50,6 @@ class User(object):
         if not check_password_hash(existing_user.get('password'), password):
             return json.jsonify({"error": "passwords do not match"}), 400
 
-        return json.jsonify({"success": "user {email} password verified".format(email=email)}), 200
+        sessionId = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(32))
+
+        return {"success": "user {email} password verified".format(email=email), "sessionId": sessionId}, 200

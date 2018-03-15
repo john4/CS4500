@@ -5,6 +5,8 @@ from app import APP
 from models import User
 from models import Movie
 
+activeSessions = []
+
 
 @APP.route('/')
 def index():
@@ -42,7 +44,33 @@ def login_user():
 
     login_result, response_status = User.attempt_login(email, password)
 
-    return make_response(login_result, response_status)
+    activeSessions.append(login_result.get('sessionId'))
+
+    return make_response(jsonify(login_result), response_status)
+
+@APP.route('/user/logout/', methods=['POST'])
+def end_session():
+    """delete the given session"""
+
+    data = json.loads(request.data)
+    sessionId = data.get('sessionId')
+
+    if sessionId in activeSessions:
+        activeSessions.remove(sessionId)
+        return make_response(jsonify({"sessionId": sessionId}), 200)
+    else:
+        return make_response(jsonify({"sessionId": sessionId}), 400)
+
+@APP.route('/user/details/', methods=['GET'])
+def user_details():
+    """check sensitive user details"""
+
+    sessionId = request.args.get('sessionId')
+
+    if sessionId in activeSessions:
+        return make_response(jsonify({"request": "cool"}), 200)
+    else:
+        return make_response(jsonify({"request": "not cool"}), 400)
 
 @APP.route('/movies/<int:count>', methods=['GET'])
 def get_movies(count):

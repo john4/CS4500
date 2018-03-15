@@ -4,7 +4,7 @@ from flask import json, make_response, request, jsonify
 from app import APP
 from models import Movie, User, Review
 
-activeSessions = []
+active_sessions = []
 
 
 @APP.route('/')
@@ -39,34 +39,33 @@ def login_user():
     password = data.get('password')
 
     if not email or not password:
-        return make_response(json.jsonify({"error": "email and password are required"}), 400)
+        return make_response({"error": "email and password are required"}, 400)
 
     login_result, response_status = User.attempt_login(email, password)
+    active_sessions.append(login_result.get('sessionId'))
 
-    activeSessions.append(login_result.get('sessionId'))
-
-    return make_response(jsonify(login_result), response_status)
+    return make_response(json.jsonify(login_result), response_status)
 
 @APP.route('/user/logout/', methods=['POST'])
 def end_session():
     """delete the given session"""
 
     data = json.loads(request.data)
-    sessionId = data.get('sessionId')
+    session_id = data.get('sessionId')
 
-    if sessionId in activeSessions:
-        activeSessions.remove(sessionId)
-        return make_response(jsonify({"sessionId": sessionId}), 200)
+    if session_id in active_sessions:
+        active_sessions.remove(session_id)
+        return make_response(jsonify({"sessionId": session_id}), 200)
     else:
-        return make_response(jsonify({"sessionId": sessionId}), 400)
+        return make_response(jsonify({"sessionId": session_id}), 400)
 
 @APP.route('/user/details/', methods=['GET'])
 def user_details():
     """check sensitive user details"""
 
-    sessionId = request.args.get('sessionId')
+    session_id = request.args.get('sessionId')
 
-    if sessionId in activeSessions:
+    if session_id in active_sessions:
         return make_response(jsonify({"request": "cool"}), 200)
     else:
         return make_response(jsonify({"request": "not cool"}), 400)

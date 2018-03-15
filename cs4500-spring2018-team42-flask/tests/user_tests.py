@@ -58,7 +58,8 @@ class UserTests(unittest.TestCase):
         response = self.app.post('/user/login/', data=json.dumps(login))
         data = json.loads(response.get_data(as_text=True))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(data, {'success': 'user notarealemail1@notarealplace.com password verified'})
+        self.assertEqual(data.get('success'), 'user notarealemail1@notarealplace.com password verified')
+        self.assertIsNotNone(data.get('sessionId'))
 
     def test_user_login_wrong_pass(self):
         user_one = {

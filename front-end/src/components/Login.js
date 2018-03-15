@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-const LOGIN_ENDPOINT = "http://127.0.0.1:5000/user/login";
+const LOGIN_ENDPOINT = "http://ec2-54-87-191-69.compute-1.amazonaws.com:5000/user/login/";
+// const LOGIN_ENDPOINT = "http://127.0.0.1:5000/user/login/";
 
 class Login extends Component {
     constructor(props) {
@@ -9,14 +10,21 @@ class Login extends Component {
       this.handleLogin = this.handleLogin.bind(this);
     }
 
-    handleLogin() {
+    handleLogin(e) {
       const email    = this.refs.email.value;
       const password = this.refs.password.value;
-      axios.post(LOGIN_ENDPOINT, { form: { email, password } })
-      .then(res => {
-        debugger;
-        // TODO: save session
-      })
+      axios
+        .post(LOGIN_ENDPOINT, { email, password })
+        .then(res => {
+          console.log(res.data);
+          debugger;
+          // TODO: save session
+        })
+        .catch(err => {
+          debugger;
+        });
+      e.preventDefault();
+      return false;
     }
 
     render() {

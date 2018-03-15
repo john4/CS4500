@@ -16,10 +16,8 @@ class GetMovieTests(unittest.TestCase):
 
         DB.Movie.insert_one({
                 "_id" : 3924,
-                "adult" : False,
                 "original_title" : "Blondie",
                 "popularity" : 1.274044,
-                "video" : False
             })
 
     def tearDown(self):

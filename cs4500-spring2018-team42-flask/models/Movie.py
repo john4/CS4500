@@ -29,7 +29,7 @@ class Movie(object):
 
         # results = DB.Movie.find({"_id": str(movie_id)})
 
-        """Cache Data in our Database"""
+        # Cache Data in our Database
         # if results.count() != 1:
         #
         #     results = requests.get(url).json()

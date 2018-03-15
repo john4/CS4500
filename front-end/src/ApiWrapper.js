@@ -25,6 +25,11 @@ export const ApiWrapper = (() => {
       getAccountDetails: function () {
         return axios.get(API_ENDPOINT + `/user/details/?sessionId=${localStorage.getItem("spoiledSessionId")}`);
       },
+      createMovieReview: function (movieId, email, score) {
+        console.log(email);
+        console.log(score);
+        return axios.post(API_ENDPOINT + '/movie/' + movieId + '/review/', {'email': email, 'score': score});
+      },
     };
 
   };

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import DetailResults from './DetailResults.js'
+import Review from '../Review/Review.js';
 import axios from 'axios';
 
 
@@ -39,6 +40,7 @@ class Details extends Component {
 		return (
 			<div>
 				<DetailResults detailResults={this.state.result}/>
+				<Review movieId={this.state.result.id}/>
 			</div>
 		);
 	}

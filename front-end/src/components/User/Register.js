@@ -42,7 +42,7 @@ class Register extends Component {
             window.location = "/login";
         })
         .catch(err => {
-            this.setState({error: String(err)});
+            this.setState({error: "Error: " + err.response.data.error});
         });
 
         e.preventDefault();

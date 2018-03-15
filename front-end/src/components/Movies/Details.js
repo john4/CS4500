@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Results from '../Search/Results';
+import DetailResults from './DetailResults.js'
 import axios from 'axios';
 
 
@@ -9,26 +9,22 @@ class Details extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			results: []
+			result: {}
 		}
-		
+		this.URL      = 'http://ec2-54-87-191-69.compute-1.amazonaws.com:5000/movies/details/8'
+
 		this.getDetails = this.getDetails.bind(this);
 		this.showResults = this.showResults.bind(this);
 		
-		this.getInitialMovies();
-	}
-	
-	getInitialMovies() {
-		var URL = 'http://ec2-54-87-191-69.compute-1.amazonaws.com:5000/movies/10'
-		this.getDetails(URL);
+		this.getDetails(this.URL);
 	}
 	
 	showResults(response) {
 		this.setState({
-			results: response
+			result: response
 		})
 	}
-	
+
 	
 	getDetails(URL) {
 		axios.get(URL)
@@ -41,13 +37,7 @@ class Details extends Component {
 	render() {
 		
 		return (
-			<div>
-				<p>
-					This is a list of loaded data
-				</p>
-				<ul>
-					{JSON.stringify(this.state.results)}
-				</ul>
+				<DetailResults detailResults={this.state.result}/>
 			</div>
 		);
 	}

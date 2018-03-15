@@ -1,5 +1,8 @@
 import requests
+from flask import json
+
 from app import DB
+
 
 class Movie(object):
     """represents a movie in the Spoiled Tomatillos database"""
@@ -8,8 +11,6 @@ class Movie(object):
         self._id = None
         self.original_title = None
         self.popularity = None
-        self.video = None
-        self.adult = None
         self.reviews = []
 
     @staticmethod
@@ -24,7 +25,23 @@ class Movie(object):
         """get details from TMDB for a movie of id movie_id"""
 
         url = "https://api.themoviedb.org/3/movie/" + \
-                str(movie_id) + "?api_key=020a1282ad51b08df67da919fca9f44e&language=en-US"
+              str(movie_id) + "?api_key=020a1282ad51b08df67da919fca9f44e&language=en-US"
+
+        # results = DB.Movie.find({"_id": str(movie_id)})
+
+        """Cache Data in our Database"""
+        # if results.count() != 1:
+        #
+        #     results = requests.get(url).json()
+        #
+        #
+        #     movie = Movie()
+        #     movie._id = results["id"]
+        #     movie.original_title = results["original_title"]
+        #     movie.popularity = results["popularity"]
+        #
+        #     DB.Movie.post(json.dumps(movie))
 
         results = requests.get(url)
+
         return results.json(), results.status_code

@@ -70,14 +70,15 @@ def user_details():
     else:
         return make_response(jsonify({"request": "not cool"}), 400)
 
-@APP.route('/movies/<int:count>/', methods=['GET'])
+@APP.route('/movies/', methods=['GET'])
 def get_movies(count):
     """get a list of movies from the db"""
 
-    results = Movie.get_movies(count)
+    #TODO: add pagination
+    results = Movie.get_movies(10)
     return make_response(jsonify(list(results)), 200)
 
-@APP.route('/movies/details/<int:movie_id>/', methods=['GET'])
+@APP.route('/movie/<int:movie_id>/detail', methods=['GET'])
 def get_movie_details(movie_id):
     """get a movie's details from the db"""
 

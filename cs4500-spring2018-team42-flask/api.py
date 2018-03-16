@@ -71,7 +71,7 @@ def user_details():
         return make_response(jsonify({"request": "not cool"}), 400)
 
 @APP.route('/movies/', methods=['GET'])
-def get_movies(count):
+def get_movies():
     """get a list of movies from the db"""
 
     #TODO: add pagination

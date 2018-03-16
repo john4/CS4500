@@ -9,7 +9,7 @@ class ReviewItem extends Component {
   }
 
     submitReview() {
-      ApiWrapper().api().createMovieReview(this.props.movieId, 'email', this.refs.score.value);
+      ApiWrapper().api().createMovieReview(this.props.movieId, this.refs.score.value);
     }
 
     render() {
@@ -26,5 +26,5 @@ class ReviewItem extends Component {
       );
     }
   }
-  
+
   export default ReviewItem;

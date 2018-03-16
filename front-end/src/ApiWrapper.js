@@ -27,12 +27,15 @@ export const ApiWrapper = (() => {
       getAccountDetails: function () {
         return axios.get(API_ENDPOINT + `/user/details/?sessionId=${localStorage.getItem("spoiledSessionId")}`);
       },
+      getAverageMovieRating: function (movieId) {
+        return axios.get(API_ENDPOINT + `/movie/${movieId}/rating/`);
+      },
       createMovieReview: function (movieId, score) {
         return axios.post(
           API_ENDPOINT + '/movie/' + movieId + '/review/',
           {
             user_email: localStorage.getItem("spoiledUserEmail"),
-            score: score,
+            rating: score,
           }
         );
       },

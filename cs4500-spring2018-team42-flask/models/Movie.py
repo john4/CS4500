@@ -18,7 +18,7 @@ class Movie(object):
         """get a list of movies of 'count' length"""
 
         results = DB.Movie.find(limit=abs(count))
-        return results
+        return list(results)
 
     @staticmethod
     def get_movie_details(movie_id):

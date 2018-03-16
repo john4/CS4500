@@ -1,6 +1,7 @@
 """exposed API routes"""
 
 from flask import json, make_response, request, jsonify
+from bson.json_util import dumps
 from app import APP
 from models import Movie, User, Review
 
@@ -76,7 +77,7 @@ def get_movies():
 
     #TODO: add pagination
     results = Movie.get_movies(10)
-    return make_response(jsonify(list(results)), 200)
+    return make_response(dumps(results), 200)
 
 @APP.route('/movie/<int:movie_id>/detail/', methods=['GET'])
 def get_movie_details(movie_id):

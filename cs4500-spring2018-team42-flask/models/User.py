@@ -52,4 +52,4 @@ class User(object):
 
         session_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(32))
 
-        return {"success": "user {email} password verified".format(email=email), "email": email, "sessionId": sessionId}, 200
+        return {"success": "user {email} password verified".format(email=email), "email": email, "sessionId": session_id}, 200

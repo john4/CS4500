@@ -2,22 +2,22 @@
 import json
 import unittest
 
-from app import app, db
+from app import APP, DB
 
 
-class BasicTests(unittest.TestCase):
+class UserTests(unittest.TestCase):
 
     # Set up & tear down ########################################
     # executed prior to each test ###############################
 
     def setUp(self):
-        app.config['TESTING'] = True
-        app.config['WTF_CSRF_ENABLED'] = False
-        app.config['DEBUG'] = False
-        self.app = app.test_client()
-        self.assertEqual(app.debug, False)
+        APP.config['TESTING'] = True
+        APP.config['WTF_CSRF_ENABLED'] = False
+        APP.config['DEBUG'] = False
+        self.app = APP.test_client()
+        self.assertEqual(APP.debug, False)
 
-        db.User.delete_many({})
+        DB.User.delete_many({})
 
     # executed after each test
     def tearDown(self):
@@ -58,7 +58,8 @@ class BasicTests(unittest.TestCase):
         response = self.app.post('/user/login/', data=json.dumps(login))
         data = json.loads(response.get_data(as_text=True))
         self.assertEqual(response.status_code, 200)
-        self.assertEqual(data, {'success': 'user notarealemail1@notarealplace.com password verified'})
+        self.assertEqual(data.get('success'), 'user notarealemail1@notarealplace.com password verified')
+        self.assertIsNotNone(data.get('sessionId'))
 
     def test_user_login_wrong_pass(self):
         user_one = {

@@ -1,53 +1,45 @@
 import React, { Component } from 'react';
-import Results from '../Search/Results';
+import DetailResults from './DetailResults.js'
+import Review from '../Review/Review.js';
 import axios from 'axios';
-
+import { ApiWrapper } from '../../ApiWrapper';
 
 
 class Details extends Component {
-	
+
 	constructor(props) {
 		super(props);
-		this.state = {
-			results: []
-		}
-		
-		this.getDetails = this.getDetails.bind(this);
-		this.showResults = this.showResults.bind(this);
-		
-		this.getInitialMovies();
+		this.state = {};
+		this.URL      = 'http://ec2-54-87-191-69.compute-1.amazonaws.com:5000/movies/details/' + this.props.match.params.tmdbid
 	}
-	
-	getInitialMovies() {
-		var URL = 'http://ec2-54-87-191-69.compute-1.amazonaws.com:5000/movies/10'
-		this.getDetails(URL);
+
+	componentWillMount() {
+		this.getDetails(this.URL);
+		this.getAverageRating();
 	}
-	
-	showResults(response) {
-		this.setState({
-			results: response
-		})
-	}
-	
-	
+
 	getDetails(URL) {
 		axios.get(URL)
 		.then( res => {
 			const response = res.data;
-			this.showResults(response);
-		})
+			this.setState({ ...response });
+		});
 	}
-	
+
+	getAverageRating() {
+		ApiWrapper().api().getAverageMovieRating(this.props.match.params.tmdbid).then(res => {
+			this.setState({
+				averageRating: res.data
+			});
+		});
+	}
+
 	render() {
-		
+
 		return (
 			<div>
-				<p>
-					This is a list of loaded data
-				</p>
-				<ul>
-					{JSON.stringify(this.state.results)}
-				</ul>
+				<DetailResults {...this.state}/>
+				<Review movieId={this.state.id}/>
 			</div>
 		);
 	}

@@ -10,12 +10,12 @@ class Details extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {};
-		this.URL      = 'http://ec2-54-87-191-69.compute-1.amazonaws.com:5000/movies/details/' + this.props.match.params.tmdbid
+		this.URL      = 'http://ec2-54-87-191-69.compute-1.amazonaws.com:5000/movie/' + this.props.match.params.tmdbid + '/detail/';
 	}
 
 	componentWillMount() {
 		this.getDetails(this.URL);
-		this.getAverageRating();
+        this.getAverageRating();
 	}
 
 	getDetails(URL) {
@@ -29,7 +29,7 @@ class Details extends Component {
 	getAverageRating() {
 		ApiWrapper().api().getAverageMovieRating(this.props.match.params.tmdbid).then(res => {
 			this.setState({
-				averageRating: res.data
+				averageRating: res.data.avg_rating
 			});
 		});
 	}

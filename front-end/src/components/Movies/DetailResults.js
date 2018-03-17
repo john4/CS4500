@@ -16,7 +16,7 @@ class DetailResults extends Component {
 					  posterSrc={posterSrc}
 					  overview={result.overview}
 					  average={result.vote_average}
-						averageRating={result.averageRating}
+					  averageRating={result.averageRating}
 					  production_countries={result.production_countries}
 					  production_companies={result.production_companies}
 					  release_date={result.release_date}

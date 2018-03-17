@@ -52,8 +52,8 @@ class Movie(object):
         reviews = [review for review in reviews]
 
         if len(reviews) > 0:
-            reviews = [review.get('rating') for review in reviews]
-            ratings_avg = sum(reviews) / len(reviews)
+            ratings = [int(review.get('rating')) for review in reviews]
+            ratings_avg = sum(ratings) / len(ratings)
         else:
             ratings_avg = 0
 

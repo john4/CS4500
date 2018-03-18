@@ -62,6 +62,20 @@ class User(object):
         return return_data, 200
 
     @staticmethod
+    def get_user_data_from_session(session_id):
+        session = DB.Session.find_one({'session_id': session_id})
+
+        if session:
+            user_email = session.get('email')
+            if user_email:
+                user = DB.User.find_one({'email': user_email})
+
+                if user:
+                    return user, 200
+            return {'error': 'user not found'}, 400
+        return {'error': 'session not found'}, 400
+
+    @staticmethod
     def check_session(session_id):
         """
         Check to see if a session is valid

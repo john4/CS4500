@@ -66,11 +66,8 @@ def user_details():
     """check sensitive user details"""
 
     session_id = request.args.get('sessionId')
-
-    if User.check_session(session_id):
-        return make_response(jsonify({"success": "cool"}), 200)
-    else:
-        return make_response(jsonify({"error": "not cool"}), 400)
+    result, response_code = User.get_user_data_from_session(session_id)
+    return make_response(dumps(result), response_code)
 
 @APP.route('/movies/', methods=['GET'])
 def get_movies():

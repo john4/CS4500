@@ -15,9 +15,9 @@ class Login extends Component {
       ApiWrapper().api()
         .post(LOGIN_PATH, { email, password })
         .then(res => {
-          ApiWrapper().api().setSession(res.data.sessionId);
+          ApiWrapper().api().setSession(res.data.session_id);
           console.log(res.data);
-          // TODO: save session
+          window.location = "/";
         })
         .catch(err => {
           console.log(err);

@@ -4,8 +4,8 @@ import axios from 'axios';
 export const ApiWrapper = (() => {
   let instance;
   function init() {
-    // const API_ENDPOINT = "http://ec2-54-87-191-69.compute-1.amazonaws.com:5000";
-    const API_ENDPOINT = "http://127.0.0.1:5000";
+    const API_ENDPOINT = "http://ec2-54-87-191-69.compute-1.amazonaws.com:5000";
+    // const API_ENDPOINT = "http://127.0.0.1:5000";
 
     return {
       get: function (path) {

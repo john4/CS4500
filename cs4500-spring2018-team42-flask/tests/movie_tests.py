@@ -10,9 +10,7 @@ class GetMovieTests(unittest.TestCase):
     def setUp(self):
         APP.config['TESTING'] = True
         APP.config['WTF_CSRF_ENABLED'] = False
-        APP.config['DEBUG'] = False
         self.app = APP.test_client()
-        self.assertEqual(APP.debug, False)
 
         DB.Movie.insert_one({
                 "tmdb_id" : 3924,

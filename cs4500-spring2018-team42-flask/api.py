@@ -5,14 +5,17 @@ from bson.json_util import dumps
 from app import APP
 from models import Movie, User, Review
 
-active_sessions = []
-
 
 @APP.route('/')
 def index():
     """basic index route helpful for testing connection"""
 
     return 'Hello, Team 42!'
+
+@APP.route('/teapot/')
+def teapot():
+    """I'm a teapot"""
+    return make_response('', 418)
 
 @APP.route('/user/register/', methods=['POST'])
 def register_user():
@@ -43,22 +46,20 @@ def login_user():
         return make_response({"error": "email and password are required"}, 400)
 
     login_result, response_status = User.attempt_login(email, password)
-    active_sessions.append(login_result.get('sessionId'))
 
-    return make_response(json.jsonify(login_result), response_status)
+    return make_response(dumps(login_result), response_status)
 
 @APP.route('/user/logout/', methods=['POST'])
 def end_session():
-    """delete the given session"""
+    """
+    End a user's session
+    """
 
     data = json.loads(request.data)
     session_id = data.get('sessionId')
 
-    if session_id in active_sessions:
-        active_sessions.remove(session_id)
-        return make_response(jsonify({"sessionId": session_id}), 200)
-    else:
-        return make_response(jsonify({"sessionId": session_id}), 400)
+    result, response_code = User.end_session(session_id)
+    return make_response(dumps(result), response_code)
 
 @APP.route('/user/detail/', methods=['GET'])
 def user_details():
@@ -66,10 +67,10 @@ def user_details():
 
     session_id = request.args.get('sessionId')
 
-    if session_id in active_sessions:
-        return make_response(jsonify({"request": "cool"}), 200)
+    if User.check_session(session_id):
+        return make_response(jsonify({"success": "cool"}), 200)
     else:
-        return make_response(jsonify({"request": "not cool"}), 400)
+        return make_response(jsonify({"error": "not cool"}), 400)
 
 @APP.route('/movies/', methods=['GET'])
 def get_movies():
@@ -95,12 +96,15 @@ def review_movie(movie_id):
     new_review = Review()
     data = json.loads(request.data)
 
+    if not (data.get('session_id') and User.check_session(data.get('session_id'))):
+        return make_response(dumps({'error': 'must be logged in to review'}), 400)
+
     new_review.tmdb_id = movie_id
     new_review.user_email = data.get('user_email')
     new_review.rating = data.get('rating')
 
     results, response_code = new_review.create()
-    return make_response(results, response_code)
+    return make_response(dumps(results), response_code)
 
 @APP.route('/movie/<int:movie_id>/rating/', methods=['GET'])
 def get_movie_avg_rating(movie_id):

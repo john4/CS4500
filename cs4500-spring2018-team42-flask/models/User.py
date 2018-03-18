@@ -52,4 +52,53 @@ class User(object):
 
         session_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(32))
 
-        return {"success": "user {email} password verified".format(email=email), "email": email, "sessionId": session_id}, 200
+        return_data = {
+            "success": "user {email} password verified".format(email=email),
+            "email": email,
+            "session_id": session_id
+        }
+
+        User.add_session(session_id, email)
+        return return_data, 200
+
+    @staticmethod
+    def check_session(session_id):
+        """
+        Check to see if a session is valid
+        """
+        existing_session = DB.Session.find_one({'session_id': session_id})
+        return bool(existing_session)
+
+    @staticmethod
+    def end_session(session_id):
+        """
+        End a session
+        """
+
+        existing_session = DB.Session.find_one({'session_id': session_id})
+
+        if existing_session:
+            DB.Session.delete_one({'session_id': session_id})
+            return_data = {
+                'success': 'session deleted',
+                'session_id': session_id
+            }
+
+            return return_data, 200
+        else:
+            response = {
+                'error': 'session does not exist',
+                'session_id': session_id
+            }
+
+            return response, 400
+
+    @staticmethod
+    def add_session(session_id, email):
+        """
+        Start a new session
+        """
+        DB.Session.insert_one({
+            'session_id': session_id,
+            'email': email
+        })

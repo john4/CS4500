@@ -18,10 +18,10 @@ class Review(object):
 
         existing_review = DB.Review.find_one({"user_email": self.user_email, "tmdb_id": self.tmdb_id})
         if existing_review:
-            return json.jsonify({"error": "trying to create a duplicate review"}), 400
+            return {"error": "trying to create a duplicate review"}, 400
 
         DB.Review.insert_one(self.__dict__)
-        return dumps(self.__dict__), 200
+        return self.__dict__, 200
 
     # TODO: separate update
     # if existing_rating:

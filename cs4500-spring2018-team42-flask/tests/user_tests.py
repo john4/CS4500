@@ -141,6 +141,38 @@ class UserTests(unittest.TestCase):
         self.assertEqual(data.get('name'), 'Test User 2')
         self.assertEqual(data.get('email'), 'differentemail@notarealplace.com')
 
+    def test_user_delete_fail_no_info(self):
+        response = self.app.post('/user/delete/', data=json.dumps({}))
+        data = json.loads(response.get_data(as_text=True))
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(data, {'error': 'email is required'})
+
+    def test_user_delete_not_existing(self):
+        email = {
+            'email': 'notarealuser@notarealplace.com' 
+        }
+        response = self.app.post('/user/delete/', data=json.dumps(email))
+        data = json.loads(response.get_data(as_text=True))
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(data, {'error': 'no user with this email exists'})
+
+    def test_user_delete_existing(self):
+        user = {
+            'name': 'Test User',
+            'email': 'notarealemail@notarealplace.com',
+            'password': 'password',
+            'age': 22,
+            'genre': ['Mystery', 'Horror']
+        }
+        self.app.post('/user/register/', data=json.dumps(user))
+        email = {
+            'email': 'notarealemail@notarealplace.com'
+        }
+        response = self.app.post('/user/delete/', data=json.dumps(email))
+        data = json.loads(response.get_data(as_text=True))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data.get('success'), 'user notarealemail@notarealplace.com has been deleted')
+        self.assertIsNone(DB.User.find_one({"email": "notarealemail@notarealplace.com"}))
 
 if __name__ == "__main__":
     unittest.main()

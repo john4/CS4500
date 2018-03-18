@@ -53,3 +53,17 @@ class User(object):
         session_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(32))
 
         return {"success": "user {email} password verified".format(email=email), "email": email, "sessionId": session_id}, 200
+
+    @staticmethod
+    def delete_user(email):
+        """
+        Deletes user whose email matches the input, if it exists
+        """
+        
+        user_data = DB.User.find_one_and_delete({"email": email})
+
+        if not user_data:
+            return {"error": "no user with this email exists"}, 400
+        
+        response = {"success": "user " + email + " has been deleted"}
+        return response, 200

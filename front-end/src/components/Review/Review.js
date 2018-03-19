@@ -11,7 +11,7 @@ class Review extends Component {
     }
 
     return (
-      <div className="Review-delete" onClick={onDelete(reviewId)}>
+      <div className="Review-delete" onClick={() => onDelete(reviewId)}>
         <i class="fas fa-times-circle"></i>
       </div>
     );

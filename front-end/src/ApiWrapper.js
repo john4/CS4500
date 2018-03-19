@@ -66,6 +66,7 @@ export const ApiWrapper = (() => {
       },
       deleteReview: function (reviewId) {
         // TODO: hookup back end
+        console.log(`delete review ${reviewId}`);
       },
     };
 

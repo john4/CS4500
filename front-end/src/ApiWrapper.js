@@ -30,14 +30,35 @@ export const ApiWrapper = (() => {
       getAverageMovieRating: function (movieId) {
         return axios.get(API_ENDPOINT + `/movie/${movieId}/rating/`);
       },
-      createMovieReview: function (movieId, score) {
+      createMovieReview: function (movieId, score, description) {
         return axios.post(
           API_ENDPOINT + '/movie/' + movieId + '/review/',
           {
             user_email: localStorage.getItem("spoiledUserEmail"),
             rating: score,
+            description,
           }
         );
+      },
+      getReviews: function (movieId) {
+        // TODO: hookup back end
+        return [
+          {
+            user: "someonesmart@gmail.com",
+            rating: 5,
+            description: "great stuff",
+          },
+          {
+            user: "anothersmartperson@gmail.com",
+            rating: 1,
+            description: "not great stuff",
+          },
+          {
+            user: "justadude@gmail.com",
+            rating: 3,
+            description: "okay stuff",
+          },
+        ];
       },
     };
 

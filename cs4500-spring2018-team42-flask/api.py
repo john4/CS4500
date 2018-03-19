@@ -34,6 +34,19 @@ def register_user():
 
     return make_response(new_user, response_status)
 
+@APP.route('/user/delete/', methods=['POST'])
+def delete_user():
+    """delete a user"""
+    data = json.loads(request.data)
+    email = data.get('email')
+
+    if not email:
+        return make_response(dumps({"error": "email is required"}), 400)
+
+    delete_result, response_status = User.delete_user(email)
+
+    return make_response(dumps(delete_result), response_status)
+
 @APP.route('/user/login/', methods=['POST'])
 def login_user():
     """check an email and password login"""
@@ -43,7 +56,7 @@ def login_user():
     password = data.get('password')
 
     if not email or not password:
-        return make_response({"error": "email and password are required"}, 400)
+        return make_response(dumps({"error": "email and password are required"}), 400)
 
     login_result, response_status = User.attempt_login(email, password)
 
@@ -109,3 +122,4 @@ def get_movie_avg_rating(movie_id):
 
     results, response_code = Movie.get_average_rating(movie_id)
     return make_response(results, response_code)
+

@@ -116,3 +116,17 @@ class User(object):
             'session_id': session_id,
             'email': email
         })
+
+    @staticmethod
+    def delete_user(email):
+        """
+        Deletes user whose email matches the input, if it exists
+        """
+
+        user_data = DB.User.find_one_and_delete({"email": email})
+
+        if not user_data:
+            return {"error": "no user with this email exists"}, 400
+
+        response = {"success": "user " + email + " has been deleted"}
+        return response, 200

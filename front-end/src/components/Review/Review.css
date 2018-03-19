@@ -1,6 +1,28 @@
+.WriteReview {
+  margin: 1rem;
+}
+
+.WriteReview-label {
+  padding-right: 1rem;
+}
+
 .Review {
   margin: 1rem;
 }
-.Review-label {
-  padding-right: 1rem;
+
+.Review-user {
+  display: inline;
+  padding-right: 12px;
+}
+
+.Review-rating {
+  display: inline;
+}
+
+.Review-rating span {
+  font-weight: 900;
+}
+
+.Review-description span {
+  padding-left: 1rem;
 }

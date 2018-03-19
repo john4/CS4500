@@ -50,7 +50,7 @@ class Details extends Component {
 		}
 
 		return reviews.map(review => {
-			return <Review { ...review } />;
+			return <Review { ...review, onDelete: ApiWrapper().api().deleteReview } />;
 		});
 	}
 

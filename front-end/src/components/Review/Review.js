@@ -4,21 +4,21 @@ import './Review.css';
 class Review extends Component {
 
   renderDelete() {
-    const {isUsersReview} = this.props;
+    const { isUsersReview, onDelete, reviewId } = this.props;
 
     if (!isUsersReview) {
       return null;
     }
 
     return (
-      <div className="Review-delete">
+      <div className="Review-delete" onClick={onDelete(reviewId)}>
         <i class="fas fa-times-circle"></i>
       </div>
     );
   }
 
   render() {
-    const {user, rating, description} = this.props;
+    const { user, rating, description } = this.props;
 
     return (
       <div className="Review">

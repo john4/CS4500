@@ -15,7 +15,7 @@ class WriteReview extends Component {
   render() {
     return (
       <div className="WriteReview">
-        <label for="rating"className="WriteReview-label">Review Score:</label>
+        <label for="rating" className="WriteReview-label">Review Score:</label>
         <div className="input-group">
           <input id="rating" type="number" className="form-control" ref="score" min="0" max="5" />
           <input id="description" type="text" className="form-control" ref="description" placeholder="What did you think?" />

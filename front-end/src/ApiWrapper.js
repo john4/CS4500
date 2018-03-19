@@ -47,6 +47,7 @@ export const ApiWrapper = (() => {
             user: "someonesmart@gmail.com",
             rating: 5,
             description: "great stuff",
+            isUsersReview: true,
           },
           {
             user: "anothersmartperson@gmail.com",

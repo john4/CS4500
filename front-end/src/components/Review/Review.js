@@ -3,11 +3,26 @@ import './Review.css';
 
 class Review extends Component {
 
+  renderDelete() {
+    const {isUsersReview} = this.props;
+
+    if (!isUsersReview) {
+      return null;
+    }
+
+    return (
+      <div className="Review-delete">
+        <i class="fas fa-times-circle"></i>
+      </div>
+    );
+  }
+
   render() {
     const {user, rating, description} = this.props;
 
     return (
       <div className="Review">
+        {this.renderDelete()}
         <div className="Review-user">
           {user}
         </div>

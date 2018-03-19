@@ -8,6 +8,14 @@
 
 .Review {
   margin: 1rem;
+  position: relative;
+}
+
+.Review-delete {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  cursor: pointer;
 }
 
 .Review-user {

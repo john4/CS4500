@@ -3,7 +3,6 @@ import React, { Component } from 'react';
 class DetailResultItem extends Component {
 
     render() {
-			debugger;
 			return <div>
 				<h2>{this.props.title}</h2>
 	 			<img src={this.props.posterSrc}/>

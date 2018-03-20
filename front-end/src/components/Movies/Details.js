@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import DetailResults from './DetailResults.js'
+import WriteReview from '../Review/WriteReview.js';
 import Review from '../Review/Review.js';
 import axios from 'axios';
 import { ApiWrapper } from '../../ApiWrapper';
@@ -15,7 +16,8 @@ class Details extends Component {
 
 	componentWillMount() {
 		this.getDetails(this.URL);
-        this.getAverageRating();
+    this.getAverageRating();
+		this.getReviews();
 	}
 
 	getDetails(URL) {
@@ -34,12 +36,31 @@ class Details extends Component {
 		});
 	}
 
+	getReviews() {
+		this.setState({
+			reviews: ApiWrapper().api().getReviews(this.props.match.params.tmdbid)
+		});
+	}
+
+	renderReviews() {
+		const { reviews } = this.state;
+
+		if (!reviews) {
+			return null;
+		}
+
+		return reviews.map(review => {
+			return <Review { ...review } onDelete={ ApiWrapper().api().deleteReview } />;
+		});
+	}
+
 	render() {
 
 		return (
 			<div>
 				<DetailResults {...this.state}/>
-				<Review movieId={this.state.id}/>
+				<WriteReview movieId={this.state.id}/>
+				{this.renderReviews()}
 			</div>
 		);
 	}

@@ -15,29 +15,37 @@ export const ApiWrapper = (() => {
         return axios.post(API_ENDPOINT + path, data);
       },
       setSession: function (sessionId, userEmail) {
-        window.localStorage.setItem("spoiledSessionId", sessionId);
-        window.localStorage.setItem("spoiledUserEmail", userEmail);
+        if (typeof window.localStorage != "undefined") {
+            window.localStorage.setItem("spoiledSessionId", sessionId);
+            window.localStorage.setItem("spoiledUserEmail", userEmail);
+        }
       },
       removeSession: function () {
-        const LOGOUT_PATH = "/user/logout/";
-        axios.post(API_ENDPOINT + LOGOUT_PATH, { sessionId: window.localStorage.getItem("spoiledSessionId") });
-        window.localStorage.setItem("spoiledSessionId", null);
-        window.localStorage.setItem("spoiledUserEmail", null);
+        if (typeof window.localStorage != "undefined") {
+            const LOGOUT_PATH = "/user/logout/";
+            axios.post(API_ENDPOINT + LOGOUT_PATH, { sessionId: window.localStorage.getItem("spoiledSessionId") });
+            window.localStorage.setItem("spoiledSessionId", null);
+            window.localStorage.setItem("spoiledUserEmail", null);
+        }
       },
       getAccountDetails: function () {
-        return axios.get(API_ENDPOINT + `/user/detail/?sessionId=${window.localStorage.getItem("spoiledSessionId")}`);
+        if (typeof window.localStorage != "undefined") {
+            return axios.get(API_ENDPOINT + `/user/detail/?sessionId=${window.localStorage.getItem("spoiledSessionId")}`);
+        }
       },
       getAverageMovieRating: function (movieId) {
         return axios.get(API_ENDPOINT + `/movie/${movieId}/rating/`);
       },
       createMovieReview: function (movieId, score) {
-        return axios.post(
-          API_ENDPOINT + '/movie/' + movieId + '/review/',
-          {
-            user_email: window.localStorage.getItem("spoiledUserEmail"),
-            rating: score,
-          }
-        );
+        if (typeof window.localStorage != "undefined") {
+            return axios.post(
+              API_ENDPOINT + '/movie/' + movieId + '/review/',
+              {
+                user_email: window.localStorage.getItem("spoiledUserEmail"),
+                rating: score,
+              }
+            );
+        }
       },
     };
 

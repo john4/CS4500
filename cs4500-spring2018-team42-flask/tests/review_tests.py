@@ -10,18 +10,37 @@ class MovieReviewTest(unittest.TestCase):
     def setUp(self):
         APP.config['TESTING'] = True
         APP.config['WTF_CSRF_ENABLED'] = False
-        APP.config['DEBUG'] = False
         self.app = APP.test_client()
-        self.assertEqual(APP.debug, False)
+
         DB.Review.delete_many({})
+        DB.Session.delete_many({})
+
+        DB.Session.insert_one({
+            'session_id': 'abcdefghijklmnopqrstuvwyzabcdef',
+            'email': 'notarealemail@notarealplace.com'
+        })
 
     def tearDown(self):
-        pass
+        DB.Review.delete_many({})
+        DB.Session.delete_many({})
+
+    def test_review_not_logged_in(self):
+        data = {
+            'user_email': 'notarealemail@notarealplace.com',
+            'rating': 5
+        }
+
+        response = self.app.post('/movie/1234/review/', data=json.dumps(data))
+        data = json.loads(response.get_data(as_text=True))
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(data.get('error'), 'must be logged in to review')
 
     def test_add_review(self):
         data = {
             'user_email': 'notarealemail@notarealplace.com',
-            'rating': 5
+            'rating': 5,
+            'session_id': 'abcdefghijklmnopqrstuvwyzabcdef'
         }
 
         response = self.app.post('/movie/1234/review/', data=json.dumps(data))
@@ -35,12 +54,19 @@ class MovieReviewTest(unittest.TestCase):
     def test_add_duplicate_review(self):
         data = {
             'user_email': 'notarealemail@notarealplace.com',
-            'rating': 5
+            'rating': 5,
+            'session_id': 'abcdefghijklmnopqrstuvwyzabcdef'
         }
 
         response = self.app.post('/movie/1234/review/', data=json.dumps(data))
         data = json.loads(response.get_data(as_text=True))
         self.assertEqual(response.status_code, 200)
+
+        data = {
+            'user_email': 'notarealemail@notarealplace.com',
+            'rating': 5,
+            'session_id': 'abcdefghijklmnopqrstuvwyzabcdef'
+        }
 
         response = self.app.post('/movie/1234/review/', data=json.dumps(data))
         data = json.loads(response.get_data(as_text=True))
@@ -55,7 +81,8 @@ class MovieReviewTest(unittest.TestCase):
 
         data = {
             'user_email': 'notarealemail@notarealplace.com',
-            'rating': 5
+            'rating': 5,
+            'session_id': 'abcdefghijklmnopqrstuvwyzabcdef'
         }
 
         response = self.app.post('/movie/1234/review/', data=json.dumps(data))
@@ -69,7 +96,8 @@ class MovieReviewTest(unittest.TestCase):
 
         data = {
             'user_email': 'notarealemail2@notarealplace.com',
-            'rating': 1
+            'rating': 1,
+            'session_id': 'abcdefghijklmnopqrstuvwyzabcdef'
         }
 
         response = self.app.post('/movie/1234/review/', data=json.dumps(data))

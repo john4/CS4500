@@ -15,7 +15,7 @@ class Account extends Component {
       error: ''
     }
 
-
+    this.receiveDetails = this.receiveDetails.bind(this);
   }
 
   componentWillMount() {
@@ -23,11 +23,15 @@ class Account extends Component {
   }
 
   receiveDetails(res) {
-    console.log(res);
+    this.setState({
+        name: res.data.name
+    })
   }
 
   render() {
-    return <div />;
+    // const username = this.state.name;
+    var username = this.state.name;
+    return (username);
   }
 }
 

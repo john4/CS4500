@@ -13,9 +13,7 @@ class UserTests(unittest.TestCase):
     def setUp(self):
         APP.config['TESTING'] = True
         APP.config['WTF_CSRF_ENABLED'] = False
-        APP.config['DEBUG'] = False
         self.app = APP.test_client()
-        self.assertEqual(APP.debug, False)
 
         DB.User.delete_many({})
 
@@ -59,7 +57,7 @@ class UserTests(unittest.TestCase):
         data = json.loads(response.get_data(as_text=True))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data.get('success'), 'user notarealemail1@notarealplace.com password verified')
-        self.assertIsNotNone(data.get('sessionId'))
+        self.assertIsNotNone(data.get('session_id'))
 
     def test_user_login_wrong_pass(self):
         user_one = {

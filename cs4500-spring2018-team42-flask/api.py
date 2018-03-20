@@ -86,7 +86,6 @@ def user_details():
 def get_movies():
     """get a list of movies from the db"""
 
-    #TODO: add pagination
     results = Movie.get_movies(10)
     return make_response(dumps(results), 200)
 
@@ -101,7 +100,6 @@ def get_movie_details(movie_id):
 @APP.route('/movie/<int:movie_id>/review/', methods=['POST'])
 def review_movie(movie_id):
     """rate a movie from 1-5 stars (add more later)"""
-    #TODO: handle update
 
     new_review = Review()
     data = json.loads(request.data)
@@ -132,4 +130,3 @@ def get_movie_avg_rating(movie_id):
 
     results, response_code = Movie.get_average_rating(movie_id)
     return make_response(results, response_code)
-

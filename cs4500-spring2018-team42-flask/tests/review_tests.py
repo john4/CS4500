@@ -12,6 +12,9 @@ class MovieReviewTest(unittest.TestCase):
         APP.config['WTF_CSRF_ENABLED'] = False
         self.app = APP.test_client()
 
+        DB.Review.delete_many({})
+        DB.Session.delete_many({})
+
         DB.Session.insert_one({
             'session_id': 'abcdefghijklmnopqrstuvwyzabcdef',
             'email': 'notarealemail@notarealplace.com'

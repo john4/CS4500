@@ -112,9 +112,19 @@ def review_movie(movie_id):
     new_review.tmdb_id = movie_id
     new_review.user_email = data.get('user_email')
     new_review.rating = data.get('rating')
+    new_review.description = data.get('description')
 
     results, response_code = new_review.create()
     return make_response(dumps(results), response_code)
+
+@APP.route('/movie/<int:movie_id>/get-reviews/', methods=['GET'])
+def get_movie_reviews(movie_id):
+    """
+    Get all Spoiled Tomatillos reviews for a movie
+    """
+
+    reviews, response_code = Review.get_all(movie_id)
+    return make_response(dumps(reviews), response_code)
 
 @APP.route('/movie/<int:movie_id>/rating/', methods=['GET'])
 def get_movie_avg_rating(movie_id):

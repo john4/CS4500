@@ -1,11 +1,14 @@
-from app import db
 from bson.json_util import dumps
 from flask import json
 from werkzeug.security import check_password_hash, generate_password_hash
+from app import DB
+import random
+import string
 
-# return check_password_hash(self.password, password)
 
 class User(object):
+    """represents a user on Spoiled Tomatillos"""
+
     def __init__(self):
         self.name = None
         self.email = None
@@ -16,12 +19,13 @@ class User(object):
     def register(self):
         """
         Add this user's information to the database
+        Returns some json info on success or error and boolean for success
         """
 
         if not self.name or not self.email or not self.password or not self.age:
             return json.jsonify({"error": "missing required fields"}), 400
 
-        user_exists = db.User.find_one({"email": self.email})
+        user_exists = DB.User.find_one({"email": self.email})
         if user_exists:
             return json.jsonify({"error": "a user with this email already exists"}), 400
 
@@ -29,6 +33,37 @@ class User(object):
             return json.jsonify({"error": "passwords must be at least 8 characters"}), 400
 
         self.password = generate_password_hash(self.password, method='sha256')
-        db.User.insert_one(self.__dict__)
+        DB.User.insert_one(self.__dict__)
 
         return dumps(self.__dict__), 200
+
+    @staticmethod
+    def attempt_login(email, password):
+        """
+        Check to see if this user exists and passwords match
+        """
+
+        existing_user = DB.User.find_one({"email": email})
+        if not existing_user:
+            return {"error": "no user with this email exists"}, 400
+
+        if not check_password_hash(existing_user.get('password'), password):
+            return {"error": "passwords do not match"}, 400
+
+        session_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(32))
+
+        return {"success": "user {email} password verified".format(email=email), "email": email, "sessionId": session_id}, 200
+
+    @staticmethod
+    def delete_user(email):
+        """
+        Deletes user whose email matches the input, if it exists
+        """
+        
+        user_data = DB.User.find_one_and_delete({"email": email})
+
+        if not user_data:
+            return {"error": "no user with this email exists"}, 400
+        
+        response = {"success": "user " + email + " has been deleted"}
+        return response, 200

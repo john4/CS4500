@@ -8,3 +8,7 @@ import App from './App';
 //   ReactDOM.render(<App />, div);
 //   ReactDOM.unmountComponentAtNode(div);
 // });
+
+it('passes its tests', () => {
+    const hello = 'hello';
+});

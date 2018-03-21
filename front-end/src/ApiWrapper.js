@@ -24,6 +24,12 @@ export const ApiWrapper = (() => {
         localStorage.setItem("spoiledSessionId", null);
         localStorage.setItem("spoiledUserEmail", null);
       },
+      getSession: function() {
+        return {
+          sessionId: localStorage.getItem("spoiledSessionId"),
+          userEmail: localStorage.getItem("spoiledUserEmail"),
+        };
+      },
       getAccountDetails: function () {
         return axios.get(API_ENDPOINT + `/user/detail/?sessionId=${localStorage.getItem("spoiledSessionId")}`);
       },
@@ -34,6 +40,7 @@ export const ApiWrapper = (() => {
         return axios.post(
           API_ENDPOINT + '/movie/' + movieId + '/review/',
           {
+            session_id: localStorage.getItem("spoiledSessionId"),
             user_email: localStorage.getItem("spoiledUserEmail"),
             rating: score,
             description,
@@ -41,28 +48,7 @@ export const ApiWrapper = (() => {
         );
       },
       getReviews: function (movieId) {
-        // TODO: hookup back end
-        return [
-          {
-            user: "someonesmart@gmail.com",
-            rating: 5,
-            description: "great stuff",
-            isUsersReview: true,
-            reviewId: "001",
-          },
-          {
-            user: "anothersmartperson@gmail.com",
-            rating: 1,
-            description: "not great stuff",
-            reviewId: "002",
-          },
-          {
-            user: "justadude@gmail.com",
-            rating: 3,
-            description: "okay stuff",
-            reviewId: "003",
-          },
-        ];
+        return axios.get(`${API_ENDPOINT}/movie/${movieId}/get-reviews/`);
       },
       deleteReview: function (reviewId) {
         // TODO: hookup back end

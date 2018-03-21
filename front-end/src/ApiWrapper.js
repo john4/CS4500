@@ -48,28 +48,7 @@ export const ApiWrapper = (() => {
         );
       },
       getReviews: function (movieId) {
-        // TODO: hookup back end
-        return [
-          {
-            user: "someonesmart@gmail.com",
-            rating: 5,
-            description: "great stuff",
-            isUsersReview: true,
-            reviewId: "001",
-          },
-          {
-            user: "anothersmartperson@gmail.com",
-            rating: 1,
-            description: "not great stuff",
-            reviewId: "002",
-          },
-          {
-            user: "justadude@gmail.com",
-            rating: 3,
-            description: "okay stuff",
-            reviewId: "003",
-          },
-        ];
+        return axios.get(`${API_ENDPOINT}/movie/${movieId}/get-reviews/`);
       },
       deleteReview: function (reviewId) {
         // TODO: hookup back end

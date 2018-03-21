@@ -40,6 +40,7 @@ export const ApiWrapper = (() => {
         return axios.post(
           API_ENDPOINT + '/movie/' + movieId + '/review/',
           {
+            session_id: localStorage.getItem("spoiledSessionId"),
             user_email: localStorage.getItem("spoiledUserEmail"),
             rating: score,
             description,

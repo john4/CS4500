@@ -37,9 +37,22 @@ class Details extends Component {
 	}
 
 	getReviews() {
-		this.setState({
-			reviews: ApiWrapper().api().getReviews(this.props.match.params.tmdbid)
-		});
+		const { userEmail } = ApiWrapper().api().getSession();
+
+		ApiWrapper().api().getReviews(this.props.match.params.tmdbid).then(res => {
+			this.setState({
+				reviews: res.data.map(review => {
+					return {
+						description: review.description,
+						rating: review.rating,
+						tmdbId: review.tmdb_id,
+						reviewId: review._id.$oid,
+						userEmail: review.user_email,
+						isUsersReview: userEmail == review.user_email,
+					};
+				})
+			});
+		})
 	}
 
 	renderReviews() {

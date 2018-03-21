@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import './Review.css';
 
 class Review extends Component {
-
   renderDelete() {
     const { isUsersReview, onDelete, reviewId } = this.props;
 
@@ -18,13 +17,13 @@ class Review extends Component {
   }
 
   render() {
-    const { user, rating, description } = this.props;
+    const { userEmail, rating, description } = this.props;
 
     return (
       <div className="Review">
         {this.renderDelete()}
         <div className="Review-user">
-          {user}
+          {userEmail}
         </div>
         <div className="Review-rating">
           <span>{rating}</span> / 5

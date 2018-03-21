@@ -24,6 +24,12 @@ export const ApiWrapper = (() => {
         localStorage.setItem("spoiledSessionId", null);
         localStorage.setItem("spoiledUserEmail", null);
       },
+      getSession: function() {
+        return {
+          sessionId: localStorage.getItem("spoiledSessionId"),
+          userEmail: localStorage.getItem("spoiledUserEmail"),
+        };
+      },
       getAccountDetails: function () {
         return axios.get(API_ENDPOINT + `/user/detail/?sessionId=${localStorage.getItem("spoiledSessionId")}`);
       },

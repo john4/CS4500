@@ -14,7 +14,7 @@ pipeline {
          }
          steps {
             echo  "Testing"
-	    sh './run_tests.sh'
+	    sh './flask_tests.sh'
 	    step([
 		$class: 'CoberturaPublisher',
 	        coberturaReportFile: 'coverage.xml',

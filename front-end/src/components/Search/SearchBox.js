@@ -16,10 +16,11 @@ class SearchBox extends Component {
     }
 
     render() {
-      const { onSearch } = this.props;
+      const { onSearch, placeholder } = this.props;
+
       return (
         <div className="SearchBox input-group">
-            <input className="form-control" type="text" ref="query" placeholder="Batman..." onChange={this.onChange} />
+            <input className="form-control" type="text" ref="query" placeholder={placeholder || "Batman..."} onChange={this.onChange} />
             <span className="input-group-append">
               <button className="btn btn-secondary" type="button" onClick={() => onSearch(this.state.value)} value="Search">Search</button>
             </span>

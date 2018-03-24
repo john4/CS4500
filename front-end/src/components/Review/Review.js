@@ -29,7 +29,7 @@ class Review extends Component {
           <span>{rating}</span> / 5
         </div>
         <div className="Review-description">
-          <i class="fas fa-quote-left"></i>
+          <i className="fas fa-quote-left"></i>
           <span>{description}</span>
         </div>
       </div>

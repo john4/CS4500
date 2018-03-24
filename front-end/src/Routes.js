@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 
 import App from './App';
 import MovieSearch from './components/MovieSearch/MovieSearch';
+import FollowerSearch from './components/FollowerSearch/FollowerSearch';
 import Register from './components/User/Register';
 import Details from './components/Movies/Details';
 import Login from './components/Login';
@@ -19,6 +20,7 @@ class Routes extends Component {
           <Route exact path="/logout/" component={Logout} />
           <Route exact path="/register/" component={Register} />
           <Route exact path="/search/" component={MovieSearch} />
+          <Route exact path="/user-search/" component={FollowerSearch} />
           <Route exact path="/movie/:tmdbid/detail/" component={Details} />
         </div>
       </Router>

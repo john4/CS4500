@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import './ResultItem.css';
 
-class ResultItem extends Component {
+class MovieResultItem extends Component {
     render() {
       const detailURL = '/movie/' + this.props.id + '/detail/';
       return (
@@ -17,5 +17,5 @@ class ResultItem extends Component {
       );
     }
   }
-  
-  export default ResultItem;
+
+  export default MovieResultItem;

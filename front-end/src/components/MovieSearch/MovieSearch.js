@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Search from '../Search/Search';
+import MovieResults from './MovieResults'
 import axios from 'axios';
 
 
@@ -27,7 +28,7 @@ class MovieSearch extends Component {
     const {results} = this.state;
 
     return (
-      <Search onSearch={this.search} results={results} />
+      <Search onSearch={this.search} results={results} ResultsComponent={MovieResults} />
     );
   }
 }

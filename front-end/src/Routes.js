@@ -8,6 +8,7 @@ import Account from './components/User/Account';
 import Details from './components/Movies/Details';
 import Login from './components/Login';
 import Logout from './components/Logout';
+import Profile from './components/User/Profile';
 
 class Routes extends Component {
   render() {
@@ -22,6 +23,7 @@ class Routes extends Component {
           <Route exact path="/search/" component={Search} />
           <Route exact path="/account/" component={Account} />
           <Route exact path="/movie/:tmdbid/detail/" component={Details} />
+		  <Route exact path="/user/profile/" component={Profile} />
         </div>
       </Router>
     )

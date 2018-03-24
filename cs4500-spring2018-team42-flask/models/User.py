@@ -45,7 +45,7 @@ class User(object):
         Check to see if this user exists and passwords match
         """
 
-        existing_user = DB.User.find_one({"email": email})
+        existing_user = DB.User.find_one({"email": email}, projection={'password': False})
         if not existing_user:
             return {"error": "no user with this email exists"}, 400
 
@@ -55,9 +55,9 @@ class User(object):
         session_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(32))
 
         return_data = {
-            "success": "user {email} password verified".format(email=email),
-            "email": email,
-            "session_id": session_id
+            'success': 'user {email} password verified'.format(email=email),
+            'session_id': session_id,
+            'user_data': existing_user
         }
 
         User.add_session(session_id, email)

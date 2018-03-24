@@ -9,4 +9,4 @@ pip install -r ./cs4500-spring2018-team42-flask/requirements.txt
 # run tests and coverage report
 pip install pytest
 pip install pytest-cov
-pytest ./cs4500-spring2018-team42-flask/tests/* --verbose --cov=models --cov-report term-missing --cov-report xml --cov-branch --junit-xml results.xml'
+pytest ./cs4500-spring2018-team42-flask/tests/* --verbose --cov=models --cov-report term-missing --cov-report xml --cov-branch --junit-xml results.xml

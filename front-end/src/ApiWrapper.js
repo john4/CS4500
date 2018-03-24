@@ -24,20 +24,35 @@ export const ApiWrapper = (() => {
         localStorage.setItem("spoiledSessionId", null);
         localStorage.setItem("spoiledUserEmail", null);
       },
+      getSession: function() {
+        return {
+          sessionId: localStorage.getItem("spoiledSessionId"),
+          userEmail: localStorage.getItem("spoiledUserEmail"),
+        };
+      },
       getAccountDetails: function () {
         return axios.get(API_ENDPOINT + `/user/detail/?sessionId=${localStorage.getItem("spoiledSessionId")}`);
       },
       getAverageMovieRating: function (movieId) {
         return axios.get(API_ENDPOINT + `/movie/${movieId}/rating/`);
       },
-      createMovieReview: function (movieId, score) {
+      createMovieReview: function (movieId, score, description) {
         return axios.post(
-            API_ENDPOINT + '/movie/' + movieId + '/review/',
-            {
+          API_ENDPOINT + '/movie/' + movieId + '/review/',
+          {
+            session_id: localStorage.getItem("spoiledSessionId"),
             user_email: localStorage.getItem("spoiledUserEmail"),
             rating: score,
-            }
+            description,
+          }
         );
+      },
+      getReviews: function (movieId) {
+        return axios.get(`${API_ENDPOINT}/movie/${movieId}/get-reviews/`);
+      },
+      deleteReview: function (reviewId) {
+        // TODO: hookup back end
+        console.log(`delete review ${reviewId}`);
       },
     };
 

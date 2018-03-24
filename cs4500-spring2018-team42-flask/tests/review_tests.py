@@ -197,7 +197,7 @@ class MovieReviewTest(unittest.TestCase):
     def test_delete_review_does_not_exist(self):
         data = {
             'session_id': 'abcdefghijklmnopqrstuvwyzabcdef',
-            'review_id': 'notareview'
+            'review_id': '5ab699f15ee07b115a50aab0'
         }
 
         response = self.app.post('/movie/1234/delete-review/', data=json.dumps(data))

@@ -86,7 +86,6 @@ def user_details():
 def get_movies():
     """get a list of movies from the db"""
 
-    #TODO: add pagination
     results = Movie.get_movies(10)
     return make_response(dumps(results), 200)
 
@@ -101,7 +100,6 @@ def get_movie_details(movie_id):
 @APP.route('/movie/<int:movie_id>/review/', methods=['POST'])
 def review_movie(movie_id):
     """rate a movie from 1-5 stars (add more later)"""
-    #TODO: handle update
 
     new_review = Review()
     data = json.loads(request.data)
@@ -112,9 +110,19 @@ def review_movie(movie_id):
     new_review.tmdb_id = movie_id
     new_review.user_email = data.get('user_email')
     new_review.rating = data.get('rating')
+    new_review.description = data.get('description')
 
     results, response_code = new_review.create()
     return make_response(dumps(results), response_code)
+
+@APP.route('/movie/<int:movie_id>/get-reviews/', methods=['GET'])
+def get_movie_reviews(movie_id):
+    """
+    Get all Spoiled Tomatillos reviews for a movie
+    """
+
+    reviews, response_code = Review.get_all(movie_id)
+    return make_response(dumps(reviews), response_code)
 
 @APP.route('/movie/<int:movie_id>/rating/', methods=['GET'])
 def get_movie_avg_rating(movie_id):
@@ -122,7 +130,6 @@ def get_movie_avg_rating(movie_id):
 
     results, response_code = Movie.get_average_rating(movie_id)
     return make_response(results, response_code)
-
 
 @APP.route('/user/search/', methods=['GET'])
 def search_user():

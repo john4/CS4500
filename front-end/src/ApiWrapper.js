@@ -55,7 +55,16 @@ export const ApiWrapper = (() => {
         console.log(`delete review ${reviewId}`);
       },
       searchUser: function (query) {
-        return axios.get(`${API_ENDPOINT}/user/${query}/`);
+        return axios.get(`${API_ENDPOINT}/user/search/?name=${query}`);
+      },
+      followUser: function (userId) {
+        return axios.post(
+          `${API_ENDPOINT}/user/follow/`,
+          {
+            user_id: userId,
+            session_id: localStorage.getItem("spoiledUserEmail"),
+          }
+        );
       },
     };
 

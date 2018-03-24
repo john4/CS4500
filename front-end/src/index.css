@@ -4,3 +4,11 @@ body {
   font-family: sans-serif;
   background-color: #ebebd4;
 }
+
+a {
+  color: #1446a0;
+}
+
+a:hover {
+  color: #1446a0;
+}

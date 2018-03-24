@@ -1,10 +1,11 @@
+import random
+import string
 from bson.json_util import dumps
 from bson.objectid import ObjectId
 from flask import json
 from werkzeug.security import check_password_hash, generate_password_hash
 from app import DB
-import random
-import string
+
 
 
 class User(object):
@@ -64,6 +65,9 @@ class User(object):
 
     @staticmethod
     def get_user_data_from_session(session_id):
+        """
+        Gets the user data from the session id
+        """
         session = DB.Session.find_one({'session_id': session_id})
 
         if session:
@@ -155,23 +159,22 @@ class User(object):
         """
 
         current_user, status = User.get_user_data_from_session(session_id)
-        
+
         user_exists = DB.User.find_one({"_id": ObjectId(oid.get('$oid'))})
         if not user_exists:
             return {"error": "A user with that id does not exist"}, 400
 
-        existing_follower = DB.User.find_one({"_id": current_user.get('_id'), "iFollow": ObjectId(oid.get('$oid'))})
+        existing_follower = DB.User.find_one(
+            {"_id": current_user.get('_id'), "iFollow": ObjectId(oid.get('$oid'))})
         if existing_follower:
             return {"error": "You are already following this user"}, 400
 
         DB.User.update({'_id': current_user.get('_id')},
-        {'$addToSet': 
-            {'iFollow': ObjectId(oid.get('$oid'))}})
-        
+                       {'$addToSet': {'iFollow': ObjectId(oid.get('$oid'))}})
+
         DB.User.update({'_id': ObjectId(oid.get('$oid'))},
-        {'$addToSet': 
-            {'followMe': current_user.get('_id')}})
-        
+                       {'$addToSet':{'followMe': current_user.get('_id')}})
+
         response = {"success": "user " + current_user.get('email') + " is following the user"}
         return response, 200
 
@@ -182,7 +185,7 @@ class User(object):
         """
 
         current_user, status = User.get_user_data_from_session(session_id)
-        
+
         user_exists = DB.User.find_one({"_id": ObjectId(oid.get('$oid'))})
         if not user_exists:
             return {"error": "A user with that id does not exist"}, 400
@@ -192,13 +195,11 @@ class User(object):
             return {"error": "You are not following this user"}, 400
 
         DB.User.update({'_id': current_user.get('_id')},
-        {'$pull': 
-            {'iFollow': ObjectId(oid.get('$oid'))}})
-        
+                       {'$pull': {'iFollow': ObjectId(oid.get('$oid'))}})
+
         DB.User.update({'_id': ObjectId(oid.get('$oid'))},
-        {'$pull': 
-            {'followMe': current_user.get('_id')}})
-        
+                       {'$pull': {'followMe': current_user.get('_id')}})
+
         response = {"success": "user " + current_user.get('email') + " is no longer following the user"}
         return response, 200
 
@@ -211,7 +212,6 @@ class User(object):
         session = DB.Session.find_one({'session_id': session_id})
 
         if session:
-            
             user_email = session.get('email')
             if user_email:
                 user = DB.User.find_one({'email': user_email})

@@ -6,6 +6,8 @@ virtualenv venv
 . venv/bin/activate
 pip install -r ./cs4500-spring2018-team42-flask/requirements.txt
 
+export FLASK_DEBUG=1
+
 # run tests and coverage report
 pip install pytest
 pip install pytest-cov

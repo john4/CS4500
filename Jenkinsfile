@@ -13,14 +13,22 @@ pipeline {
             }
          }
          steps {
-            echo  "Testing"
-	    sh './flask_tests.sh'
-	    step([
-		$class: 'CoberturaPublisher',
-	        coberturaReportFile: 'coverage.xml',
-	        failUnhealthy: true,
-	        failUnstable: true
-	    ])
+		docker.image('mongo:3.0-wheezy').withRun('-e "mongod"') { c ->
+		docker.image('python:3-alpine').inside("--link ${c.id}:db") {
+		    /*
+		     * Run some tests which require MySQL, and assume that it is
+		     * available on the host name `db`
+		     */
+		    echo  "Testing"
+		    sh './flask_tests.sh'
+		    step([
+			$class: 'CoberturaPublisher',
+			coberturaReportFile: 'coverage.xml',
+			failUnhealthy: true,
+			failUnstable: true
+		    ])
+		}
+	    }
          }
 	 post {
 	    always {

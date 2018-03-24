@@ -1,4 +1,5 @@
 from bson.json_util import dumps
+from bson.objectid import ObjectId
 from flask import json
 from werkzeug.security import check_password_hash, generate_password_hash
 from app import DB
@@ -130,3 +131,92 @@ class User(object):
 
         response = {"success": "user " + email + " has been deleted"}
         return response, 200
+
+
+    @staticmethod
+    def find_all_user_with_name(name):
+        """
+        Finds all users with a name string that contains the input string
+        """
+
+        user_data = DB.User.find({"name": {'$regex': name}}, projection={'name':True, 'genre':True})
+        user_data_list = list(user_data)
+
+        if not user_data_list:
+            return {"error": "no user with this name exists"}, 400
+
+        return user_data_list, 200
+
+
+    @staticmethod
+    def follow_user_with_id(session_id, oid):
+        """
+        Follow another user and update that users followMe with caller
+        """
+
+        current_user, status = User.get_user_data_from_session(session_id)
+        
+        user_exists = DB.User.find_one({"_id": ObjectId(oid.get('$oid'))})
+        if not user_exists:
+            return {"error": "A user with that id does not exist"}, 400
+
+        existing_follower = DB.User.find_one({"_id": current_user.get('_id'), "iFollow": ObjectId(oid.get('$oid'))})
+        if existing_follower:
+            return {"error": "You are already following this user"}, 400
+
+        DB.User.update({'_id': current_user.get('_id')},
+        {'$addToSet': 
+            {'iFollow': ObjectId(oid.get('$oid'))}})
+        
+        DB.User.update({'_id': ObjectId(oid.get('$oid'))},
+        {'$addToSet': 
+            {'followMe': current_user.get('_id')}})
+        
+        response = {"success": "user " + current_user.get('email') + " is following the user"}
+        return response, 200
+
+    @staticmethod
+    def unfollow_user_with_id(session_id, oid):
+        """
+        UnFollow another user and update that users followMe to remove caller
+        """
+
+        current_user, status = User.get_user_data_from_session(session_id)
+        
+        user_exists = DB.User.find_one({"_id": ObjectId(oid.get('$oid'))})
+        if not user_exists:
+            return {"error": "A user with that id does not exist"}, 400
+
+        existing_follower = DB.User.find_one({"_id": current_user.get('_id'), "iFollow": ObjectId(oid.get('$oid'))})
+        if not existing_follower:
+            return {"error": "You are not following this user"}, 400
+
+        DB.User.update({'_id': current_user.get('_id')},
+        {'$pull': 
+            {'iFollow': ObjectId(oid.get('$oid'))}})
+        
+        DB.User.update({'_id': ObjectId(oid.get('$oid'))},
+        {'$pull': 
+            {'followMe': current_user.get('_id')}})
+        
+        response = {"success": "user " + current_user.get('email') + " is no longer following the user"}
+        return response, 200
+
+    @staticmethod
+    def get_users_followers(session_id, oid):
+        """
+        Gets the iFollow of the given id
+        """
+
+        session = DB.Session.find_one({'session_id': session_id})
+
+        if session:
+            
+            user_email = session.get('email')
+            if user_email:
+                user = DB.User.find_one({'email': user_email})
+
+                if user:
+                    return user, 200
+            return {'error': 'user not found'}, 400
+        return {'error': 'session not found'}, 400

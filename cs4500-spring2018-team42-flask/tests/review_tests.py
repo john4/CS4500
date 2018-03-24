@@ -166,6 +166,44 @@ class MovieReviewTest(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(data), 0)
 
+    def test_delete_review(self):
+        data = {
+            'user_email': 'notarealemail@notarealplace.com',
+            'rating': 5,
+            'session_id': 'abcdefghijklmnopqrstuvwyzabcdef',
+            'description': 'this movie sucked'
+        }
+
+        response = self.app.post('/movie/1234/review/', data=json.dumps(data))
+        self.assertEqual(response.status_code, 200)
+
+        response = self.app.get('/movie/1234/get-reviews/')
+        data = json.loads(response.get_data(as_text=True))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(data), 1)
+
+        review_id = data[0].get('_id').get('$oid')
+
+        data = {
+            'session_id': 'abcdefghijklmnopqrstuvwyzabcdef',
+            'review_id': review_id
+        }
+
+        response = self.app.post('/movie/1234/delete-review/', data=json.dumps(data))
+        data = json.loads(response.get_data(as_text=True))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(review_id, data.get('review_data').get('_id').get('$oid'))
+
+    def test_delete_review_does_not_exist(self):
+        data = {
+            'session_id': 'abcdefghijklmnopqrstuvwyzabcdef',
+            'review_id': 'notareview'
+        }
+
+        response = self.app.post('/movie/1234/delete-review/', data=json.dumps(data))
+        data = json.loads(response.get_data(as_text=True))
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(data.get('error'), 'review does not exist')
 
 if __name__ == "__main__":
     unittest.main()

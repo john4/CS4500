@@ -63,7 +63,7 @@ class Details extends Component {
 		}
 
 		return reviews.map(review => {
-			return <Review { ...review } onDelete={ ApiWrapper().api().deleteReview } />;
+			return <Review { ...review } movieId={this.props.match.params.tmdbid} onDelete={ ApiWrapper().api().deleteReview } />;
 		});
 	}
 

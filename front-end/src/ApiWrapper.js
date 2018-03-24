@@ -54,6 +54,9 @@ export const ApiWrapper = (() => {
         // TODO: hookup back end
         console.log(`delete review ${reviewId}`);
       },
+      searchUser: function (query) {
+        return axios.get(`${API_ENDPOINT}/user/${query}/`);
+      },
     };
 
   };

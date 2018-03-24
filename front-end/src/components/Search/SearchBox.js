@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './SearchBox.css';
 
 
 class SearchBox extends Component {
@@ -15,10 +16,12 @@ class SearchBox extends Component {
   
     render() {
       return (
-          <div>
-              <input type="text" ref="query" />
-              <input type="submit" onClick={this.createAjax} />
-          </div>
+        <div className="SearchBox input-group">
+            <input className="form-control" type="text" ref="query" placeholder="Batman..."/>
+            <span class="input-group-append">
+              <button className="btn btn-secondary" type="button" onClick={this.createAjax} value="Search">Search</button>
+            </span>
+        </div>
       );
     }
   }

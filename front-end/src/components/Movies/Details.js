@@ -1,53 +1,79 @@
 import React, { Component } from 'react';
-import Results from '../Search/Results';
+import DetailResults from './DetailResults.js'
+import WriteReview from '../Review/WriteReview.js';
+import Review from '../Review/Review.js';
 import axios from 'axios';
-
+import { ApiWrapper } from '../../ApiWrapper';
 
 
 class Details extends Component {
-	
+
 	constructor(props) {
 		super(props);
-		this.state = {
-			results: []
-		}
-		
-		this.getDetails = this.getDetails.bind(this);
-		this.showResults = this.showResults.bind(this);
-		
-		this.getInitialMovies();
+		this.state = {};
+		this.URL      = 'http://ec2-54-87-191-69.compute-1.amazonaws.com:5000/movie/' + this.props.match.params.tmdbid + '/detail/';
 	}
-	
-	getInitialMovies() {
-		var URL = 'http://ec2-54-87-191-69.compute-1.amazonaws.com:5000/movies/10'
-		this.getDetails(URL);
+
+	componentWillMount() {
+		this.getDetails(this.URL);
+    this.getAverageRating();
+		this.getReviews();
 	}
-	
-	showResults(response) {
-		this.setState({
-			results: response
-		})
-	}
-	
-	
+
 	getDetails(URL) {
 		axios.get(URL)
 		.then( res => {
 			const response = res.data;
-			this.showResults(response);
+			this.setState({ ...response });
+		});
+	}
+
+	getAverageRating() {
+		ApiWrapper().api().getAverageMovieRating(this.props.match.params.tmdbid).then(res => {
+			this.setState({
+				averageRating: res.data.avg_rating
+			});
+		});
+	}
+
+	getReviews() {
+		const { userEmail } = ApiWrapper().api().getSession();
+
+		ApiWrapper().api().getReviews(this.props.match.params.tmdbid).then(res => {
+			this.setState({
+				reviews: res.data.map(review => {
+					return {
+						description: review.description,
+						rating: review.rating,
+						tmdbId: review.tmdb_id,
+						reviewId: review._id.$oid,
+						userEmail: review.user_email,
+						isUsersReview: userEmail == review.user_email,
+					};
+				})
+			});
 		})
 	}
-	
+
+	renderReviews() {
+		const { reviews } = this.state;
+
+		if (!reviews) {
+			return null;
+		}
+
+		return reviews.map(review => {
+			return <Review { ...review } onDelete={ ApiWrapper().api().deleteReview } />;
+		});
+	}
+
 	render() {
-		
+
 		return (
 			<div>
-				<p>
-					This is a list of loaded data
-				</p>
-				<ul>
-					{JSON.stringify(this.state.results)}
-				</ul>
+				<DetailResults {...this.state}/>
+				<WriteReview movieId={this.state.id}/>
+				{this.renderReviews()}
 			</div>
 		);
 	}

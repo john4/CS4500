@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+import { ApiWrapper } from '../../ApiWrapper';
 
 
 class Register extends Component {
@@ -27,8 +27,6 @@ class Register extends Component {
     }
 
     submit(e) {
-        var url = 'http://ec2-54-87-191-69.compute-1.amazonaws.com:5000/user/register/';
-
         var data = {
             'name': this.state.name,
             'email': this.state.email,
@@ -37,12 +35,12 @@ class Register extends Component {
             'genre': this.state.genre
         }
 
-        axios.post(url, data)
+        ApiWrapper().api().post('/user/register/', data)
         .then(res => {
             window.location = "/login";
         })
         .catch(err => {
-            this.setState({error: String(err)});
+            this.setState({error: "Error: " + err.response.data.error});
         });
 
         e.preventDefault();

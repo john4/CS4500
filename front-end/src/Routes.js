@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Route } from 'react-router-dom';
 import React, { Component } from 'react';
 
 import App from './App';
-import Search from './components/Search/Search';
+import MovieSearch from './components/MovieSearch/MovieSearch';
 import Register from './components/User/Register';
 import Details from './components/Movies/Details';
 import Login from './components/Login';
@@ -18,7 +18,7 @@ class Routes extends Component {
           <Route exact path="/login/" component={Login} />
           <Route exact path="/logout/" component={Logout} />
           <Route exact path="/register/" component={Register} />
-          <Route exact path="/search/" component={Search} />
+          <Route exact path="/search/" component={MovieSearch} />
           <Route exact path="/movie/:tmdbid/detail/" component={Details} />
         </div>
       </Router>

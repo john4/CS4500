@@ -1,7 +1,7 @@
 """ REVIEWS """
 
 from app import DB
-
+from bson.objectid import ObjectId
 
 class Review(object):
     """
@@ -29,6 +29,24 @@ class Review(object):
 
         DB.Review.insert_one(self.__dict__)
         return self.__dict__, 200
+
+    @staticmethod
+    def delete(review_id):
+        """
+        Delete a movie review from the database
+        """
+
+        review_data = DB.Review.find_one_and_delete({'_id': ObjectId(review_id)})
+
+        if not review_data:
+            return {'error': 'review does not exist'}, 400
+
+        response = {
+            'success': 'review has been deleted',
+            'review_data': review_data
+        }
+
+        return response, 200
 
     @staticmethod
     def get_all(movie_id):

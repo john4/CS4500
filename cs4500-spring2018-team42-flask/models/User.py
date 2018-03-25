@@ -53,11 +53,12 @@ class User(object):
             return {"error": "passwords do not match"}, 400
 
         session_id = ''.join(random.SystemRandom().choice(string.ascii_uppercase + string.digits) for _ in range(32))
+        existing_user['password'] = '[REDACTED]'
 
         return_data = {
-            "success": "user {email} password verified".format(email=email),
-            "email": email,
-            "session_id": session_id
+            'success': 'user {email} password verified'.format(email=email),
+            'session_id': session_id,
+            'user_data': existing_user
         }
 
         User.add_session(session_id, email)

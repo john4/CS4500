@@ -115,6 +115,23 @@ def review_movie(movie_id):
     results, response_code = new_review.create()
     return make_response(dumps(results), response_code)
 
+@APP.route('/movie/<int:movie_id>/delete-review/', methods=['POST'])
+def delete_movie_reviews(movie_id):
+    """
+    Delete a review from a movie, given the review id
+    """
+
+    data = json.loads(request.data)
+    review_id = data.get('review_id')
+    session_id = data.get('session_id')
+
+    if not (data.get('session_id') and User.check_session(data.get('session_id'))):
+        return make_response(dumps({'error': 'must be logged in to delete review'}), 400)
+
+    results, response_code = Review.delete(review_id)
+    return make_response(dumps(results), response_code)
+
+
 @APP.route('/movie/<int:movie_id>/get-reviews/', methods=['GET'])
 def get_movie_reviews(movie_id):
     """

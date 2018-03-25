@@ -20,7 +20,7 @@ pipeline {
 	        coberturaReportFile: 'coverage.xml',
 		methodCoverageTargets: '100, 100, 50',
 		lineCoverageTargets: '100, 100, 50',
-		conditionalCoverageTargets: '100, 100, 50',
+		conditionalCoverageTargets: '85, 85, 50',
 	        failUnhealthy: true,
 	        failUnstable: true
 	    ])

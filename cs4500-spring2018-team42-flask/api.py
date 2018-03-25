@@ -3,7 +3,7 @@
 from flask import json, make_response, request, jsonify
 from bson.json_util import dumps
 from app import APP
-from models import Movie, User, Review
+from models import Movie, User, Review, Prod
 
 
 @APP.route('/')
@@ -104,7 +104,7 @@ def review_movie(movie_id):
     new_review = Review()
     data = json.loads(request.data)
 
-    if not (data.get('session_id') and User.check_session(data.get('session_id'))):
+    if not User.check_session(data.get('session_id')):
         return make_response(dumps({'error': 'must be logged in to review'}), 400)
 
     new_review.tmdb_id = movie_id
@@ -147,11 +147,11 @@ def follow():
 
     data = json.loads(request.data)
 
-    if not (data.get('session_id') and User.check_session(data.get('session_id'))):
+    if User.check_session(data.get('session_id')):
         return make_response(dumps({'error': 'must be logged in to follow'}), 400)
 
     results, response_code = User.follow_user_with_id(data.get('session_id'), data.get('oid'))
-    
+
     return make_response(dumps(results), response_code)
 
 @APP.route('/user/unfollow/', methods=['POST'])
@@ -160,9 +160,59 @@ def unfollow():
 
     data = json.loads(request.data)
 
-    if not (data.get('session_id') and User.check_session(data.get('session_id'))):
+    if not User.check_session(data.get('session_id')):
         return make_response(dumps({'error': 'must be logged in to unfollow'}), 400)
 
     results, response_code = User.unfollow_user_with_id(data.get('session_id'), data.get('oid'))
-    
+
+    return make_response(dumps(results), response_code)
+
+@APP.route('/user/prod/', methods=['POST'])
+def prod_users():
+    """
+    Send users prods (movie recommendations)
+    Return data contains a dict from receiver id to result
+    """
+
+    data = json.loads(request.data)
+
+    if not User.check_session(data.get('session_id')):
+        return make_response(dumps({'error': 'must be logged in to prod'}), 400)
+
+    receivers = data.get('receivers')
+    sender = data.get('sender')
+    tmdb_id = data.get('tmdb_id')
+    message = data.get('message')
+
+    if not receivers or not sender or not tmdb_id:
+        return make_response(dumps({'error': 'sender, receiver, and tmdb id required for prod'}), 400)
+
+    results = {}
+    for recv in receivers:
+        new_prod = Prod(sender, recv, tmdb_id, message)
+        result, rc = new_prod.create()
+        results[recv] = result
+
+    return make_response(dumps(results), 200)
+
+@APP.route('/user/prod/mark-read/', methods=['POST'])
+def prod_mark_read():
+    """
+    Marks prods as read in the database
+    """
+
+    data = json.loads(request.data)
+    prod_id = data.get('prod_id')
+    result, response_code = Prod.mark_read(prod_id)
+    return make_response(dumps(result), response_code)
+
+@APP.route('/user/prod/get-all/', methods=['POST'])
+def prod_get_all():
+    """
+    Gets all prods for a user
+    """
+
+    data = json.loads(request.data)
+    user_id = data.get('user_id')
+    results, response_code = Prod.get_all_for_user(user_id)
     return make_response(dumps(results), response_code)

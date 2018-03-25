@@ -16,7 +16,8 @@ class User(object):
         self.email = None
         self.password = None
         self.age = None
-        self.genre = []
+        self.genre = None
+        self.photo_url = None
 
     def register(self):
         """
@@ -24,7 +25,7 @@ class User(object):
         Returns some json info on success or error and boolean for success
         """
 
-        if not self.name or not self.email or not self.password or not self.age:
+        if not self.name or not self.email or not self.password or not self.age or not self.genre:
             return json.jsonify({"error": "missing required fields"}), 400
 
         user_exists = DB.User.find_one({"email": self.email})

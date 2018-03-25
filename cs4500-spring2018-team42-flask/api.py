@@ -115,6 +115,23 @@ def review_movie(movie_id):
     results, response_code = new_review.create()
     return make_response(dumps(results), response_code)
 
+@APP.route('/movie/<int:movie_id>/delete-review/', methods=['POST'])
+def delete_movie_reviews(movie_id):
+    """
+    Delete a review from a movie, given the review id
+    """
+
+    data = json.loads(request.data)
+    review_id = data.get('review_id')
+    session_id = data.get('session_id')
+
+    if not (data.get('session_id') and User.check_session(data.get('session_id'))):
+        return make_response(dumps({'error': 'must be logged in to delete review'}), 400)
+
+    results, response_code = Review.delete(review_id)
+    return make_response(dumps(results), response_code)
+
+
 @APP.route('/movie/<int:movie_id>/get-reviews/', methods=['GET'])
 def get_movie_reviews(movie_id):
     """
@@ -130,3 +147,39 @@ def get_movie_avg_rating(movie_id):
 
     results, response_code = Movie.get_average_rating(movie_id)
     return make_response(results, response_code)
+
+@APP.route('/user/search/', methods=['GET'])
+def search_user():
+    """searches for a user with a name containing the given string"""
+
+    name = request.args.get('name')
+
+    results, response_code = User.find_all_user_with_name(name)
+
+    return make_response(dumps(results), response_code)
+
+@APP.route('/user/follow/', methods=['POST'])
+def follow():
+    """follows a user with the given id"""
+
+    data = json.loads(request.data)
+
+    if not (data.get('session_id') and User.check_session(data.get('session_id'))):
+        return make_response(dumps({'error': 'must be logged in to follow'}), 400)
+
+    results, response_code = User.follow_user_with_id(data.get('session_id'), data.get('oid'))
+    
+    return make_response(dumps(results), response_code)
+
+@APP.route('/user/unfollow/', methods=['POST'])
+def unfollow():
+    """unfollows a user with the given id"""
+
+    data = json.loads(request.data)
+
+    if not (data.get('session_id') and User.check_session(data.get('session_id'))):
+        return make_response(dumps({'error': 'must be logged in to unfollow'}), 400)
+
+    results, response_code = User.unfollow_user_with_id(data.get('session_id'), data.get('oid'))
+    
+    return make_response(dumps(results), response_code)

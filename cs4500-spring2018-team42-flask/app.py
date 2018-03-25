@@ -9,12 +9,12 @@ from pymongo import MongoClient
 APP = Flask(__name__)
 CORS(APP)
 
-CLIENT = MongoClient('mongodb://%s:%s@ec2-54-197-196-20.compute-1.amazonaws.com' \
-                     % ('admin', 'team42root'))
-
 if not APP.config['TESTING'] and not APP.config['DEBUG']:
+    CLIENT = MongoClient('mongodb://%s:%s@ec2-54-197-196-20.compute-1.amazonaws.com' \
+                     % ('admin', 'team42root'))
     DB = CLIENT.SpoiledTomatillos
 else:
+    CLIENT = MongoClient('mongodb://localhost:27017')
     DB = CLIENT.SpoiledTomatillosTest
 
 import api

@@ -7,7 +7,7 @@ virtualenv venv
 pip install -r ./cs4500-spring2018-team42-flask/requirements.txt
 
 # run test database
-mongod &
+mongod --smallfiles &
 
 # use test database
 export FLASK_DEBUG=1

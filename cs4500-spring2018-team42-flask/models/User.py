@@ -149,7 +149,7 @@ class User(object):
         Finds all users with a name string that contains the input string
         """
 
-        user_data = DB.User.find({"name": {'$regex': name}}, projection={'name':True, 'genre':True})
+        user_data = DB.User.find({"name": {'$regex': name}}, projection={'password':False})
         user_data_list = list(user_data)
 
         if not user_data_list:

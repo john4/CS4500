@@ -87,6 +87,10 @@ class User(object):
         """
         Check to see if a session is valid
         """
+
+        if not session_id:
+            return False
+
         existing_session = DB.Session.find_one({'session_id': session_id})
         return bool(existing_session)
 

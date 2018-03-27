@@ -56,11 +56,3 @@ class Review(object):
 
         reviews = DB.Review.find({'tmdb_id': movie_id})
         return reviews, 200
-
-    # if existing_rating:
-    #     DB.Review.update_one(
-    #         {"user_email": user_email, "tmdb_id": movie_id},
-    #         {"$set": {
-    #                 "rating": rating
-    #             }
-    #         })

@@ -83,6 +83,7 @@ class Register extends Component {
                             <option value="Comedy">Comedy</option>
                             <option value="Documentary">Documentary</option>
                             <option value="Horror">Horror</option>
+                            <option value="Science Fiction">Science Fiction</option>
                             <option value="Western">Western</option>
                         </select>
                     </div>

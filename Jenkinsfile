@@ -18,9 +18,8 @@ pipeline {
 	    step([
 		$class: 'CoberturaPublisher',
 	        coberturaReportFile: 'coverage.xml',
-		methodCoverageTargets: '100, 100, 50',
-		lineCoverageTargets: '100, 100, 50',
-		conditionalCoverageTargets: '85, 85, 50',
+		lineCoverageTargets: '85, 85, 50',
+		conditionalCoverageTargets: '75, 75, 50',
 	        failUnhealthy: true,
 	        failUnstable: true
 	    ])

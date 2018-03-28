@@ -48,7 +48,16 @@ class Register extends Component {
         e.preventDefault();
     }
 
+    renderOptions() {
+        var opts = []
+        for (var genre in GENRES) {
+            opts.push(<option value={genre} >{genre}</option>)
+        }
+        return opts
+    }
+
     render() {
+        
         return (
             <div>
                 <h3>{this.state.error}</h3>

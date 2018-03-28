@@ -17,9 +17,9 @@ pip install pytest
 pip install pytest-cov
 pytest ./cs4500-spring2018-team42-flask/tests/* --verbose --cov=models --cov-report term-missing --cov-report xml --cov-branch --junit-xml results.xml
 
-if [ $? != 0 ] 
-then
-	exit 1
-fi
+code=$?
+
 # stop test database
 pkill mongod
+
+exit $code

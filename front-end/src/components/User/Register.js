@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { ApiWrapper } from '../../ApiWrapper';
+import GENRES from '../../Genres'
 
 
 class Register extends Component {
@@ -16,6 +17,7 @@ class Register extends Component {
         }
 
         this.submit = this.submit.bind(this);
+        this.renderOptions = this.renderOptions.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
       }
 
@@ -46,7 +48,16 @@ class Register extends Component {
         e.preventDefault();
     }
 
+    renderOptions() {
+        var opts = []
+        for (var genre in GENRES) {
+            opts.push(<option value={genre} >{genre}</option>)
+        }
+        return opts
+    }
+
     render() {
+        
         return (
             <div>
                 <h3>{this.state.error}</h3>
@@ -79,12 +90,7 @@ class Register extends Component {
                         <label>Favorite Genre</label>
                         <select name="genre" value={this.state.genre} onChange={this.handleInputChange} required>
                             <option value="" disabled>Choose your favorite Genre</option>
-                            <option value="Action">Action</option>
-                            <option value="Comedy">Comedy</option>
-                            <option value="Documentary">Documentary</option>
-                            <option value="Horror">Horror</option>
-                            <option value="Science Fiction">Science Fiction</option>
-                            <option value="Western">Western</option>
+                            {this.renderOptions()}
                         </select>
                     </div>
 

@@ -20,6 +20,7 @@ class NavBar extends Component {
           <div className="col navbar">
             <a href="/search">Search</a>
             <a href="/logout">Logout</a>
+            <a href="/playlist/genre"> Playlist</a>
           </div>
           <div className="col text-right">
             <AccountNav />

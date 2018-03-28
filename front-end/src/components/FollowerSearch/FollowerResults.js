@@ -4,7 +4,15 @@ import FollowerResultItem from './FollowerResultItem';
 
 class FollowerResults extends Component {
   render() {
-    return null;
+    const { searchResults } = this.props;
+
+    return (
+      <ul>
+        {searchResults.map(result => {
+          return <FollowerResultItem { ...result } onClickFollow={this.handleFollow} />;
+        })}
+      </ul>
+    );
   }
 }
 

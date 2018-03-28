@@ -12,23 +12,24 @@ class FollowerSearch extends Component {
       results: []
     };
     this.search = this.search.bind(this);
+    this.receiveResults = this.receiveResults.bind(this);
   }
 
   search(query) {
-    // ApiWrapper().api().searchUser(query).then(this.receiveResults);
-    this.setState({ results: [
-      {
-
-      },
-      {
-
-      }
-    ]});
+    ApiWrapper().api().searchUser(query).then(this.receiveResults);
   }
 
   receiveResults(res) {
-    debugger;
-    const results = res.data.results;
+    const results = res.data.map(user => {
+      return {
+        age: user.age,
+        email: user.email,
+        genre: user.genre,
+        name: user.name,
+        photoUrl: user.photo_url || "https://sites.google.com/a/windermereprep.com/canvas/_/rsrc/1486400406169/home/unknown-user/user-icon.png",
+        userId: user._id.$oid
+      };
+    });
     this.setState({results});
   }
 

@@ -3,7 +3,7 @@
 from flask import json, make_response, request, jsonify
 from bson.json_util import dumps
 from app import APP
-from models import Movie, User, Review
+from models import Movie, User, Review, Prod
 
 
 @APP.route('/')
@@ -104,7 +104,7 @@ def review_movie(movie_id):
     new_review = Review()
     data = json.loads(request.data)
 
-    if not (data.get('session_id') and User.check_session(data.get('session_id'))):
+    if not User.check_session(data.get('session_id')):
         return make_response(dumps({'error': 'must be logged in to review'}), 400)
 
     new_review.tmdb_id = movie_id
@@ -114,6 +114,23 @@ def review_movie(movie_id):
 
     results, response_code = new_review.create()
     return make_response(dumps(results), response_code)
+
+@APP.route('/movie/<int:movie_id>/delete-review/', methods=['POST'])
+def delete_movie_reviews(movie_id):
+    """
+    Delete a review from a movie, given the review id
+    """
+
+    data = json.loads(request.data)
+    review_id = data.get('review_id')
+    session_id = data.get('session_id')
+
+    if not (data.get('session_id') and User.check_session(data.get('session_id'))):
+        return make_response(dumps({'error': 'must be logged in to delete review'}), 400)
+
+    results, response_code = Review.delete(review_id)
+    return make_response(dumps(results), response_code)
+
 
 @APP.route('/movie/<int:movie_id>/get-reviews/', methods=['GET'])
 def get_movie_reviews(movie_id):
@@ -130,3 +147,89 @@ def get_movie_avg_rating(movie_id):
 
     results, response_code = Movie.get_average_rating(movie_id)
     return make_response(results, response_code)
+
+@APP.route('/user/search/', methods=['GET'])
+def search_user():
+    """searches for a user with a name containing the given string"""
+
+    name = request.args.get('name')
+
+    results, response_code = User.find_all_user_with_name(name)
+
+    return make_response(dumps(results), response_code)
+
+@APP.route('/user/follow/', methods=['POST'])
+def follow():
+    """follows a user with the given id"""
+
+    data = json.loads(request.data)
+
+    if not User.check_session(data.get('session_id')):
+        return make_response(dumps({'error': 'must be logged in to follow'}), 400)
+
+    results, response_code = User.follow_user_with_id(data.get('session_id'), data.get('oid'))
+
+    return make_response(dumps(results), response_code)
+
+@APP.route('/user/unfollow/', methods=['POST'])
+def unfollow():
+    """unfollows a user with the given id"""
+
+    data = json.loads(request.data)
+
+    if not User.check_session(data.get('session_id')):
+        return make_response(dumps({'error': 'must be logged in to unfollow'}), 400)
+
+    results, response_code = User.unfollow_user_with_id(data.get('session_id'), data.get('oid'))
+
+    return make_response(dumps(results), response_code)
+
+@APP.route('/user/prod/', methods=['POST'])
+def prod_users():
+    """
+    Send users prods (movie recommendations)
+    Return data contains a dict from receiver id to result
+    """
+
+    data = json.loads(request.data)
+
+    if not User.check_session(data.get('session_id')):
+        return make_response(dumps({'error': 'must be logged in to prod'}), 400)
+
+    receivers = data.get('receivers')
+    sender = data.get('sender')
+    tmdb_id = data.get('tmdb_id')
+    message = data.get('message')
+
+    if not receivers or not sender or not tmdb_id:
+        return make_response(dumps({'error': 'sender, receiver, and tmdb id required for prod'}), 400)
+
+    results = {}
+    for recv in receivers:
+        new_prod = Prod(sender, recv, tmdb_id, message)
+        result, rc = new_prod.create()
+        results[recv] = result
+
+    return make_response(dumps(results), 200)
+
+@APP.route('/user/prod/mark-read/', methods=['POST'])
+def prod_mark_read():
+    """
+    Marks prods as read in the database
+    """
+
+    data = json.loads(request.data)
+    prod_id = data.get('prod_id')
+    result, response_code = Prod.mark_read(prod_id)
+    return make_response(dumps(result), response_code)
+
+@APP.route('/user/prod/get-all/', methods=['POST'])
+def prod_get_all():
+    """
+    Gets all prods for a user
+    """
+
+    data = json.loads(request.data)
+    user_id = data.get('user_id')
+    results, response_code = Prod.get_all_for_user(user_id)
+    return make_response(dumps(results), response_code)

@@ -1,8 +1,7 @@
 """ REVIEWS """
 
-
 from app import DB
-
+from bson.objectid import ObjectId
 
 class Review(object):
     """
@@ -32,6 +31,24 @@ class Review(object):
         return self.__dict__, 200
 
     @staticmethod
+    def delete(review_id):
+        """
+        Delete a movie review from the database
+        """
+
+        review_data = DB.Review.find_one_and_delete({'_id': ObjectId(review_id)})
+
+        if not review_data:
+            return {'error': 'review does not exist'}, 400
+
+        response = {
+            'success': 'review has been deleted',
+            'review_data': review_data
+        }
+
+        return response, 200
+
+    @staticmethod
     def get_all(movie_id):
         """
         Get all Spoiled Tomatillos reviews for movie with id movie_id
@@ -39,11 +56,3 @@ class Review(object):
 
         reviews = DB.Review.find({'tmdb_id': movie_id})
         return reviews, 200
-
-    # if existing_rating:
-    #     DB.Review.update_one(
-    #         {"user_email": user_email, "tmdb_id": movie_id},
-    #         {"$set": {
-    #                 "rating": rating
-    #             }
-    #         })

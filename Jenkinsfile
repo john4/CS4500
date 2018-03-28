@@ -9,15 +9,17 @@ pipeline {
       stage ( 'Test Back End' ) {
 	 agent {
             docker {
-              image 'python:3-alpine'
+              image 'losoak/python3-mongodb'
             }
          }
          steps {
             echo  "Testing"
-            sh  'pip install virtualenv && virtualenv venv && . venv/bin/activate && pip install -r ./cs4500-spring2018-team42-flask/requirements.txt && pip install pytest && pip install pytest-cov && pytest ./cs4500-spring2018-team42-flask/tests/* --verbose --cov=models --cov-report term-missing --cov-report xml --cov-branch --junit-xml results.xml'
+	    sh './flask_tests.sh'
 	    step([
 		$class: 'CoberturaPublisher',
 	        coberturaReportFile: 'coverage.xml',
+		lineCoverageTargets: '90, 90, 50',
+		conditionalCoverageTargets: '82, 82, 50',
 	        failUnhealthy: true,
 	        failUnstable: true
 	    ])

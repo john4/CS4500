@@ -164,7 +164,7 @@ def follow():
 
     data = json.loads(request.data)
 
-    if User.check_session(data.get('session_id')):
+    if not User.check_session(data.get('session_id')):
         return make_response(dumps({'error': 'must be logged in to follow'}), 400)
 
     results, response_code = User.follow_user_with_id(data.get('session_id'), data.get('oid'))

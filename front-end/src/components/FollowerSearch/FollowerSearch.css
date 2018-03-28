@@ -1,0 +1,22 @@
+.FollowerResultItem {
+  max-width: 540px;
+  margin: 0 auto 1rem auto;
+  padding: 0;
+  position: relative;
+  display: flex;
+}
+
+.FollowerResultItem-add {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  cursor: pointer;
+}
+
+.FollowerResultItem-image {
+  display: inline-flex;
+}
+
+.FollowerResultItem-body {
+  padding-left: 1rem
+}

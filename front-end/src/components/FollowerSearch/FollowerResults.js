@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
 import FollowerResultItem from './FollowerResultItem';
-// import './Results.css';
+import { ApiWrapper } from '../../ApiWrapper';
 
 class FollowerResults extends Component {
+  handleFollow(userId) {
+    ApiWrapper().api().followUser(userId);
+  }
+
   render() {
     const { searchResults } = this.props;
 

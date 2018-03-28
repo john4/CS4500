@@ -62,7 +62,7 @@ export const ApiWrapper = (() => {
           `${API_ENDPOINT}/user/follow/`,
           {
             user_id: userId,
-            session_id: localStorage.getItem("spoiledUserEmail"),
+            session_id: localStorage.getItem("spoiledSessionId"),
           }
         );
       },

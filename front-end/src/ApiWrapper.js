@@ -50,9 +50,13 @@ export const ApiWrapper = (() => {
       getReviews: function (movieId) {
         return axios.get(`${API_ENDPOINT}/movie/${movieId}/get-reviews/`);
       },
-      deleteReview: function (reviewId) {
-        // TODO: hookup back end
-        console.log(`delete review ${reviewId}`);
+      deleteReview: function (movieId, reviewId) {
+        return axios.post(`${API_ENDPOINT}/movie/${movieId}/delete-review/`,
+          {
+            review_id: reviewId,
+            session_id: localStorage.getItem("spoiledSessionId"),
+          }
+        );
       },
       searchUser: function (query) {
         return axios.get(`${API_ENDPOINT}/user/search/?name=${query}`);

@@ -3,14 +3,14 @@ import './Review.css';
 
 class Review extends Component {
   renderDelete() {
-    const { isUsersReview, onDelete, reviewId } = this.props;
+    const { isUsersReview, onDelete, movieId, reviewId } = this.props;
 
     if (!isUsersReview) {
       return null;
     }
 
     return (
-      <div className="Review-delete" onClick={() => onDelete(reviewId)}>
+      <div className="Review-delete" onClick={() => onDelete(movieId, reviewId)}>
         <i class="fas fa-times-circle"></i>
       </div>
     );

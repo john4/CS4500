@@ -54,31 +54,38 @@ class Register extends Component {
                     <div>
                         <label>Name</label>
                         <input type="text" placeholder="Jane Doe" name="name" value={this.state.name}
-                            onChange={this.handleInputChange} />
+                            onChange={this.handleInputChange} required/>
                     </div>
 
                     <div>
                         <label>Email</label>
                         <input type="email" placeholder="myemail@example.com" name="email" value={this.state.email}
-                            onChange={this.handleInputChange} />
+                            onChange={this.handleInputChange} required/>
                     </div>
 
                     <div>
                         <label>Age</label>
                         <input type="number" placeholder="18" name="age" value={this.state.age}
-                            onChange={this.handleInputChange}  />
+                            onChange={this.handleInputChange} required/>
                     </div>
 
                     <div>
                         <label>Password</label>
                         <input type="password" name="password" value={this.state.password}
-                            onChange={this.handleInputChange} />
+                            onChange={this.handleInputChange} required/>
                     </div>
 
                     <div>
                         <label>Favorite Genre</label>
-                        <input type="text" placeholder="Horror" name="genre" value={this.state.genre}
-                            onChange={this.handleInputChange} />
+                        <select name="genre" value={this.state.genre} onChange={this.handleInputChange} required>
+                            <option value="" disabled>Choose your favorite Genre</option>
+                            <option value="Action">Action</option>
+                            <option value="Comedy">Comedy</option>
+                            <option value="Documentary">Documentary</option>
+                            <option value="Horror">Horror</option>
+                            <option value="Science Fiction">Science Fiction</option>
+                            <option value="Western">Western</option>
+                        </select>
                     </div>
 
                     <div>

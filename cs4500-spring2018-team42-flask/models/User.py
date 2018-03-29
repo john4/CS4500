@@ -7,7 +7,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from app import DB
 
 
-
 class User(object):
     """represents a user on Spoiled Tomatillos"""
 
@@ -127,6 +126,25 @@ class User(object):
             'session_id': session_id,
             'email': email
         })
+		
+    @staticmethod
+    def update_user(name, age, photoUrl, genre, email):
+		"""
+		Update an existing user's details
+		"""
+		update_data = DB.User.find_one_and_update({"email": email}, {
+			'$set': {'name': name,
+					 'age': age,
+					 'photo_url': photoUrl,
+					 'genre': genre
+					}
+		})
+				
+		if not update_data:
+			return {"error": "no user found to update"}, 400
+		
+		response = {"success": "user " + email + " has been updated"}
+		return response, 200
 
     @staticmethod
     def delete_user(email):

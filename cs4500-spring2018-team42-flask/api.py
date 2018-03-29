@@ -33,6 +33,24 @@ def register_user():
     new_user, response_status = new_user.register()
 
     return make_response(new_user, response_status)
+	
+@APP.route('/user/update/', methods=['POST'])
+def update_user():
+	"""update a user record"""
+	data = json.loads(request.data)
+	name = data.get('name')
+	age = data.get('age')
+	photoUrl = data.get('photoUrl')
+	genre = data.get('genre')
+	email = data.get('email')
+	
+	if not email:
+		return make_response(dumps({"error": "email is required"}), 400)
+	
+	update_result, response_status = User.update_user(name, age, photoUrl, genre, email)
+	
+	return make_response(dumps(update_result), response_status)
+	
 
 @APP.route('/user/delete/', methods=['POST'])
 def delete_user():

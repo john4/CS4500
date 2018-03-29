@@ -23,7 +23,7 @@ class ProfileDetails extends Component {
 					<span> {this.props.details.age} </span>
 				</div>
 				<div className="row">
-					<span>Genre(s): </span>
+					<span>Genre: </span>
 					<span> {this.props.details.genre} </span>
 				</div>
 				

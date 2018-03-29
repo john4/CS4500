@@ -14,9 +14,11 @@ class ProfileDetailsEdit extends Component {
 	
 	render(){
 		const aValue = this.props.details
+		const whatDetail = this.props.what
 		
 		return (
 			<div className="row">
+				<span>{this.props.what}: </span>
 				<input type="text" placeholder={aValue} onChange={this.handleChange} />
 			</div>
 		)

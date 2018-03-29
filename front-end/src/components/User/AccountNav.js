@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { ApiWrapper } from '../../ApiWrapper';
 
-
 class Account extends Component {
   constructor(props) {
     super(props);
@@ -31,7 +30,8 @@ class Account extends Component {
   render() {
     var username = this.state.name;
     if (username) {
-      return (username);
+      return (
+	  <a href="/user/profile">{username}</a>);
     } else {
       return (
         <a href="/login">Log in</a>

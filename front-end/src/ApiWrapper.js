@@ -148,6 +148,19 @@ export const ApiWrapper = (() => {
           }
         );
       },
+      prodUser: function (movieId, targetUserId) {
+        const { sessionId, userId } = getSession();
+
+        return axios.post(`${API_ENDPOINT}/user/prod/`,
+          {
+            session_id: sessionId,
+            sender: userId,
+            tmdb_id: movieId,
+            receivers: [targetUserId],
+            message: "",
+          }
+        );
+      },
     }
   };
 

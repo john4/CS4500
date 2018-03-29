@@ -175,10 +175,10 @@ class UserTests(unittest.TestCase):
 	   
     def test_user_update_non_existing(self):
         user = self.generate_user('Test User', 'test@test.com')
-        self.app.post('/user/register/', json.dumps(user))
+        self.app.post('/user/register/', data=json.dumps(user))
         data = {'name': "fail the test", 'genre': "Action", 'email': 'test@test.com'}
         
-        response = self.app.post('/user/update/', json.dumps(data))
+        response = self.app.post('/user/update/', data=json.dumps(data))
         data = json.loads(response.get_data(as_text=True))
         self.assertEqual(response.status_code, 400)
         self.assertEqual(data.get('error'), 'no user found to update')

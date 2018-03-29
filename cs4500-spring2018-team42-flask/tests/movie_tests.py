@@ -25,7 +25,7 @@ class GetMovieTests(unittest.TestCase):
     # Tests ##################################
 
     def test_get_1_movie(self):
-        movie = new Movie()
+        movie = Movie()
 		movie.tmdb_id = "tmdb_id"
         movie.original_title = "Lion King"
         movie.popularity = "10"

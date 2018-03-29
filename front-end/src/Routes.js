@@ -7,6 +7,7 @@ import Register from './components/User/Register';
 import Details from './components/Movies/Details';
 import Login from './components/Login';
 import Logout from './components/Logout';
+import NotificationList from './components/Notification/NotificationList';
 
 class Routes extends Component {
   render() {
@@ -20,6 +21,7 @@ class Routes extends Component {
           <Route exact path="/register/" component={Register} />
           <Route exact path="/search/" component={Search} />
           <Route exact path="/movie/:tmdbid/detail/" component={Details} />
+          <Route exact path="/user/notification/" component={NotificationList} />
         </div>
       </Router>
     )

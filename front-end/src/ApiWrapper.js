@@ -58,6 +58,9 @@ export const ApiWrapper = (() => {
           }
         );
       },
+      getMovieDetails: function (movieId) {
+        return axios.get(API_ENDPOINT + `/movie/${movieId}/detail/`);
+      }
     };
 
   };

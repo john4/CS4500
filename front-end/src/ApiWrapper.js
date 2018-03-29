@@ -101,21 +101,35 @@ export const ApiWrapper = (() => {
           }
         );
       },
-      getUsersWhoFollow: function () {
+      getUsersWhoFollow: function (lookupUserId) {
+        const { sessionId, userId } = getSession();
+
+        if (!lookupUserId) {
+          lookupUserId = userId;
+        }
+
         return axios.post(`${API_ENDPOINT}/user/follow-me/`,
           {
-            session_id: localStorage.getItem("spoiledSessionId"),
+            session_id: sessionId,
+            user_id: lookupUserId,
           }
         );
       },
-      getUsersWhoAreFollowed: function () {
+      getUsersWhoAreFollowed: function (lookupUserId) {
+        const { sessionId, userId } = getSession();
+
+        if (!lookupUserId) {
+          lookupUserId = userId;
+        }
+
         return axios.post(`${API_ENDPOINT}/user/i-follow/`,
           {
-            session_id: localStorage.getItem("spoiledSessionId"),
+            session_id: sessionId,
+            user_id: lookupUserId,
           }
         );
       },
-    };
+    }sessionId,
 
   };
 

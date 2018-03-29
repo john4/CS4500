@@ -167,7 +167,7 @@ class UserTests(unittest.TestCase):
         self.app.post('/user/register/', data=json.dumps(user))
         data = {'name': "pass the test", 'genre': "Action", 'email': 'test@test.com'}
         
-        response = self.app.put('/user/update/', data=json.dumps(data))
+        response = self.app.post('/user/update/', data=json.dumps(data))
         data = json.loads(response.get_data(as_text=True))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data.get('success'), 'user test@test.com has been updated')
@@ -178,7 +178,7 @@ class UserTests(unittest.TestCase):
         self.app.post('/user/register/', json.dumps(user))
         data = {'name': "fail the test", 'genre': "Action", 'email': 'test@test.com'}
         
-        response = self.app.put('/user/update/', json.dumps(data))
+        response = self.app.post('/user/update/', json.dumps(data))
         data = json.loads(response.get_data(as_text=True))
         self.assertEqual(response.status_code, 400)
         self.assertEqual(data.get('error'), 'no user found to update')

@@ -12,16 +12,7 @@ class Login extends Component {
     handleLogin(e) {
       const email    = this.refs.email.value;
       const password = this.refs.password.value;
-      ApiWrapper().api()
-        .post(LOGIN_PATH, { email, password })
-        .then(res => {
-          ApiWrapper().api().setSession(res.data.session_id, res.data.email);
-          console.log(res.data);
-          window.location = "/";
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      ApiWrapper().api().login(email, password);
       e.preventDefault();
       return false;
     }

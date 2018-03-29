@@ -1,6 +1,40 @@
 'use es6';
 import axios from 'axios';
 
+const setSession = function (sessionData) {
+  const { session_id, user_data } = sessionData;
+
+  localStorage.setItem("st:sessionId", session_id);
+  localStorage.setItem("st:userId", user_data._id.$oid);
+  localStorage.setItem("st:email", user_data.email);
+  localStorage.setItem("st:name", user_data.name);
+  localStorage.setItem("st:genre", user_data.genre);
+  localStorage.setItem("st:photo_url", user_data.photo_url);
+  localStorage.setItem("st:age", user_data.age);
+}
+
+const removeSession = function () {
+  localStorage.setItem("st:sessionId", null);
+  localStorage.setItem("st:userId", null);
+  localStorage.setItem("st:email", null);
+  localStorage.setItem("st:name", null);
+  localStorage.setItem("st:genre", null);
+  localStorage.setItem("st:photo_url", null);
+  localStorage.setItem("st:age", null);
+}
+
+const getSession = function() {
+  return {
+    sessionId: localStorage.getItem("st:sessionId"),
+    userId: localStorage.getItem("st:userId"),
+    email: localStorage.getItem("st:email"),
+    name: localStorage.getItem("st:name"),
+    genre: localStorage.getItem("st:genre"),
+    photoUrl: localStorage.getItem("st:photo_url"),
+    age: localStorage.getItem("st:age"),
+  };
+}
+
 export const ApiWrapper = (() => {
   let instance;
   function init() {
@@ -14,21 +48,22 @@ export const ApiWrapper = (() => {
       post: function (path, data) {
         return axios.post(API_ENDPOINT + path, data);
       },
-      setSession: function (sessionId, userEmail) {
-        localStorage.setItem("spoiledSessionId", sessionId);
-        localStorage.setItem("spoiledUserEmail", userEmail);
+      login: function (email, password) {
+        const LOGIN_PATH = "/user/login/";
+
+        return axios.post(API_ENDPOINT + LOGIN_PATH, { email, password })
+          .then(res => {
+            setSession(res.data);
+            window.location = "/";
+          })
+          .catch(err => {
+            console.log(err);
+          });
       },
       removeSession: function () {
         const LOGOUT_PATH = "/user/logout/";
         axios.post(API_ENDPOINT + LOGOUT_PATH, { sessionId: localStorage.getItem("spoiledSessionId") });
-        localStorage.setItem("spoiledSessionId", null);
-        localStorage.setItem("spoiledUserEmail", null);
-      },
-      getSession: function() {
-        return {
-          sessionId: localStorage.getItem("spoiledSessionId"),
-          userEmail: localStorage.getItem("spoiledUserEmail"),
-        };
+        removeSession();
       },
       getAccountDetails: function () {
         return axios.get(API_ENDPOINT + `/user/detail/?sessionId=${localStorage.getItem("spoiledSessionId")}`);
@@ -41,7 +76,7 @@ export const ApiWrapper = (() => {
           API_ENDPOINT + '/movie/' + movieId + '/review/',
           {
             session_id: localStorage.getItem("spoiledSessionId"),
-            user_email: localStorage.getItem("spoiledUserEmail"),
+            user_email: localStorage.getItem("spoiledUser").email,
             rating: score,
             description,
           }
@@ -82,6 +117,9 @@ export const ApiWrapper = (() => {
         instance = init();
       }
       return instance;
+    },
+    getSession: function() {
+      return getSession();
     },
   };
 });

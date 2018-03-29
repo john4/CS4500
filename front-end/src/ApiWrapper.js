@@ -117,6 +117,19 @@ export const ApiWrapper = (() => {
           }
         );
       },
+      unfollowUser: function (userId) {
+        const { sessionId } = getSession();
+
+        return axios.post(
+          `${API_ENDPOINT}/user/unfollow/`,
+          { oid:
+            {
+              $oid: userId
+            },
+            session_id: sessionId
+          }
+        );
+      },
       getMovieDetails: function (movieId) {
         return axios.get(API_ENDPOINT + `/movie/${movieId}/detail/`);
       },

@@ -11,6 +11,8 @@ class SessionTest(unittest.TestCase):
         APP.config['WTF_CSRF_ENABLED'] = False
         self.app = APP.test_client()
 
+        DB.Logs.delete_many({})
+
         DB.Session.insert_one({
             'session_id': 'abcdefghijklmnopqrstuvwyzabcdef',
             'email': 'notarealemail@notarealplace.com'
@@ -18,6 +20,7 @@ class SessionTest(unittest.TestCase):
 
     def tearDown(self):
         DB.Session.delete_many({})
+        DB.Logs.delete_many({})
 
 
     def test_check_session(self):

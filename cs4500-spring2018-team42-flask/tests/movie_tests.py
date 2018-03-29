@@ -11,7 +11,7 @@ class GetMovieTests(unittest.TestCase):
         APP.config['TESTING'] = True
         APP.config['WTF_CSRF_ENABLED'] = False
         self.app = APP.test_client()
-        
+        DB.Logs.delete_many({})
         DB.Movie.insert_one({
                 "tmdb_id" : 3924,
                 "original_title" : "Blondie",
@@ -20,6 +20,7 @@ class GetMovieTests(unittest.TestCase):
 
     def tearDown(self):
         DB.Movie.delete_many({})
+        DB.Logs.delete_many({})
 
     # Tests ##################################
 

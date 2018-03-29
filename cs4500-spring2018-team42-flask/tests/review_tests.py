@@ -14,6 +14,7 @@ class MovieReviewTest(unittest.TestCase):
 
         DB.Review.delete_many({})
         DB.Session.delete_many({})
+        DB.Logs.delete_many({})
 
         DB.Session.insert_one({
             'session_id': 'abcdefghijklmnopqrstuvwyzabcdef',
@@ -33,6 +34,7 @@ class MovieReviewTest(unittest.TestCase):
     def tearDown(self):
         DB.Review.delete_many({})
         DB.Session.delete_many({})
+        DB.Logs.delete_many({})
 
     def test_review_not_logged_in(self):
         data = {

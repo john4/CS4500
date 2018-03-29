@@ -10,10 +10,23 @@ class ProfileDetails extends Component {
 	render(){
 		return (
 			<div>
-				<span> {this.props.details.name} </span>
-				<span> {this.props.details.email} </span>
-				<span> {this.props.details.age} </span>
-				<span> {this.props.details.genre} </span>
+				<div className="row">
+					<span>Name: </span>
+					<span>{this.props.details.name} </span>
+				</div>
+				<div className="row">
+					<span>Email: </span>
+					<span>{this.props.details.email} </span>
+				</div>
+				<div className="row">
+					<span>Age: </span>
+					<span> {this.props.details.age} </span>
+				</div>
+				<div className="row">
+					<span>Genre(s): </span>
+					<span> {this.props.details.genre} </span>
+				</div>
+				
 			</div>
 		);
 	};

@@ -5,21 +5,21 @@ class ProfileDetailsEdit extends Component {
 	
 	constructor(props){
 		super(props)
-	
+		this.handleChange = this.handleChange.bind(this)
 	}
 	
 	handleChange(event) {
-		this.setState({value: event.target.value})
+		this.props.handleChange(event.target.value)
 	}
 	
 	render(){
-		return (
+		const aValue = this.props.details
 		
-		<div>
-			<input type="name" value={this.props.details.name} onChange={this.handleChange} />
-			<input type="email" value={this.props.details.email} onChange={this.handleChange} />
-			<input type="age" value={this.props.details.age} onChange={this.handleChange} />
-		</div>)
+		return (
+			<div className="row">
+				<input type="text" placeholder={aValue} onChange={this.handleChange} />
+			</div>
+		)
 	}
 }
 

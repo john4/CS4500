@@ -16,7 +16,7 @@ class Login extends Component {
         .post(LOGIN_PATH, { email, password })
         .then(res => {
           ApiWrapper().api().setSession(res.data.session_id, res.data.email);
-          console.log(res.data);
+          localStorage.setItem("spoiledUserId", res.data.user_data._id.$oid);
           window.location = "/";
         })
         .catch(err => {

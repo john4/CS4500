@@ -269,6 +269,23 @@ class FollowTest(unittest.TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(data.get('error'), "must be logged in to view followers")
 
+    def test_follow_me_get_all_empty(self):
+
+        user_without_follow_me =  DB.User.find_one({"email": 'notarealemail2@notarealplace.com'})
+        session_one = User.check_session('abcdefghijklmnopqrstuvwyzabcdef')
+
+        if session_one:
+            data = {
+                'session_id': 'abcdefghijklmnopqrstuvwyzabcdef',
+                'user_id': str(user_without_follow_me.get('_id'))
+            }
+
+        response = self.app.post('/user/follow-me/', data=dumps(data))
+        data = loads(response.get_data(as_text=True))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data, [])
+
     def test_i_follow_get_all(self):
         me, other = FollowTest.follow_setup(self)
 
@@ -318,3 +335,20 @@ class FollowTest(unittest.TestCase):
 
         self.assertEqual(response.status_code, 400)
         self.assertEqual(data.get('error'), "must be logged in to view followers")
+
+    def test_i_follow_get_all_empty(self):
+
+        user_without_i_follow =  DB.User.find_one({"email": 'notarealemail2@notarealplace.com'})
+        session_one = User.check_session('abcdefghijklmnopqrstuvwyzabcdef')
+
+        if session_one:
+            data = {
+                'session_id': 'abcdefghijklmnopqrstuvwyzabcdef',
+                'user_id': str(user_without_i_follow.get('_id'))
+            }
+
+        response = self.app.post('/user/i-follow/', data=dumps(data))
+        data = loads(response.get_data(as_text=True))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data, [])

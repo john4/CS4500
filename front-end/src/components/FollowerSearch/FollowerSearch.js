@@ -32,7 +32,8 @@ class FollowerSearch extends Component {
         genre: user.genre,
         name: user.name,
         photoUrl: user.photo_url || "https://sites.google.com/a/windermereprep.com/canvas/_/rsrc/1486400406169/home/unknown-user/user-icon.png",
-        userId: user._id.$oid
+        userId: user._id.$oid,
+        followMe: user.followMe
       };
     });
     this.setState({results});

@@ -23,6 +23,7 @@ class Prod(object):
         Create an instance of a prod
         """
 
+        self.sender_name = DB.User.find_one({'_id': ObjectId(self.sender)}).get('name')
         DB.Prod.insert_one(self.__dict__)
         return self.__dict__, 200
 
@@ -48,5 +49,5 @@ class Prod(object):
         Get all prods received by this user; returns a list
         """
 
-        prods = DB.Prod.find({'receiver': ObjectId(user_id)})
+        prods = DB.Prod.find({"receiver": ObjectId(user_id)})
         return list(prods), 200

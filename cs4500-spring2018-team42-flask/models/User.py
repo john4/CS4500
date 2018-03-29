@@ -220,8 +220,9 @@ class User(object):
             return {"error": "A user with that id does not exist"}, 400
 
         result = []
-        for follower in found.get('followMe'):
-            result.append(DB.User.find_one({'_id': follower}, projection={'password':False}))
+        if found.get('followMe'):
+            for follower in found.get('followMe'):
+                result.append(DB.User.find_one({'_id': follower}, projection={'password':False}))
         return result, 200
 
     @staticmethod
@@ -235,6 +236,7 @@ class User(object):
             return {"error": "A user with that id does not exist"}, 400
 
         result = []
-        for followee in found.get('iFollow'):
-            result.append(DB.User.find_one({'_id': followee}, projection={'password':False}))
+        if found.get('iFollow'):
+            for followee in found.get('iFollow'):
+                result.append(DB.User.find_one({'_id': followee}, projection={'password':False}))
         return result, 200

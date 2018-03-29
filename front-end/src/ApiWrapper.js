@@ -129,8 +129,7 @@ export const ApiWrapper = (() => {
           }
         );
       },
-    }sessionId,
-
+    }
   };
 
   return {

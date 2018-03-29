@@ -162,7 +162,7 @@ class UserTests(unittest.TestCase):
         self.assertEqual(data.get('success'), 'user notarealemail@notarealplace.com has been deleted')
         self.assertIsNone(DB.User.find_one({"email": "notarealemail@notarealplace.com"}))
 		
-	def test_user_update_existing(self):
+    def test_user_update_existing(self):
 		user = self.generate_user('Test User', 'test@test.com')
 		self.app.post('/user/register/', data=json.dumps(user))
 		data = {'name': "pass the test", 'genre': "Action", 'email': 'test@test.com'}
@@ -173,7 +173,7 @@ class UserTests(unittest.TestCase):
 		self.assertEqual(data.get('success'), 'user test@test.com has been updated')
 		self.assertEqual(DB.User.find_one({"email": "test@test.com"}).get('name'), "pass the test")
 	   
-	def test_user_update_non_existing(self):
+    def test_user_update_non_existing(self):
 		user = self.generate_user('Test User', 'test@test.com')
 		self.app.post('/user/register/', json.dumps(user))
 		data = {'name': "fail the test", 'genre': "Action", 'email': 'test@test.com'}

@@ -14,6 +14,7 @@ class ProdTest(unittest.TestCase):
         self.app = APP.test_client()
 
         DB.Prod.delete_many({})
+        DB.Logs.delete_many({})
 
         DB.User.insert_one({
             'name': 'Alice',
@@ -43,6 +44,7 @@ class ProdTest(unittest.TestCase):
 
     def tearDown(self):
         DB.Prod.delete_many({})
+        DB.Logs.delete_many({})
 
     def test_prod_not_logged_in(self):
         alice = DB.User.find_one({'email': 'yes@yes.com'})

@@ -22,13 +22,10 @@ class NotificationItem extends Component {
     }
 
     onDelete() {
-      const DELETE_URL = '/user/prod/mark-read/';
-      ApiWrapper().api().post(DELETE_URL, {
-        session_id: localStorage.getItem("spoiledSessionId"),
-        prod_id: this.props.id
-      }).then(res => {
-        window.location.reload();
-      })
+      ApiWrapper().api().markNotificationRead(this.props.id)
+        .then(res => {
+          window.location.reload();
+        });
     }
 
     render() {

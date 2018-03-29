@@ -12,3 +12,7 @@ a {
 a:hover {
   color: #1446a0;
 }
+
+ul {
+  padding: 0;
+}

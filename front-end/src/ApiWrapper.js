@@ -58,9 +58,23 @@ export const ApiWrapper = (() => {
           }
         );
       },
+      searchUser: function (query) {
+        return axios.get(`${API_ENDPOINT}/user/search/?name=${query}`);
+      },
+      followUser: function (userId) {
+        return axios.post(
+          `${API_ENDPOINT}/user/follow/`,
+          { oid:
+            {
+              $oid: userId
+            },
+            session_id: localStorage.getItem("spoiledSessionId")
+          }
+        );
+      },
       getMovieDetails: function (movieId) {
         return axios.get(API_ENDPOINT + `/movie/${movieId}/detail/`);
-      }
+      },
     };
 
   };

@@ -164,7 +164,7 @@ def follow():
 
     data = json.loads(request.data)
 
-    if User.check_session(data.get('session_id')):
+    if not User.check_session(data.get('session_id')):
         return make_response(dumps({'error': 'must be logged in to follow'}), 400)
 
     results, response_code = User.follow_user_with_id(data.get('session_id'), data.get('oid'))
@@ -182,6 +182,36 @@ def unfollow():
 
     results, response_code = User.unfollow_user_with_id(data.get('session_id'), data.get('oid'))
 
+    return make_response(dumps(results), response_code)
+
+@APP.route('/user/follow-me/', methods=['POST'])
+def follow_me_get_all():
+    """
+    Gets all users who follow a user
+    """
+
+    data = json.loads(request.data)
+
+    if not User.check_session(data.get('session_id')):
+        return make_response(dumps({'error': 'must be logged in to view followers'}), 400)
+
+    user_id = data.get('user_id')
+    results, response_code = User.get_users_follow_me(user_id)
+    return make_response(dumps(results), response_code)
+
+@APP.route('/user/i-follow/', methods=['POST'])
+def i_follow_get_all():
+    """
+    Gets all users who a user follows
+    """
+
+    data = json.loads(request.data)
+
+    if not User.check_session(data.get('session_id')):
+        return make_response(dumps({'error': 'must be logged in to view followers'}), 400)
+
+    user_id = data.get('user_id')
+    results, response_code = User.get_users_i_follow(user_id)
     return make_response(dumps(results), response_code)
 
 @APP.route('/user/prod/', methods=['POST'])

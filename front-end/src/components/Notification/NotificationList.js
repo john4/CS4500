@@ -12,19 +12,13 @@ class NotificationList extends Component {
     }
 
     componentDidMount() {
-      ApiWrapper().api()
-      .post(
-        '/user/prod/get-all/',
-        {
-          session_id: localStorage.getItem("spoiledSessionId"),
-          user_id: localStorage.getItem("spoiledUserId")
-        }
-      ).then(res => {
-        var unread = res.data.filter(note => !note.read);
-        this.setState({notifications: unread});
-      }).catch(err => {
-        console.log(err);
-      });
+      ApiWrapper().api().getNotifications()
+        .then(res => {
+          var unread = res.data.filter(note => !note.read);
+          this.setState({notifications: unread});
+        }).catch(err => {
+          console.log(err);
+        });
     }
 
     render() {

@@ -148,6 +148,26 @@ export const ApiWrapper = (() => {
           }
         );
       },
+      getNotifications: function () {
+        const { sessionId, userId } = getSession();
+
+        return axios.post(`${API_ENDPOINT}/user/prod/get-all/`,
+          {
+            session_id: sessionId,
+            user_id: userId,
+          }
+        );
+      },
+      markNotificationRead: function (prodId) {
+        const { sessionId } = getSession();
+
+        return axios.post(`${API_ENDPOINT}/user/prod/mark-read/`,
+          {
+            prod_id: prodId,
+            session_id: sessionId,
+          }
+        );
+      },
       prodUser: function (movieId, targetUserId) {
         const { sessionId, userId } = getSession();
 

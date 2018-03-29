@@ -58,6 +58,13 @@ export const ApiWrapper = (() => {
           }
         );
       },
+      getUsersWhoFollow: function () {
+        return axios.post(`${API_ENDPOINT}/user/follow-me/`,
+          {
+            session_id: localStorage.getItem("spoiledSessionId"),
+          }
+        );
+      },
     };
 
   };

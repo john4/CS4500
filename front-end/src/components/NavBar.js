@@ -22,6 +22,7 @@ class NavBar extends Component {
             <a href="/search">Search</a>
             <a href="/logout">Logout</a>
             <NotificationIcon />
+            <a href="/playlist/genre"> Playlist</a>
           </div>
           <div className="col text-right">
             <AccountNav />

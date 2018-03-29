@@ -16,7 +16,8 @@ class User(object):
         self.email = None
         self.password = None
         self.age = None
-        self.genre = []
+        self.genre = None
+        self.photo_url = None
 
     def register(self):
         """
@@ -24,7 +25,7 @@ class User(object):
         Returns some json info on success or error and boolean for success
         """
 
-        if not self.name or not self.email or not self.password or not self.age:
+        if not self.name or not self.email or not self.password or not self.age or not self.genre:
             return json.jsonify({"error": "missing required fields"}), 400
 
         user_exists = DB.User.find_one({"email": self.email})
@@ -163,7 +164,7 @@ class User(object):
         Follow another user and update that users followMe with caller
         """
 
-        current_user, status = User.get_user_data_from_session(session_id)
+        current_user, _status = User.get_user_data_from_session(session_id)
 
         user_exists = DB.User.find_one({"_id": ObjectId(oid.get('$oid'))})
         if not user_exists:
@@ -189,7 +190,7 @@ class User(object):
         UnFollow another user and update that users followMe to remove caller
         """
 
-        current_user, status = User.get_user_data_from_session(session_id)
+        current_user, _status = User.get_user_data_from_session(session_id)
 
         user_exists = DB.User.find_one({"_id": ObjectId(oid.get('$oid'))})
         if not user_exists:
@@ -209,19 +210,31 @@ class User(object):
         return response, 200
 
     @staticmethod
-    def get_users_followers(session_id, oid):
+    def get_users_follow_me(user_id):
         """
-        Gets the iFollow of the given id
+        Gets the array of people who follow the given user_id string
         """
 
-        session = DB.Session.find_one({'session_id': session_id})
+        found = DB.User.find_one({'_id': ObjectId(user_id)})
+        if not found:
+            return {"error": "A user with that id does not exist"}, 400
 
-        if session:
-            user_email = session.get('email')
-            if user_email:
-                user = DB.User.find_one({'email': user_email})
+        result = []
+        for follower in found.get('followMe'):
+            result.append(DB.User.find_one({'_id': follower}, projection={'password':False}))
+        return result, 200
 
-                if user:
-                    return user, 200
-            return {'error': 'user not found'}, 400
-        return {'error': 'session not found'}, 400
+    @staticmethod
+    def get_users_i_follow(user_id):
+        """
+        Gets the array of people who the given user_id string follows
+        """
+
+        found = DB.User.find_one({'_id': ObjectId(user_id)})
+        if not found:
+            return {"error": "A user with that id does not exist"}, 400
+
+        result = []
+        for followee in found.get('iFollow'):
+            result.append(DB.User.find_one({'_id': followee}, projection={'password':False}))
+        return result, 200

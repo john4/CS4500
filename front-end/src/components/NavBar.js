@@ -5,6 +5,7 @@ import '../App.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'react-bootstrap';
 import AccountNav from './User/AccountNav';
+import NotificationIcon from './Notification/NotificationIcon';
 
 class NavBar extends Component {
 
@@ -20,6 +21,7 @@ class NavBar extends Component {
           <div className="col navbar">
             <a href="/search">Search</a>
             <a href="/logout">Logout</a>
+            <NotificationIcon />
             <a href="/playlist/genre"> Playlist</a>
           </div>
           <div className="col text-right">

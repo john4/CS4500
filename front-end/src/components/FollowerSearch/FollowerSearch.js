@@ -35,9 +35,9 @@ class FollowerSearch extends Component {
 
   render() {
     const {results} = this.state;
-
+    const placeholder = "Search user by username...";
     return (
-      <Search onSearch={this.search} results={results} ResultsComponent={FollowerResults} />
+      <Search onSearch={this.search} results={results} ResultsComponent={FollowerResults} placeholder={placeholder} />
     );
   }
 }

@@ -9,20 +9,11 @@ class NotificationIcon extends Component {
       this.state = {
         notificationCount: 0
       }
-
-      // this.componentDidMount = this.componentDidMount.bind(this);
     }
 
     componentDidMount() {
-      ApiWrapper().api()
-        .post(
-          '/user/prod/get-all/',
-          {
-            session_id: localStorage.getItem("spoiledSessionId"),
-            user_id: localStorage.getItem("spoiledUserId")
-          }
-        ).then(res => {
-          console.log(res.data);
+      ApiWrapper().api().getNotifications()
+        .then(res => {
           var unread = res.data.filter(note => !note.read);
           this.setState({notificationCount: String(unread.length)});
         }).catch(err => {

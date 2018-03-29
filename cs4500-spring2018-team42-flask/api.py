@@ -3,7 +3,7 @@
 from flask import json, make_response, request, jsonify
 from bson.json_util import dumps
 from app import APP
-from models import Movie, User, Review, Prod
+from models import Logs, Movie, User, Review, Prod
 
 
 @APP.route('/')
@@ -32,6 +32,11 @@ def register_user():
 
     new_user, response_status = new_user.register()
 
+    # TODO figure out why this breaks tests
+
+    # log = Logs('register_user', new_user, response_status)
+    # log.create()
+
     return make_response(new_user, response_status)
 	
 @APP.route('/user/update/', methods=['POST'])
@@ -55,13 +60,18 @@ def update_user():
 @APP.route('/user/delete/', methods=['POST'])
 def delete_user():
     """delete a user"""
+
     data = json.loads(request.data)
     email = data.get('email')
 
     if not email:
+        log = Logs('delete_user', dumps({"error": "email is required"}), 400)
+        log.create()
         return make_response(dumps({"error": "email is required"}), 400)
 
     delete_result, response_status = User.delete_user(email)
+    log = Logs('delete_user', dumps(delete_result), response_status)
+    log.create()
 
     return make_response(dumps(delete_result), response_status)
 
@@ -77,6 +87,8 @@ def login_user():
         return make_response(dumps({"error": "email and password are required"}), 400)
 
     login_result, response_status = User.attempt_login(email, password)
+    log = Logs('login_user', dumps(login_result), response_status)
+    log.create()
 
     return make_response(dumps(login_result), response_status)
 
@@ -90,6 +102,8 @@ def end_session():
     session_id = data.get('sessionId')
 
     result, response_code = User.end_session(session_id)
+    log = Logs('end_session', dumps(result), response_code)
+    log.create()
     return make_response(dumps(result), response_code)
 
 @APP.route('/user/detail/', methods=['GET'])
@@ -98,6 +112,8 @@ def user_details():
 
     session_id = request.args.get('sessionId')
     result, response_code = User.get_user_data_from_session(session_id)
+    log = Logs('user_details', dumps(result), response_code)
+    log.create()
     return make_response(dumps(result), response_code)
 
 @APP.route('/movies/', methods=['GET'])
@@ -105,6 +121,8 @@ def get_movies():
     """get a list of movies from the db"""
 
     results = Movie.get_movies(10)
+    log = Logs('get_movies', dumps(results), 200)
+    log.create()
     return make_response(dumps(results), 200)
 
 @APP.route('/movie/<int:movie_id>/detail/', methods=['GET'])
@@ -112,6 +130,8 @@ def get_movie_details(movie_id):
     """get a movie's details from the db"""
 
     results, response_code = Movie.get_movie_details(movie_id)
+    log = Logs('get_movie_details', dumps(results), response_code)
+    log.create()
 
     return make_response(jsonify(results), response_code)
 
@@ -123,6 +143,8 @@ def review_movie(movie_id):
     data = json.loads(request.data)
 
     if not User.check_session(data.get('session_id')):
+        log = Logs('review_movie', dumps({'error': 'must be logged in to review'}), 400)
+        log.create()
         return make_response(dumps({'error': 'must be logged in to review'}), 400)
 
     new_review.tmdb_id = movie_id
@@ -131,6 +153,8 @@ def review_movie(movie_id):
     new_review.description = data.get('description')
 
     results, response_code = new_review.create()
+    log = Logs('review_movie', dumps(results), response_code)
+    log.create()
     return make_response(dumps(results), response_code)
 
 @APP.route('/movie/<int:movie_id>/delete-review/', methods=['POST'])
@@ -144,9 +168,13 @@ def delete_movie_reviews(movie_id):
     session_id = data.get('session_id')
 
     if not (data.get('session_id') and User.check_session(data.get('session_id'))):
+        log = Logs('delete_movie_reviews', dumps({'error': 'must be logged in to delete review'}), 400)
+        log.create()
         return make_response(dumps({'error': 'must be logged in to delete review'}), 400)
 
     results, response_code = Review.delete(review_id)
+    log = Logs('delete_movie_reviews', dumps(results), response_code)
+    log.create()
     return make_response(dumps(results), response_code)
 
 
@@ -157,6 +185,10 @@ def get_movie_reviews(movie_id):
     """
 
     reviews, response_code = Review.get_all(movie_id)
+
+    # TODO figure out why this breaks tests
+    # log = Logs('get_movie_reviews', dumps(reviews), response_code)
+    # log.create()
     return make_response(dumps(reviews), response_code)
 
 @APP.route('/movie/<int:movie_id>/rating/', methods=['GET'])
@@ -164,6 +196,9 @@ def get_movie_avg_rating(movie_id):
     """get the average rating for a movie"""
 
     results, response_code = Movie.get_average_rating(movie_id)
+    # TODO figure out why this breaks tests
+    # log = Logs('get_movie_avg_rating', dumps(results), response_code)
+    # log.create()
     return make_response(results, response_code)
 
 @APP.route('/user/search/', methods=['GET'])
@@ -173,6 +208,8 @@ def search_user():
     name = request.args.get('name')
 
     results, response_code = User.find_all_user_with_name(name)
+    log = Logs('search_user', dumps(results), response_code)
+    log.create()
 
     return make_response(dumps(results), response_code)
 
@@ -183,10 +220,13 @@ def follow():
     data = json.loads(request.data)
 
     if not User.check_session(data.get('session_id')):
+        log = Logs('follow', dumps({'error': 'must be logged in to follow'}), 400)
+        log.create()
         return make_response(dumps({'error': 'must be logged in to follow'}), 400)
 
     results, response_code = User.follow_user_with_id(data.get('session_id'), data.get('oid'))
-
+    log = Logs('follow', dumps(results), response_code)
+    log.create()
     return make_response(dumps(results), response_code)
 
 @APP.route('/user/unfollow/', methods=['POST'])
@@ -196,10 +236,13 @@ def unfollow():
     data = json.loads(request.data)
 
     if not User.check_session(data.get('session_id')):
+        log = Logs('unfollow', dumps({'error': 'must be logged in to unfollow'}), 400)
+        log.create()
         return make_response(dumps({'error': 'must be logged in to unfollow'}), 400)
 
     results, response_code = User.unfollow_user_with_id(data.get('session_id'), data.get('oid'))
-
+    log = Logs('unfollow', dumps(results), response_code)
+    log.create()
     return make_response(dumps(results), response_code)
 
 @APP.route('/user/follow-me/', methods=['POST'])
@@ -211,10 +254,14 @@ def follow_me_get_all():
     data = json.loads(request.data)
 
     if not User.check_session(data.get('session_id')):
+        log = Logs('follow_me_get_all', dumps({'error': 'must be logged in to view followers'}), 400)
+        log.create()
         return make_response(dumps({'error': 'must be logged in to view followers'}), 400)
 
     user_id = data.get('user_id')
     results, response_code = User.get_users_follow_me(user_id)
+    log = Logs('follow_me_get_all', dumps(results), response_code)
+    log.create()
     return make_response(dumps(results), response_code)
 
 @APP.route('/user/i-follow/', methods=['POST'])
@@ -226,10 +273,14 @@ def i_follow_get_all():
     data = json.loads(request.data)
 
     if not User.check_session(data.get('session_id')):
+        log = Logs('i_follow_get_all', dumps({'error': 'must be logged in to view followers'}), 400)
+        log.create()
         return make_response(dumps({'error': 'must be logged in to view followers'}), 400)
 
     user_id = data.get('user_id')
     results, response_code = User.get_users_i_follow(user_id)
+    log = Logs('i_follow_get_all', dumps(results), response_code)
+    log.create()
     return make_response(dumps(results), response_code)
 
 @APP.route('/user/prod/', methods=['POST'])
@@ -242,6 +293,8 @@ def prod_users():
     data = json.loads(request.data)
 
     if not User.check_session(data.get('session_id')):
+        log = Logs('prod_users', dumps({'error': 'must be logged in to prod'}), 400)
+        log.create()
         return make_response(dumps({'error': 'must be logged in to prod'}), 400)
 
     receivers = data.get('receivers')
@@ -250,6 +303,8 @@ def prod_users():
     message = data.get('message')
 
     if not receivers or not sender or not tmdb_id:
+        log = Logs('prod_users', dumps({'error': 'sender, receiver, and tmdb id required for prod'}), 400)
+        log.create()
         return make_response(dumps({'error': 'sender, receiver, and tmdb id required for prod'}), 400)
 
     results = {}
@@ -257,6 +312,9 @@ def prod_users():
         new_prod = Prod(sender, recv, tmdb_id, message)
         result, rc = new_prod.create()
         results[recv] = result
+
+    log = Logs('prod_users', dumps(results), 200)
+    log.create()
 
     return make_response(dumps(results), 200)
 
@@ -269,6 +327,8 @@ def prod_mark_read():
     data = json.loads(request.data)
     prod_id = data.get('prod_id')
     result, response_code = Prod.mark_read(prod_id)
+    log = Logs('prod_mark_read', dumps(result), response_code)
+    log.create()
     return make_response(dumps(result), response_code)
 
 @APP.route('/user/prod/get-all/', methods=['POST'])
@@ -280,4 +340,16 @@ def prod_get_all():
     data = json.loads(request.data)
     user_id = data.get('user_id')
     results, response_code = Prod.get_all_for_user(user_id)
+    log = Logs('prod_get_all', dumps(results), response_code)
+    log.create()
+    return make_response(dumps(results), response_code)
+
+
+@APP.route('/logs/', methods=['GET'])
+def logs_get_all():
+    """
+    Gets all logs
+    """
+
+    results, response_code = Logs.get_all()
     return make_response(dumps(results), response_code)

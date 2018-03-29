@@ -21,11 +21,13 @@ class FollowerModal extends Component {
   }
 
   handleSend(userId) {
+    const { movieId } = this.props;
     const { alreadySentFollowers } = this.state;
-    debugger;
 
-    alreadySentFollowers.push(userId);
-    this.setState({ alreadySentFollowers });
+    ApiWrapper().api().prodUser(movieId, userId).then(res => {
+      alreadySentFollowers.push(userId);
+      this.setState({ alreadySentFollowers });
+    });
   }
 
   renderFollowerResults() {

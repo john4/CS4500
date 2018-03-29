@@ -16,7 +16,12 @@ class FollowerSearch extends Component {
   }
 
   search(query) {
-    ApiWrapper().api().searchUser(query).then(this.receiveResults);
+    ApiWrapper().api().searchUser(query)
+      .then(this.receiveResults)
+      .catch(err => {
+        console.log(err);
+        this.setState({results: []});
+      });;
   }
 
   receiveResults(res) {

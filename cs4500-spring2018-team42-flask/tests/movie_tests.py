@@ -12,7 +12,6 @@ class GetMovieTests(unittest.TestCase):
         APP.config['WTF_CSRF_ENABLED'] = False
         self.app = APP.test_client()
         DB.Logs.delete_many({})
-
         DB.Movie.insert_one({
                 "tmdb_id" : 3924,
                 "original_title" : "Blondie",
@@ -26,6 +25,11 @@ class GetMovieTests(unittest.TestCase):
     # Tests ##################################
 
     def test_get_1_movie(self):
+        movie = Movie()
+        movie.tmdb_id = "tmdb_id"
+        movie.original_title = "Lion King"
+        movie.popularity = "10"
+        movie.reviews = ['test']
         value = Movie.get_movies(1)
 
         self.assertEqual(1, len(value))

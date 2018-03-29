@@ -162,6 +162,28 @@ class UserTests(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(data.get('success'), 'user notarealemail@notarealplace.com has been deleted')
         self.assertIsNone(DB.User.find_one({"email": "notarealemail@notarealplace.com"}))
+		
+    def test_user_update_existing(self):
+        user = self.generate_user('Test User', 'test@test.com')
+        self.app.post('/user/register/', data=json.dumps(user))
+        data = {'name': "pass the test", 'genre': "Action", 'email': 'test@test.com'}
+        
+        response = self.app.post('/user/update/', data=json.dumps(data))
+        data = json.loads(response.get_data(as_text=True))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data.get('success'), 'user test@test.com has been updated')
+        self.assertEqual(DB.User.find_one({"email": "test@test.com"}).get('name'), "pass the test")
+	   
+    def test_user_update_non_existing(self):
+        user = self.generate_user('Test User', 'test@test.com')
+        self.app.post('/user/register/', data=json.dumps(user))
+        data = {'name': "fail the test", 'genre': "Action", 'email': 'test2@test.com'}
+        
+        response = self.app.post('/user/update/', data=json.dumps(data))
+        data = json.loads(response.get_data(as_text=True))
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(data.get('error'), 'no user found to update')
+        self.assertEqual(DB.User.find_one({"email": "test@test.com"}).get('genre'), "Horror")
 
     @staticmethod
     def generate_user(username, email):

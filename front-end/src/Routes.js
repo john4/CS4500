@@ -8,6 +8,7 @@ import Register from './components/User/Register';
 import Details from './components/Movies/Details';
 import Login from './components/Login';
 import Logout from './components/Logout';
+import Profile from './components/User/Profile';
 import NotificationList from './components/Notification/NotificationList';
 import Genre from './components/Playlist/Genre';
 
@@ -24,6 +25,7 @@ class Routes extends Component {
           <Route exact path="/search/" component={MovieSearch} />
           <Route exact path="/user-search/" component={FollowerSearch} />
           <Route exact path="/movie/:tmdbid/detail/" component={Details} />
+		  <Route exact path="/user/profile/" component={Profile} />
           <Route exact path="/user/notification/" component={NotificationList} />
           <Route exact path="/playlist/genre/" component={Genre} />
         </div>

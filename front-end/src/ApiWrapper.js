@@ -39,7 +39,7 @@ export const ApiWrapper = (() => {
   let instance;
   function init() {
     const API_ENDPOINT = "http://ec2-54-87-191-69.compute-1.amazonaws.com:5000";
-    // const API_ENDPOINT = "http://127.0.0.1:5000";
+    //const API_ENDPOINT = "http://127.0.0.1:5000";
 
     return {
       get: function (path) {
@@ -194,6 +194,17 @@ export const ApiWrapper = (() => {
           }
         );
       },
+	  updateUser: function(data) {
+		return axios.post(`${API_ENDPOINT}/user/update/`,
+		  {
+			name: data.name,
+			age: data.age,
+			photoUrl: data.photoUrl,
+			genre: data.genre,
+			email: data.email
+		  }
+		);
+	  },
     }
   };
 

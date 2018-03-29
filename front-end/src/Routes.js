@@ -8,12 +8,9 @@ import Register from './components/User/Register';
 import Details from './components/Movies/Details';
 import Login from './components/Login';
 import Logout from './components/Logout';
-<<<<<<< HEAD
 import Profile from './components/User/Profile';
-=======
 import NotificationList from './components/Notification/NotificationList';
 import Genre from './components/Playlist/Genre';
->>>>>>> 5321f33aae8c0343d2893c6c04081e6dce763340
 
 class Routes extends Component {
   render() {

@@ -26,10 +26,10 @@ class GetMovieTests(unittest.TestCase):
 
     def test_get_1_movie(self):
         movie = Movie()
-		movie.tmdb_id = "tmdb_id"
+        movie.tmdb_id = "tmdb_id"
         movie.original_title = "Lion King"
         movie.popularity = "10"
-		movie.reviews = ['test']
+        movie.reviews = ['test']
         value = Movie.get_movies(1)
 
         self.assertEqual(1, len(value))

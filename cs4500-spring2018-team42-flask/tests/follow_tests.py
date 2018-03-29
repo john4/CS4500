@@ -10,6 +10,7 @@ class FollowTest(unittest.TestCase):
         APP.config['TESTING'] = True
         APP.config['WTF_CSRF_ENABLED'] = False
         self.app = APP.test_client()
+        DB.Logs.delete_many({})
 
         DB.Session.insert_one({
             'session_id': 'abcdefghijklmnopqrstuvwyzabcdef',
@@ -43,6 +44,7 @@ class FollowTest(unittest.TestCase):
     def tearDown(self):
         DB.Session.delete_many({})
         DB.User.delete_many({})
+        DB.Logs.delete_many({})
 
     def follow_setup(self):
         user_to_add =  DB.User.find_one({"email": 'notarealemail2@notarealplace.com'})

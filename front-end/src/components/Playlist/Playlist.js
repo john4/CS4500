@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Results from '../Search/Results';
+import Results from '../MovieSearch/MovieResults';
 
 class Playlist extends Component {
   render() {

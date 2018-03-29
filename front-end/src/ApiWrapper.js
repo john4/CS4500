@@ -64,9 +64,11 @@ export const ApiWrapper = (() => {
       followUser: function (userId) {
         return axios.post(
           `${API_ENDPOINT}/user/follow/`,
-          {
-            user_id: userId,
-            session_id: localStorage.getItem("spoiledSessionId"),
+          { oid:
+            {
+              $oid: userId
+            },
+            session_id: localStorage.getItem("spoiledSessionId")
           }
         );
       },

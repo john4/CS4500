@@ -23,7 +23,7 @@ const removeSession = function () {
   localStorage.setItem("st:age", null);
 }
 
-const getSession = function() {
+const getSession = function () {
   return {
     sessionId: localStorage.getItem("st:sessionId"),
     userId: localStorage.getItem("st:userId"),
@@ -62,21 +62,27 @@ export const ApiWrapper = (() => {
       },
       removeSession: function () {
         const LOGOUT_PATH = "/user/logout/";
-        axios.post(API_ENDPOINT + LOGOUT_PATH, { sessionId: localStorage.getItem("spoiledSessionId") });
+        const { sessionId } = getSession();
+
+        axios.post(API_ENDPOINT + LOGOUT_PATH, { sessionId });
         removeSession();
       },
       getAccountDetails: function () {
-        return axios.get(API_ENDPOINT + `/user/detail/?sessionId=${localStorage.getItem("spoiledSessionId")}`);
+        const { sessionId } = getSession();
+
+        return axios.get(API_ENDPOINT + `/user/detail/?sessionId=${sessionId}`);
       },
       getAverageMovieRating: function (movieId) {
         return axios.get(API_ENDPOINT + `/movie/${movieId}/rating/`);
       },
       createMovieReview: function (movieId, score, description) {
+        const { sessionId, email } = getSession();
+
         return axios.post(
           API_ENDPOINT + '/movie/' + movieId + '/review/',
           {
-            session_id: localStorage.getItem("spoiledSessionId"),
-            user_email: localStorage.getItem("spoiledUser").email,
+            session_id: sessionId,
+            user_email: email,
             rating: score,
             description,
           }
@@ -86,10 +92,12 @@ export const ApiWrapper = (() => {
         return axios.get(`${API_ENDPOINT}/movie/${movieId}/get-reviews/`);
       },
       deleteReview: function (movieId, reviewId) {
+        const { sessionId } = getSession();
+
         return axios.post(`${API_ENDPOINT}/movie/${movieId}/delete-review/`,
           {
             review_id: reviewId,
-            session_id: localStorage.getItem("spoiledSessionId"),
+            session_id: sessionId,
           }
         );
       },

@@ -129,22 +129,22 @@ class User(object):
 		
     @staticmethod
     def update_user(name, age, photoUrl, genre, email):
-		"""
-		Update an existing user's details
-		"""
-		update_data = DB.User.find_one_and_update({"email": email}, {
-			'$set': {'name': name,
-					 'age': age,
-					 'photo_url': photoUrl,
-					 'genre': genre
-					}
-		})
-				
-		if not update_data:
-			return {"error": "no user found to update"}, 400
-		
-		response = {"success": "user " + email + " has been updated"}
-		return response, 200
+        """
+        Update an existing user's details
+        """
+        update_data = DB.User.find_one_and_update({"email": email}, {
+            '$set': {'name': name,
+                     'age': age,
+                     'photo_url': photoUrl,
+                     'genre': genre
+                    }
+        })
+        
+        if not update_data:
+            return {"error": "no user found to update"}, 400
+        
+        response = {"success": "user " + email + " has been updated"}
+        return response, 200
 
     @staticmethod
     def delete_user(email):

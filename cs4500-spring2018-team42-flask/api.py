@@ -51,9 +51,9 @@ def update_user():
     
     if not email:
         return make_response(dumps({"error": "email is required"}), 400)
-    
+
     update_result, response_status = User.update_user(name, age, photoUrl, genre, email)
-    
+
     return make_response(dumps(update_result), response_status)
 	
 

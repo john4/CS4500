@@ -105,13 +105,15 @@ export const ApiWrapper = (() => {
         return axios.get(`${API_ENDPOINT}/user/search/?name=${query}`);
       },
       followUser: function (userId) {
+        const { sessionId } = getSession();
+
         return axios.post(
           `${API_ENDPOINT}/user/follow/`,
           { oid:
             {
               $oid: userId
             },
-            session_id: localStorage.getItem("spoiledSessionId")
+            session_id: sessionId
           }
         );
       },

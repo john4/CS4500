@@ -16,10 +16,11 @@ class UserTests(unittest.TestCase):
         self.app = APP.test_client()
 
         DB.User.delete_many({})
+        DB.Logs.delete_many({})
 
     # executed after each test
     def tearDown(self):
-        pass
+        DB.Logs.delete_many({})
 
 
     # Tests ########################################
@@ -75,7 +76,7 @@ class UserTests(unittest.TestCase):
         data = json.loads(response.get_data(as_text=True))
         self.assertEqual(response.status_code, 400)
         self.assertEqual(data, {'error': 'missing required fields'})
-    
+
     def test_user_register_fail_no_genre(self):
         user = {
             'name': 'Test User',
@@ -143,7 +144,7 @@ class UserTests(unittest.TestCase):
 
     def test_user_delete_not_existing(self):
         email = {
-            'email': 'notarealuser@notarealplace.com' 
+            'email': 'notarealuser@notarealplace.com'
         }
         response = self.app.post('/user/delete/', data=json.dumps(email))
         data = json.loads(response.get_data(as_text=True))

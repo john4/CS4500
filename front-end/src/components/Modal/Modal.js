@@ -10,9 +10,9 @@ class Modal extends Component {
         <div className="Modal-container">
           <div className="Modal-body">
             <div className="Modal-close" onClick={onClose}>
-              <i class="fas fa-times"></i>
+              <i className="fas fa-times"></i>
             </div>
-            {this.children}
+            {children}
           </div>
         </div>
       </div>

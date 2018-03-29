@@ -1,0 +1,10 @@
+.ProdResultItem {
+  margin: 0 auto 1rem auto;
+  padding: 0;
+  position: relative;
+  display: flex;
+}
+
+.ProdResultItem-image {
+  display: inline-flex;
+}

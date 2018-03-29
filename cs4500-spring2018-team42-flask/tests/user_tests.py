@@ -176,7 +176,7 @@ class UserTests(unittest.TestCase):
     def test_user_update_non_existing(self):
         user = self.generate_user('Test User', 'test@test.com')
         self.app.post('/user/register/', data=json.dumps(user))
-        data = {'name': "fail the test", 'genre': "Action", 'email': 'test@test.com'}
+        data = {'name': "fail the test", 'genre': "Action", 'email': 'test2@test.com'}
         
         response = self.app.post('/user/update/', data=json.dumps(data))
         data = json.loads(response.get_data(as_text=True))

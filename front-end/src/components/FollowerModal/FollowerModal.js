@@ -22,6 +22,7 @@ class FollowerModal extends Component {
 
   handleSend(userId) {
     const { alreadySentFollowers } = this.state;
+    debugger;
 
     alreadySentFollowers.push(userId);
     this.setState({ alreadySentFollowers });
@@ -31,13 +32,15 @@ class FollowerModal extends Component {
     const { followers, alreadySentFollowers } = this.state;
 
     return followers.map(follower => {
+      const userId = follower._id.$oid;
+
       return (
         <ProdResultItem
           name={follower.name}
           genre={follower.genre}
           photoUrl={follower.photo_url || "https://sites.google.com/a/windermereprep.com/canvas/_/rsrc/1486400406169/home/unknown-user/user-icon.png"}
-          userId={follower.user_id}
-          isAlreadySent={alreadySentFollowers.includes(follower.user_id)}
+          userId={userId}
+          isAlreadySent={alreadySentFollowers.includes(userId)}
           onClickProd={this.handleSend}
         />
       );

@@ -8,7 +8,7 @@ class ProdResultItem extends Component {
     render() {
       const {genre, name, photoUrl, userId, isAlreadySent, onClickProd} = this.props;
       const alreadySentClass = isAlreadySent ? "sent" : "";
-      const onClick = !isAlreadySent ? () => onClickProd() : () => undefined;
+      const onClick = !isAlreadySent ? () => onClickProd(userId) : () => undefined;
 
       return (
         <li>
@@ -19,6 +19,9 @@ class ProdResultItem extends Component {
             <div className="ProdResultItem-body">
               <b>{name}</b>
               <p>Likes: {genre}</p>
+            </div>
+            <div className="ProdResultItem-icon">
+              {isAlreadySent ? <i className="fas fa-2x fa-check"></i> : <i className="fas fa-2x fa-share"></i>}
             </div>
           </div>
         </li>

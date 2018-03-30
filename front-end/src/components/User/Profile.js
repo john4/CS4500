@@ -71,7 +71,7 @@ class Profile extends Component {
 	handleSubmitClick() {
 		this.setState({
 					editMode: false})
-		//Shoot stuff to api I haven't written yet
+
 		var data = {
 			name: this.state.name,
 			email: this.state.email,
@@ -85,7 +85,7 @@ class Profile extends Component {
 	
 	handleCancelClick(){
 		this.setState({
-			name: this.previousDetails.name,
+            name: this.previousDetails.name,
 			email: this.previousDetails.email,
 			age: this.previousDetails.age,
 			genre: this.previousDetails.genre,
@@ -179,7 +179,7 @@ class Profile extends Component {
 					<button className="btn-sm" onClick={this.handleSubmitClick}>
 						<i className="fas fa-check-square"></i>
 					</button>
-					<button className="btn-sm" onClick={this.deleteAccount}>
+					<button className="btn-sm" onClick={() => { if(window.confirm("Are you sure you want to delete your account?")){this.deleteAccount}}}>
 						<i className="fas fa-trash"></i>
 					</button>
 				</div>

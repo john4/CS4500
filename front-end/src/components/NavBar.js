@@ -33,7 +33,7 @@ class NavBar extends Component {
           <div className="col navbar">
             <a href="/search">Movie Search</a>
             {session.isLoggedIn && [
-              <a href="/search">User Search</a>,
+              <a href="/user-search">User Search</a>,
               <NotificationIcon />
             ]}
           </div>

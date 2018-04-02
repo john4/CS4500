@@ -67,8 +67,10 @@ export const ApiWrapper = (() => {
         const LOGOUT_PATH = "/user/logout/";
         const { sessionId } = getSession();
 
-        axios.post(API_ENDPOINT + LOGOUT_PATH, { sessionId });
-        removeSession();
+        axios.post(API_ENDPOINT + LOGOUT_PATH, { sessionId }).then(res => {
+          removeSession();
+          window.location = "/";
+        });
       },
       getAccountDetails: function () {
         const { sessionId } = getSession();

@@ -57,7 +57,7 @@ export const ApiWrapper = (() => {
         return axios.post(API_ENDPOINT + LOGIN_PATH, { email, password })
           .then(res => {
             setSession(res.data);
-            window.location = "/";
+            window.location = "/playlist/genre";
           })
           .catch(err => {
             console.log(err);

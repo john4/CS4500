@@ -34,11 +34,10 @@ class NavBar extends Component {
             <a href="/search">Movie Search</a>
             {session.isLoggedIn && [
               <a href="/search">User Search</a>,
-              <NotificationIcon />,
-              <a href="/playlist/genre"> Playlist</a>
+              <NotificationIcon />
             ]}
           </div>
-          <div className="col text-right">
+          <div className="col">
             <AccountNav username={session.name} />
           </div>
         </div>

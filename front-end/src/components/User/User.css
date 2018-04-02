@@ -6,3 +6,7 @@
 .AccountNav-loginItem {
   margin-left: 1rem;
 }
+
+.AccountNav-dropdown {
+  float: right;
+}

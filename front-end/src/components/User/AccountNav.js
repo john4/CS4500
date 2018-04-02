@@ -1,41 +1,19 @@
 import React, { Component } from 'react';
 import { ApiWrapper } from '../../ApiWrapper';
+import './User.css';
 
 class Account extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      name: '',
-      email: '',
-      password: '',
-      age: 0,
-      genre: '',
-      error: ''
-    }
-
-    this.receiveDetails = this.receiveDetails.bind(this);
-  }
-
-  componentWillMount() {
-    ApiWrapper().api().getAccountDetails().then(this.receiveDetails);
-  }
-
-  receiveDetails(res) {
-    this.setState({
-        name: res.data.name
-    })
-  }
 
   render() {
-    var username = this.state.name;
+    var username = this.props.username;
     if (username) {
       return (
 	  <a href="/user/profile">{username}</a>);
     } else {
-      return (
-        <a href="/login">Log in</a>
-      );
+      return ([
+        <a className="AccountNav-loginItem" href="/login">Log in</a>,
+        <a className="AccountNav-loginItem" href="/register">Register</a>
+      ]);
     }
   }
 }

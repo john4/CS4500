@@ -4,6 +4,7 @@ import axios from 'axios';
 const setSession = function (sessionData) {
   const { session_id, user_data } = sessionData;
 
+  localStorage.setItem("st:isLoggedIn", true);
   localStorage.setItem("st:sessionId", session_id);
   localStorage.setItem("st:userId", user_data._id.$oid);
   localStorage.setItem("st:email", user_data.email);
@@ -14,17 +15,19 @@ const setSession = function (sessionData) {
 }
 
 const removeSession = function () {
-  localStorage.setItem("st:sessionId", null);
-  localStorage.setItem("st:userId", null);
-  localStorage.setItem("st:email", null);
-  localStorage.setItem("st:name", null);
-  localStorage.setItem("st:genre", null);
-  localStorage.setItem("st:photo_url", null);
-  localStorage.setItem("st:age", null);
+  localStorage.removeItem("st:isLoggedIn");
+  localStorage.removeItem("st:sessionId");
+  localStorage.removeItem("st:userId");
+  localStorage.removeItem("st:email");
+  localStorage.removeItem("st:name");
+  localStorage.removeItem("st:genre");
+  localStorage.removeItem("st:photo_url");
+  localStorage.removeItem("st:age");
 }
 
 const getSession = function () {
   return {
+    isLoggedIn: localStorage.getItem("st:isLoggedIn"),
     sessionId: localStorage.getItem("st:sessionId"),
     userId: localStorage.getItem("st:userId"),
     email: localStorage.getItem("st:email"),
@@ -54,7 +57,7 @@ export const ApiWrapper = (() => {
         return axios.post(API_ENDPOINT + LOGIN_PATH, { email, password })
           .then(res => {
             setSession(res.data);
-            window.location = "/";
+            window.location = "/playlist/genre";
           })
           .catch(err => {
             console.log(err);
@@ -64,8 +67,10 @@ export const ApiWrapper = (() => {
         const LOGOUT_PATH = "/user/logout/";
         const { sessionId } = getSession();
 
-        axios.post(API_ENDPOINT + LOGOUT_PATH, { sessionId });
-        removeSession();
+        axios.post(API_ENDPOINT + LOGOUT_PATH, { sessionId }).then(res => {
+          removeSession();
+          window.location = "/";
+        });
       },
       getAccountDetails: function () {
         const { sessionId } = getSession();

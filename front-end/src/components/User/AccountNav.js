@@ -1,41 +1,40 @@
 import React, { Component } from 'react';
 import { ApiWrapper } from '../../ApiWrapper';
+import 'bootstrap/dist/css/bootstrap.css';
+import 'react-bootstrap';
+import './User.css';
 
 class Account extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      name: '',
-      email: '',
-      password: '',
-      age: 0,
-      genre: '',
-      error: ''
-    }
-
-    this.receiveDetails = this.receiveDetails.bind(this);
-  }
-
-  componentWillMount() {
-    ApiWrapper().api().getAccountDetails().then(this.receiveDetails);
-  }
-
-  receiveDetails(res) {
-    this.setState({
-        name: res.data.name
-    })
+      menuOpen: false,
+    };
   }
 
   render() {
-    var username = this.state.name;
+    const username = this.props.username;
+    const { menuOpen } = this.state;
+    const openClass = menuOpen ? "show" : "";
+
     if (username) {
       return (
-	  <a href="/user/profile">{username}</a>);
-    } else {
-      return (
-        <a href="/login">Log in</a>
+        <div className={`AccountNav-dropdown dropdown ${openClass}`}>
+          <a className="btn btn-secondary dropdown-toggle" onClick={() => this.setState({menuOpen: !menuOpen})} href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded={menuOpen}>
+            { username }
+          </a>
+          <div style={{right: 0, left: 'auto'}} className={`dropdown-menu dropdown-menu-right ${openClass}`} aria-labelledby="dropdownMenuLink">
+            <a className="dropdown-item" href="/user/profile">Profile</a>
+            <a className="dropdown-item" href="/logout">Log out</a>
+          </div>
+        </div>
       );
+    } else {
+      return ([
+        <a className="AccountNav-loginItem" href="/login">Log in</a>,
+        <a className="AccountNav-loginItem" href="/register">Register</a>
+      ]);
     }
   }
 }

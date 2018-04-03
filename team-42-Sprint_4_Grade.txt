@@ -1,0 +1,42 @@
+CS4500 Software Development
+
+------------------------------------------------
+Sprint 4 Group Grade Team 42:
+------------------------------------------------
+
+
+Functionality Expectations Achieved:
+-----------------------------------------------
+
+Use-cases (out of 4): 4
+
+Comments on use-cases: The team completed 7 use-cases.  All the use-cases were complete in terms of the basic functionality.
+
+Comments on Functionality Expectations: Did a great job. System logs are very accessible for an admin (if they choose to make one). 
+
+
+Stretches Achieved:
+-----------------------------------------------
+
+
+Stretch: More use cases demonstrated.
+Stretch: more functionality in a particular tier created during the sprint and demonstrated. Here; especially for middle or back-end tiers; showing tests against an interface could be an effective demonstration.
+
+
+Stretch: innovative software design or particularly good use of design patterns. There’s obviously a base expectation that you are doing good design. This is for something that is over and above.
+
+Comments: 
+
+
+Environment Expectations: 
+-----------------------------------------------
+
+Comments: The burndown chart show that team has been working continuously throughout the sprint. This is a significant improvement compared to the previous sprint where you see spikes just before the deadline. 
+
+------------------------------------------------
+Team GRADE: A
+------------------------------------------------
+
+Extra Comments: Overall; the team did an exceptional job and are in a good position to deliver a quality product to their client.
+
+Grader: Amit

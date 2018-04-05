@@ -24,7 +24,7 @@ class WriteReview extends Component {
       <div className="WriteReview">
         <label for="rating" className="WriteReview-label">Review Score:</label>
         <div className="input-group">
-          <EditableRating score={this.state.score} />
+          <EditableRating onScoreClick={this.handleScoreUpdate} score={this.state.score} />
           <input id="description" type="text" className="form-control" ref="description" placeholder="What did you think?" />
           <span className="input-group-append">
             <button type="button" className="btn btn-secondary" onClick={this.submitReview}>Post</button>

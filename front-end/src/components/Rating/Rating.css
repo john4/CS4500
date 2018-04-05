@@ -1,0 +1,12 @@
+.Rating-star {
+  display: inline-block;
+  color: gray;
+}
+
+.Rating-star.st.active {
+  color: #bf354d;
+}
+
+.Rating-star.imdb.active {
+  color: #f0c853;
+}

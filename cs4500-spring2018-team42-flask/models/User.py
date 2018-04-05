@@ -6,7 +6,6 @@ from flask import json
 from werkzeug.security import check_password_hash, generate_password_hash
 from app import DB
 
-
 class User(object):
     """represents a user on Spoiled Tomatillos"""
 
@@ -126,7 +125,7 @@ class User(object):
             'session_id': session_id,
             'email': email
         })
-		
+
     @staticmethod
     def update_user(name, age, photoUrl, genre, email):
         """
@@ -139,10 +138,10 @@ class User(object):
                      'genre': genre
                     }
         })
-        
+
         if not update_data:
             return {"error": "no user found to update"}, 400
-        
+
         response = {"success": "user " + email + " has been updated"}
         return response, 200
 
@@ -160,21 +159,19 @@ class User(object):
         response = {"success": "user " + email + " has been deleted"}
         return response, 200
 
-
     @staticmethod
     def find_all_user_with_name(name):
         """
         Finds all users with a name string that contains the input string
         """
 
-        user_data = DB.User.find({"name": {'$regex': name}}, projection={'password':False})
+        user_data = DB.User.find({"name": {'$regex': name, '$options': 'i'}}, projection={'password':False})
         user_data_list = list(user_data)
 
         if not user_data_list:
             return {"error": "no user with this name exists"}, 400
 
         return user_data_list, 200
-
 
     @staticmethod
     def follow_user_with_id(session_id, oid):

@@ -1,0 +1,30 @@
+.Rating-star {
+  display: inline-block;
+  color: gray;
+}
+
+.Rating-star.st.active {
+  color: #bf354d;
+}
+
+.Rating-star.imdb.active {
+  color: #f0c853;
+}
+
+.EditableRating {
+  padding-right: 1rem;
+}
+
+.EditableRating-star {
+  display: inline-block;
+  color: gray;
+  cursor: pointer;
+}
+
+.EditableRating-star.hoverActive {
+  color: #bf354d;
+}
+
+.EditableRating-star.active {
+  color: #bf354d;
+}

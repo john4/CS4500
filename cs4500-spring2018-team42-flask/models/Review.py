@@ -10,7 +10,7 @@ class Review(object):
 
     def __init__(self):
         self.tmdb_id = None
-        self.user_email = None
+        self.user_id = None
         self.rating = 0
         self.description = ''
 
@@ -20,7 +20,7 @@ class Review(object):
         """
 
         existing_review = DB.Review.find_one({
-            'user_email': self.user_email,
+            'user_id': self.user_id,
             'tmdb_id': self.tmdb_id
         })
 
@@ -49,10 +49,19 @@ class Review(object):
         return response, 200
 
     @staticmethod
-    def get_all(movie_id):
+    def for_movie(movie_id):
         """
         Get all Spoiled Tomatillos reviews for movie with id movie_id
         """
 
         reviews = DB.Review.find({'tmdb_id': movie_id})
+        return reviews, 200
+
+    @staticmethod
+    def for_user(user_id):
+        """
+        Get all Spoiled Tomatillos reviews for user with id user_id
+        """
+
+        reviews = DB.Review.find({'user_id': user_id})
         return reviews, 200

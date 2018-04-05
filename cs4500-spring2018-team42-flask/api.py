@@ -38,7 +38,7 @@ def register_user():
     # log.create()
 
     return make_response(new_user, response_status)
-	
+
 @APP.route('/user/update/', methods=['POST'])
 def update_user():
     """update a user record"""
@@ -48,14 +48,14 @@ def update_user():
     photoUrl = data.get('photoUrl')
     genre = data.get('genre')
     email = data.get('email')
-    
+
     if not email:
         return make_response(dumps({"error": "email is required"}), 400)
 
     update_result, response_status = User.update_user(name, age, photoUrl, genre, email)
 
     return make_response(dumps(update_result), response_status)
-	
+
 
 @APP.route('/user/delete/', methods=['POST'])
 def delete_user():
@@ -148,7 +148,7 @@ def review_movie(movie_id):
         return make_response(dumps({'error': 'must be logged in to review'}), 400)
 
     new_review.tmdb_id = movie_id
-    new_review.user_email = data.get('user_email')
+    new_review.user_id = data.get('user_id')
     new_review.rating = data.get('rating')
     new_review.description = data.get('description')
 
@@ -184,12 +184,24 @@ def get_movie_reviews(movie_id):
     Get all Spoiled Tomatillos reviews for a movie
     """
 
-    reviews, response_code = Review.get_all(movie_id)
+    reviews, response_code = Review.for_movie(movie_id)
 
     # TODO figure out why this breaks tests
     # log = Logs('get_movie_reviews', dumps(reviews), response_code)
     # log.create()
     return make_response(dumps(reviews), response_code)
+
+@APP.route('/user/<user_id>/get-reviews/', methods=['GET'])
+def get_user_reviews(user_id):
+    """
+    Get all Spoiled Tomatillos reviews by a user
+    """
+
+    reviews, response_code = Review.for_user(user_id)
+
+    return make_response(dumps(reviews), response_code)
+
+
 
 @APP.route('/movie/<int:movie_id>/rating/', methods=['GET'])
 def get_movie_avg_rating(movie_id):

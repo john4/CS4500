@@ -10,3 +10,13 @@
 .Rating-star.imdb.active {
   color: #f0c853;
 }
+
+.EditableRating-star {
+  display: inline-block;
+  color: gray;
+  cursor: pointer;
+}
+
+.EditableRating-star.active {
+  color: #bf354d;
+}

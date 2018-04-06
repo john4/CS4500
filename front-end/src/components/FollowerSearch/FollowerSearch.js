@@ -3,13 +3,15 @@ import Search from '../Search/Search';
 import FollowerResults from './FollowerResults'
 import axios from 'axios';
 import { ApiWrapper } from '../../ApiWrapper'
+import { NO_USER_RESULTS } from '../../Errors'
 
 
 class FollowerSearch extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      results: []
+      results: [],
+      error: ""
     };
     this.search = this.search.bind(this);
     this.receiveResults = this.receiveResults.bind(this);
@@ -19,9 +21,11 @@ class FollowerSearch extends Component {
     ApiWrapper().api().searchUser(query)
       .then(this.receiveResults)
       .catch(err => {
-        console.log(err);
         this.setState({results: []});
-      });;
+        if (err.response.data.error) {
+          this.setState({error: NO_USER_RESULTS})
+        }
+      });
   }
 
   receiveResults(res) {
@@ -36,14 +40,15 @@ class FollowerSearch extends Component {
         followMe: user.followMe
       };
     });
-    this.setState({results});
+    this.setState({ results, error: '' });
   }
 
   render() {
-    const {results} = this.state;
+    const {results, error} = this.state;
     const placeholder = "Search user by username...";
     return (
-      <Search onSearch={this.search} results={results} ResultsComponent={FollowerResults} placeholder={placeholder} />
+      <Search onSearch={this.search} results={results} ResultsComponent={FollowerResults} 
+        placeholder={placeholder} error={error}/>
     );
   }
 }

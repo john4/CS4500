@@ -40,8 +40,7 @@ class FollowerSearch extends Component {
         followMe: user.followMe
       };
     });
-    this.setState({results});
-    this.setState({error: ''})
+    this.setState({ results, error: '' });
   }
 
   render() {

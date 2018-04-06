@@ -38,7 +38,7 @@ def register_user():
     # log.create()
 
     return make_response(new_user, response_status)
-	
+
 @APP.route('/user/update/', methods=['POST'])
 def update_user():
     """update a user record"""
@@ -48,28 +48,70 @@ def update_user():
     photoUrl = data.get('photoUrl')
     genre = data.get('genre')
     email = data.get('email')
-    
+
     if not email:
         return make_response(dumps({"error": "email is required"}), 400)
 
     update_result, response_status = User.update_user(name, age, photoUrl, genre, email)
 
     return make_response(dumps(update_result), response_status)
-	
+
+@APP.route('/user/make-admin/', methods=['POST'])
+def make_admin():
+    """make another user an admin"""
+    data = json.loads(request.data)
+    user_id = data.get('user_id')
+    session_id = data.get('session_id')
+
+    if not User.check_session(data.get('session_id')):
+        log = Logs('make_admin', dumps({'error': 'must be logged in to make a user admin'}), 400)
+        log.create()
+        return make_response(dumps({'error': 'must be logged in to make a user admin'}), 400)
+
+    if not user_id:
+        log = Logs('make_admin', dumps({"error": "user id is required"}), 400)
+        log.create()
+        return make_response(dumps({"error": "user id is required"}), 400)
+
+    current_user, _status = User.get_user_data_from_session(session_id)
+
+    if not (current_user.get('isAdmin')):
+        log = Logs('make_admin', dumps({"error": "you do not have permission to make admin"}), 401)
+        log.create()
+        return make_response(dumps({"error": "you do not have permission to make admin"}), 401)
+
+    result, response_status = User.make_admin(user_id)
+    log = Logs('make_admin', dumps(result), response_status)
+    log.create()
+    return make_response(dumps(result), response_status)
+
 
 @APP.route('/user/delete/', methods=['POST'])
 def delete_user():
     """delete a user"""
 
     data = json.loads(request.data)
-    email = data.get('email')
+    user_id = data.get('user_id')
+    session_id = data.get('session_id')
 
-    if not email:
-        log = Logs('delete_user', dumps({"error": "email is required"}), 400)
+    if not User.check_session(data.get('session_id')):
+        log = Logs('delete_user', dumps({'error': 'must be logged in to delete a user'}), 400)
         log.create()
-        return make_response(dumps({"error": "email is required"}), 400)
+        return make_response(dumps({'error': 'must be logged in to delete a user'}), 400)
 
-    delete_result, response_status = User.delete_user(email)
+    if not user_id:
+        log = Logs('delete_user', dumps({"error": "user id is required"}), 400)
+        log.create()
+        return make_response(dumps({"error": "user id is required"}), 400)
+
+    current_user, _status = User.get_user_data_from_session(session_id)
+
+    if not (str(current_user.get('_id')) == user_id or current_user.get('isAdmin')):
+        log = Logs('delete_user', dumps({"error": "you cannot delete an account you do not own"}), 401)
+        log.create()
+        return make_response(dumps({"error": "you cannot delete an account you do not own"}), 401)
+
+    delete_result, response_status = User.delete_user(user_id)
     log = Logs('delete_user', dumps(delete_result), response_status)
     log.create()
 
@@ -350,6 +392,21 @@ def logs_get_all():
     """
     Gets all logs
     """
+
+    data = json.loads(request.data)
+    session_id = data.get('session_id')
+
+    if not User.check_session(data.get('session_id')):
+        log = Logs('logs_get_all', dumps({'error': 'must be logged in to view logs'}), 400)
+        log.create()
+        return make_response(dumps({'error': 'must be logged in to view logs'}), 400)
+
+    current_user, _status = User.get_user_data_from_session(session_id)
+
+    if not (current_user.get('isAdmin')):
+        log = Logs('logs_get_all', dumps({"error": "you do not have permission to view logs"}), 401)
+        log.create()
+        return make_response(dumps({"error": "you do not have permission to view logs"}), 401)
 
     results, response_code = Logs.get_all()
     return make_response(dumps(results), response_code)

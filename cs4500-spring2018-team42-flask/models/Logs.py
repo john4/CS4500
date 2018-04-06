@@ -1,8 +1,7 @@
 """ LOG """
-
-from app import DB
-from bson.objectid import ObjectId
 import datetime
+from app import DB
+
 
 class Logs(object):
     """

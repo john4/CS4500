@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { ApiWrapper } from '../../ApiWrapper';
 import NotificationItem from './NotificationItem';
+import { NO_NOTIFS } from '../../Errors'
 
 class NotificationList extends Component {
     constructor(props) {
@@ -48,7 +49,7 @@ class NotificationList extends Component {
           <div className="container-fluid pt-2">
             <h2>My Notifications</h2>
             <div>
-              <i>No new notifications.</i>
+              <i>{NO_NOTIFS}</i>
             </div>
           </div>
         );

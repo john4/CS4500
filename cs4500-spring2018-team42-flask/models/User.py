@@ -17,6 +17,7 @@ class User(object):
         self.age = None
         self.genre = None
         self.photo_url = None
+        self.isAdmin = None
 
     def register(self):
         """
@@ -126,7 +127,7 @@ class User(object):
             'session_id': session_id,
             'email': email
         })
-		
+
     @staticmethod
     def update_user(name, age, photoUrl, genre, email):
         """
@@ -139,25 +140,39 @@ class User(object):
                      'genre': genre
                     }
         })
-        
+
         if not update_data:
             return {"error": "no user found to update"}, 400
-        
+
         response = {"success": "user " + email + " has been updated"}
         return response, 200
 
     @staticmethod
-    def delete_user(email):
+    def delete_user(user_id):
         """
-        Deletes user whose email matches the input, if it exists
+        Deletes user whose user_id matches the input, if it exists
         """
 
-        user_data = DB.User.find_one_and_delete({"email": email})
+        user_data = DB.User.find_one_and_delete({"_id": ObjectId(user_id)})
 
         if not user_data:
-            return {"error": "no user with this email exists"}, 400
+            return {"error": "no user with this id exists"}, 400
 
-        response = {"success": "user " + email + " has been deleted"}
+        response = {"success": "user " + user_id + " has been deleted"}
+        return response, 200
+
+    @staticmethod
+    def make_admin(user_id):
+        """
+        Makes the user with the given user id an admin
+        """
+
+        user_data = DB.User.find_one_and_update({"_id": ObjectId(user_id)}, {'$set': {'isAdmin': True}})
+
+        if not user_data:
+            return {"error": "no user with this id exists"}, 400
+
+        response = {"success": "user " + user_id + " is now an admin"}
         return response, 200
 
 

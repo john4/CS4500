@@ -201,8 +201,6 @@ def get_user_reviews(user_id):
 
     return make_response(dumps(reviews), response_code)
 
-
-
 @APP.route('/movie/<int:movie_id>/rating/', methods=['GET'])
 def get_movie_avg_rating(movie_id):
     """get the average rating for a movie"""

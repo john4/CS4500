@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Rating from '../Rating/Rating';
 
 class DetailResultItem extends Component {
 
@@ -12,8 +13,8 @@ class DetailResultItem extends Component {
 					</h5>
 				</div>
 				<div>{this.props.overview}</div>
-				<div><b>Rating: {this.props.average} / 10</b></div>
-				<div><b>Spoiled Tomatillos Stars: {this.props.averageRating} / 5</b></div>
+				<div>Critic Rating: <Rating isIMDB={true} score={this.props.average / 2} /></div>
+				<div>Spoiled Tomatillos Rating: <Rating isIMDB={false} score={this.props.averageRating} /></div>
 				<div>Release Date: {this.props.release_date} </div>
 				<span>Movie Length: {this.props.length} </span>
       </div>

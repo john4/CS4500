@@ -20,9 +20,11 @@ class Login extends Component {
     render() {
       return (
           <div>
+            <form>
               <input type="email" placeholder="Email address" ref="email" />
               <input type="password" placeholder="Password" ref="password" />
               <input type="submit" value="Login" onClick={this.handleLogin} />
+            </form>
           </div>
       );
     }

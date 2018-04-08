@@ -25,12 +25,14 @@ class NavBar extends Component {
     const {session} = this.state;
 
     return (
-      <header className="App-header">
-        <div className="row">
+      <header className="App-header w-100">
+        <div className="row w-100">
           <div className="col">
-            <h1 className="App-title">
-                <a className="App-title-link" href="/home/">Spoiled Tomatillos</a>
-            </h1>
+            
+              <h1 className="App-title">
+                <a href="/" className="App-title App-title-link">Spoiled Tomatillos </a>
+              </h1>
+           
           </div>
           <div className="col navbar">
             <button className="spt-btn">

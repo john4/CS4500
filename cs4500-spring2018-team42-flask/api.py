@@ -158,6 +158,15 @@ def user_details():
     log.create()
     return make_response(dumps(result), response_code)
 
+@APP.route('/user/<user_id>/detail/', methods=['GET'])
+def user_details_by_id(user_id):
+    """
+    Get user details for a specific user
+    """
+
+    result, response_code = User.get_user_data(user_id)
+    return make_response(dumps(result), response_code)
+
 @APP.route('/movies/', methods=['GET'])
 def get_movies():
     """get a list of movies from the db"""
@@ -190,9 +199,11 @@ def review_movie(movie_id):
         return make_response(dumps({'error': 'must be logged in to review'}), 400)
 
     new_review.tmdb_id = movie_id
-    new_review.user_email = data.get('user_email')
+    new_review.user_id = data.get('user_id')
+    new_review.user_name = data.get('user_name')
     new_review.rating = data.get('rating')
     new_review.description = data.get('description')
+    new_review.movie_title = data.get('movie_title')
 
     results, response_code = new_review.create()
     log = Logs('review_movie', dumps(results), response_code)
@@ -219,18 +230,27 @@ def delete_movie_reviews(movie_id):
     log.create()
     return make_response(dumps(results), response_code)
 
-
 @APP.route('/movie/<int:movie_id>/get-reviews/', methods=['GET'])
 def get_movie_reviews(movie_id):
     """
     Get all Spoiled Tomatillos reviews for a movie
     """
 
-    reviews, response_code = Review.get_all(movie_id)
+    reviews, response_code = Review.for_movie(movie_id)
 
     # TODO figure out why this breaks tests
     # log = Logs('get_movie_reviews', dumps(reviews), response_code)
     # log.create()
+    return make_response(dumps(reviews), response_code)
+
+@APP.route('/user/<user_id>/get-reviews/', methods=['GET'])
+def get_user_reviews(user_id):
+    """
+    Get all Spoiled Tomatillos reviews by a user
+    """
+
+    reviews, response_code = Review.for_user(user_id)
+
     return make_response(dumps(reviews), response_code)
 
 @APP.route('/movie/<int:movie_id>/rating/', methods=['GET'])
@@ -325,6 +345,21 @@ def i_follow_get_all():
     log.create()
     return make_response(dumps(results), response_code)
 
+@APP.route('/user/i-follow/reviews/', methods=['POST'])
+def i_follow_get_all_reviews():
+    """
+    Gets all reviews by people who a user follows, sorted by most recent
+    """
+
+    data = json.loads(request.data)
+
+    if not User.check_session(data.get('session_id')):
+        return make_response(dumps({'error': 'must be logged in to view followers'}), 400)
+
+    user_id = data.get('user_id')
+    results, response_code = Review.for_users_followed_by(user_id)
+    return make_response(dumps(results), response_code)
+
 @APP.route('/user/prod/', methods=['POST'])
 def prod_users():
     """
@@ -385,7 +420,6 @@ def prod_get_all():
     log = Logs('prod_get_all', dumps(results), response_code)
     log.create()
     return make_response(dumps(results), response_code)
-
 
 @APP.route('/logs/', methods=['GET'])
 def logs_get_all():

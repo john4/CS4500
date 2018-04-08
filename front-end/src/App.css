@@ -22,6 +22,15 @@
 
 .App-title {
   font-size: 1.5em;
+  color: #f0c853;
+}
+
+.App-title a {
+  text-decoration: none !important;
+}
+
+a {
+  text-decoration: none !important;
 }
 
 .App-intro {

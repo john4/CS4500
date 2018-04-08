@@ -37,11 +37,20 @@ class Profile extends Component {
 	componentWillMount() {
 		const api = ApiWrapper().api();
 		if (this.props.match.params.userId) {
-			api.getUserDetails(this.props.match.params.userId).then(res => {
-				this.setState({
-					isOwnAccount: false,
-					...this.getUserInformation(res.data),
-				});
+			// api.getUserDetails(this.props.match.params.userId).then(res => {
+			// 	this.setState({
+			// 		isOwnAccount: false,
+			// 		...this.getUserInformation(res.data),
+			// 	});
+			// });
+
+			this.setState({
+				isOwnAccount: false,
+				name: 'john',
+				email: 'jophn email',
+				age: 14,
+				genre: "Horror",
+				avatar: defaultAvatar,
 			});
 		} else {
 			api.getAccountDetails().then(res => {
@@ -49,7 +58,7 @@ class Profile extends Component {
 					isOwnAccount: true,
 					...this.getUserInformation(res.data),
 				});
-			}
+			});
 		}
 	}
 
@@ -139,8 +148,7 @@ class Profile extends Component {
 
 
 	render() {
-
-		const genre = this.state.genre
+		const { genre, avatar, isOwnAccount } = this.state.genre
 
 		const details = this.state.editMode ? (
 			<div id="DetailsEdit">
@@ -162,25 +170,25 @@ class Profile extends Component {
 			 <ProfileDetails details={this.state} />
 			);
 
-		const avatar = this.state.avatar
-
 		return (
 			<div className="container">
 				<div className="row">
 					<img className="avatar" src={this.state.avatar}  />
 				</div>
-					{details}
-				<div className="row">
-					<button className="btn-sm" onClick={this.handleEditClick}>
-						<i className="fas fa-edit"></i>
-					</button>
-					<button className="btn-sm" onClick={this.handleSubmitClick}>
-						<i className="fas fa-check-square"></i>
-					</button>
-					<button className="btn-sm" onClick={() => { if(window.confirm("Are you sure you want to delete your account?")){this.deleteAccount}}}>
-						<i className="fas fa-trash"></i>
-					</button>
-				</div>
+				{details}
+				{isOwnAccount && (
+					<div className="row">
+						<button className="btn-sm" onClick={this.handleEditClick}>
+							<i className="fas fa-edit"></i>
+						</button>
+						<button className="btn-sm" onClick={this.handleSubmitClick}>
+							<i className="fas fa-check-square"></i>
+						</button>
+						<button className="btn-sm" onClick={() => { if(window.confirm("Are you sure you want to delete your account?")){this.deleteAccount}}}>
+							<i className="fas fa-trash"></i>
+						</button>
+					</div>
+				)}
 			</div>
 		)
 	}

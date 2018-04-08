@@ -27,6 +27,7 @@ class Routes extends Component {
           <Route exact path="/user-search/" component={FollowerSearch} />
           <Route exact path="/movie/:tmdbid/detail/" component={Details} />
 		      <Route exact path="/user/profile/" component={Profile} />
+          <Route exact path="/user/profile/:userId" component={Profile} />
           <Route exact path="/user/notification/" component={NotificationList} />
           <Route exact path="/playlist/genre/" component={Genre} />
         </div>

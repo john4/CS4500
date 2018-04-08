@@ -64,11 +64,22 @@ class Details extends Component {
 						reviewId: review._id.$oid,
             userId: review.user_id,
             userName: review.user_name,
-						isUsersReview: userId == review.user_id,
+						isUsersReview: userId === review.user_id,
 					};
 				})
 			});
 		})
+	}
+
+	hasOwnReview() {
+		const { reviews } = this.state;
+		let result = false;
+		reviews.forEach(review => {
+			if (review.isUsersReview) {
+				result = true;
+			}
+		});
+		return result;
 	}
 
 	renderReviews() {
@@ -95,7 +106,7 @@ class Details extends Component {
 				}
 				<DetailResults {...this.state}/>
 				<button type="button" className="btn btn-secondary" onClick={this.handleOpenReferPanel}>Refer a follower</button>
-				<WriteReview movieId={this.state.id} movieTitle={this.state.original_title} />
+				{!this.hasOwnReview() && <WriteReview movieId={this.state.id} movieTitle={this.state.original_title} />}
 				{this.renderReviews()}
 			</div>
 		);

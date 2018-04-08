@@ -74,7 +74,7 @@ class Review(object):
         """
 
         user = DB.User.find_one({'_id': ObjectId(user_id)})
-        followed = user.get('iFollow')
+        followed = [str(u) for u in user.get('iFollow')]
 
         reviews = list(DB.Review.find({'user_id': {'$in': followed}}))
         return reviews, 200

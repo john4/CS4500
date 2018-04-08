@@ -17,6 +17,7 @@ class MovieReviewTest(unittest.TestCase):
         DB.Review.delete_many({})
         DB.Session.delete_many({})
         DB.Logs.delete_many({})
+        DB.User.delete_many({})
 
         DB.Session.insert_one({
             'session_id': 'abcdefghijklmnopqrstuvwyzabcdef',
@@ -53,6 +54,7 @@ class MovieReviewTest(unittest.TestCase):
         DB.Review.delete_many({})
         DB.Session.delete_many({})
         DB.Logs.delete_many({})
+        DB.User.delete_many({})
 
     def test_review_not_logged_in(self):
         user = DB.User.find_one({'email': 'notarealemail@notarealplace.com'})
@@ -253,6 +255,37 @@ class MovieReviewTest(unittest.TestCase):
         data = json.loads(response.get_data(as_text=True))
         self.assertEqual(response.status_code, 400)
         self.assertEqual(data.get('error'), 'review does not exist')
+
+    def test_get_reviews_i_follow_all(self):
+        user = DB.User.find_one({'email': 'notarealemail@notarealplace.com'})
+        uid = str(user.get('_id'))
+
+        data = {
+            'session_id': 'abcdefghijklmnopqrstuvwyzabcdef',
+            'oid': {'$oid': uid},
+            'user_id': uid
+        }
+
+        review_one = {
+            'user_id': uid,
+            'rating': 3,
+            'session_id': 'abcdefghijklmnopqrstuvwyzabcdef',
+            'description': 'this movie was ok'
+        }
+
+        response = self.app.post('/user/follow/', data=dumps(data))
+        self.assertEqual(response.status_code, 200)
+
+        response = self.app.post('/movie/1234/review/', data=dumps(review_one))
+        self.assertEqual(response.status_code, 200)
+
+        response = self.app.post('/user/i-follow/reviews/', data=dumps(data))
+        data = json.loads(response.get_data(as_text=True))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(data), 1)
+        self.assertEqual(data[0].get('tmdb_id'), 1234)
+
+
 
 if __name__ == "__main__":
     unittest.main()

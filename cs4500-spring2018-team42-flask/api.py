@@ -220,7 +220,6 @@ def delete_movie_reviews(movie_id):
     log.create()
     return make_response(dumps(results), response_code)
 
-
 @APP.route('/movie/<int:movie_id>/get-reviews/', methods=['GET'])
 def get_movie_reviews(movie_id):
     """
@@ -336,7 +335,7 @@ def i_follow_get_all():
     log.create()
     return make_response(dumps(results), response_code)
 
-@APP.route('/user/i-follow/reviews/', methods=['POST', 'GET'])
+@APP.route('/user/i-follow/reviews/', methods=['POST'])
 def i_follow_get_all_reviews():
     """
     Gets all reviews by people who a user follows, sorted by most recent
@@ -411,7 +410,6 @@ def prod_get_all():
     log = Logs('prod_get_all', dumps(results), response_code)
     log.create()
     return make_response(dumps(results), response_code)
-
 
 @APP.route('/logs/', methods=['GET'])
 def logs_get_all():

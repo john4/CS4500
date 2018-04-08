@@ -11,16 +11,13 @@ class ProfileDetails extends Component {
 		return (
 			<div>
 				<div className="row">
-					<span>Name: </span>
 					<span>{this.props.details.name} </span>
 				</div>
 				<div className="row">
-					<span>Email: </span>
 					<span>{this.props.details.email} </span>
 				</div>
 				<div className="row">
-					<span>Genre: </span>
-					<span> {this.props.details.genre} </span>
+					<span> {`Likes ${this.props.details.genre}`} </span>
 				</div>
 
 			</div>

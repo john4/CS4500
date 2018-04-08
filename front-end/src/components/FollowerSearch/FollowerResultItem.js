@@ -57,7 +57,7 @@ class FollowerResultItem extends Component {
             <img className="UserImage" src={photoUrl} />
           </div>
           <div className="FollowerResultItem-body">
-            <b>{name}</b>
+            <b><a href={`/user/profile/${userId}`}>{name}</a></b>
             <p>Likes: {genre}</p>
             <div>{this.props.overview}</div>
           </div>

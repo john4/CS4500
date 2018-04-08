@@ -17,7 +17,7 @@ class Review extends Component {
   }
 
   render() {
-    const { userEmail, rating, description } = this.props;
+    const { userName, rating, description } = this.props;
 
     return (
       <div className="Review">

@@ -11,6 +11,7 @@ import Logout from './components/Logout';
 import Profile from './components/User/Profile';
 import NotificationList from './components/Notification/NotificationList';
 import Genre from './components/Playlist/Genre';
+import Home from './components/Home';
 
 class Routes extends Component {
   render() {
@@ -18,7 +19,7 @@ class Routes extends Component {
       <Router>
         <div>
           <Route path="/" component={App} />
-          <Route exact path="/" component={Login} />
+          <Route exact path="/" component={Home} />
           <Route exact path="/login/" component={Login} />
           <Route exact path="/logout/" component={Logout} />
           <Route exact path="/register/" component={Register} />

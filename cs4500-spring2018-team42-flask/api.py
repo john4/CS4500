@@ -158,6 +158,15 @@ def user_details():
     log.create()
     return make_response(dumps(result), response_code)
 
+@APP.route('/user/<user_id>/detail/', methods=['GET'])
+def user_details_by_id(user_id):
+    """
+    Get user details for a specific user
+    """
+
+    result, response_code = User.get_user_data(user_id)
+    return make_response(dumps(result), response_code)
+
 @APP.route('/movies/', methods=['GET'])
 def get_movies():
     """get a list of movies from the db"""

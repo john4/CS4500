@@ -18,6 +18,12 @@ class UserTests(unittest.TestCase):
         DB.User.delete_many({})
         DB.Logs.delete_many({})
 
+        DB.User.insert_one({
+            'email': 'me@me.com',
+            'name': 'Test User',
+            'password': 'no'
+        })
+
     # executed after each test
     def tearDown(self):
         DB.Logs.delete_many({})
@@ -25,6 +31,21 @@ class UserTests(unittest.TestCase):
 
 
     # Tests ########################################
+    def test_get_user_detail_by_id(self):
+        user = DB.User.find_one({'email': 'me@me.com'})
+        uid = user.get('_id')
+
+        response = self.app.get('/user/{user_id}/detail/'.format(user_id=str(uid)))
+        data = json.loads(response.get_data(as_text=True))
+        self.assertEqual(response.status_code, 200)
+        self.assertIsNone(data.get('password'))
+        self.assertEqual(data.get('email'), 'me@me.com')
+
+        DB.User.delete_one({'email': 'me@me.com'})
+        response = self.app.get('/user/{user_id}/detail/'.format(user_id=str(uid)))
+        data = json.loads(response.get_data(as_text=True))
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(data.get('error'), 'user not found')
 
     def test_user_login_does_not_exist(self):
         login = {

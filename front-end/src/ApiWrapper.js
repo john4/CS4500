@@ -74,6 +74,13 @@ export const ApiWrapper = (() => {
 
         return axios.get(API_ENDPOINT + `/user/detail/?sessionId=${sessionId}`);
       },
+      getUserDetails: function (userId) {
+        const { sessionId } = getSession();
+
+        return axios.post(API_ENDPOINT + `/user/${userId}`, {
+          session_id: sessonId,
+        });
+      },
       getAverageMovieRating: function (movieId) {
         return axios.get(API_ENDPOINT + `/movie/${movieId}/rating/`);
       },

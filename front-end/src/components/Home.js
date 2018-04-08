@@ -13,10 +13,12 @@ class Home extends Component {
     this.state = {
       session: null,
       iFollow: [],
-      genreRecResults: []
+      genreRecResults: [],
+      currentMovieResults: []
     };
 
     this.handleGenreRec = this.handleGenreRec.bind(this);
+    this.handleCurrentMovies = this.handleCurrentMovies.bind(this);
     this.handleGetIFollow = this.handleGetIFollow.bind(this);
   }
 
@@ -31,6 +33,21 @@ class Home extends Component {
         this.handleGenreRec(results);
       });
 
+    var ltDate = new Date();
+    ltDate.setDate(ltDate.getDate() + 1);
+    const ltDateString = ltDate.getFullYear() + '-' + (ltDate.getMonth() + 1) + '-' + ltDate.getDate();
+
+    var gtDate = new Date();
+    gtDate.setDate(gtDate.getDate() - 21);
+    const gtDateString = gtDate.getFullYear() + '-' + (gtDate.getMonth() + 1) + '-' + gtDate.getDate();
+
+    axios.get(TMDB_URL + 'primary_release_date.gte=' + gtDateString +
+      '&primary_release_date.lte=' + ltDateString + '&sort_by=vote_average.desc&vote_count.gte=15')
+      .then(res => {
+        const results = res.data.results;
+        this.handleCurrentMovies(results);
+      });
+
     ApiWrapper().api().getUsersWhoAreFollowed()
       .then(res => {
         const results = res.data;
@@ -40,6 +57,10 @@ class Home extends Component {
 
   handleGenreRec(results) {
     this.setState({genreRecResults: results.splice(0, 10)});
+  }
+
+  handleCurrentMovies(results) {
+    this.setState({currentMovieResults: results.splice(0, 10)});
   }
 
   handleGetIFollow(results) {
@@ -54,11 +75,21 @@ class Home extends Component {
       var posterPath = 'https://image.tmdb.org/t/p/w200' + result.poster_path;
       var detailURL = '/movie/' + result.id + '/detail/';
       return (
-        <a href={detailURL}>
-          <img src={posterPath} key={result.id} className="Home-poster pr-2" />
+        <a href={detailURL} key={result.id}>
+          <img src={posterPath} className="Home-poster pr-2" />
         </a>
       );
     });
+
+    const currentMovieItems = this.state.currentMovieResults.map(function(result) {
+      var posterPath = 'https://image.tmdb.org/t/p/w200' + result.poster_path;
+      var detailURL = '/movie/' + result.id + '/detail';
+      return (
+        <a href={detailURL} key={result.id}>
+          <img src={posterPath} className="Home-poster pr-2" />
+        </a>
+      );
+    })
 
     var currentlyShowing = (
       <div>
@@ -80,6 +111,7 @@ class Home extends Component {
 
     return (
       <div className="container-fluid">
+        {session.isLoggedIn && currentlyShowing}
         {session.isLoggedIn && genreRecs}
       </div>
     );

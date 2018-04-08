@@ -12,6 +12,8 @@ import Profile from './components/User/Profile';
 import NotificationList from './components/Notification/NotificationList';
 import Genre from './components/Playlist/Genre';
 
+//Expecting Homepage route to be "/home/"
+
 class Routes extends Component {
   render() {
     return (

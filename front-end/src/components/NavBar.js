@@ -28,12 +28,19 @@ class NavBar extends Component {
       <header className="App-header">
         <div className="row">
           <div className="col">
-            <h1 className="App-title">Spoiled Tomatillos</h1>
+            <h1 className="App-title">
+                <a className="App-title-link" href="/home/">Spoiled Tomatillos</a>
+            </h1>
           </div>
           <div className="col navbar">
-            <a href="/search">Movie Search</a>
+            <button className="spt-btn">
+                <a href="/search">Movie Search</a>
+            </button>
+            
             {session.isLoggedIn && [
-              <a href="/user-search">User Search</a>,
+              <button className="spt-btn">
+              <a className="" href="/user-search">User Search</a>
+              </button>,
               <NotificationIcon />
             ]}
           </div>

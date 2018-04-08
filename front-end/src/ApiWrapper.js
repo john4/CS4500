@@ -58,9 +58,6 @@ export const ApiWrapper = (() => {
           .then(res => {
             setSession(res.data);
             window.location = "/playlist/genre";
-          })
-          .catch(err => {
-            console.log(err);
           });
       },
       removeSession: function () {

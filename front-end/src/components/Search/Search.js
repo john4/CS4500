@@ -5,12 +5,15 @@ import SearchBox from './SearchBox';
 
 class Search extends Component {
   render() {
-    const {onSearch, results, ResultsComponent, placeholder} = this.props;
+    const {onSearch, results, ResultsComponent, placeholder, error} = this.props;
 
     return (
       <div>
         <SearchBox onSearch={onSearch} placeholder={placeholder} />
-        <ResultsComponent searchResults={results} />
+        <div className="px-4">
+          <i>{error}</i>
+        </div>
+        <ResultsComponent searchResults={results} error={error}/>
       </div>
     );
   }

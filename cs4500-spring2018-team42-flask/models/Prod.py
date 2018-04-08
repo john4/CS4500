@@ -1,8 +1,9 @@
 """ PROD """
 
+import datetime
 from app import DB
 from bson.objectid import ObjectId
-import datetime
+
 
 class Prod(object):
     """

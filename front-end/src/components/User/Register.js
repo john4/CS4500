@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { ApiWrapper } from '../../ApiWrapper';
 import GENRES from '../../Genres'
+import { OOPS } from '../../Errors'
 
 
 class Register extends Component {
@@ -42,7 +43,7 @@ class Register extends Component {
             window.location = "/login";
         })
         .catch(err => {
-            this.setState({error: "Error: " + err.response.data.error});
+            this.setState({error: OOPS + err.response.data.error});
         });
 
         e.preventDefault();
@@ -60,7 +61,9 @@ class Register extends Component {
         
         return (
             <div>
-                <h3>{this.state.error}</h3>
+                <div>
+                      <i>{this.state.error}</i>
+                </div>
                 <form onSubmit={this.submit}>
                     <div>
                         <label>Name</label>

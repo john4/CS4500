@@ -9,21 +9,30 @@ class SearchBox extends Component {
         value: null
       };
       this.onChange = this.onChange.bind(this);
+      this.onSubmit = this.onSubmit.bind(this);
     }
 
     onChange(evt) {
       this.setState({value: evt.target.value});
     }
 
+    onSubmit(evt) {
+      const onSearch = this.props.onSearch;
+      evt.preventDefault();
+      onSearch(this.state.value);
+    }
+  
     render() {
-      const { onSearch, placeholder } = this.props;
+      const placeholder = this.props.placeholder;
 
       return (
         <div className="SearchBox input-group">
-            <input className="form-control" type="text" ref="query" placeholder={placeholder || "Batman..."} onChange={this.onChange} />
+          <form onSubmit={this.onSubmit}>
             <span className="input-group-append">
-              <button className="btn btn-secondary" type="button" onClick={() => onSearch(this.state.value)} value="Search">Search</button>
+              <input className="form-control" type="text" ref="query" placeholder={placeholder || "Batman..."} onChange={this.onChange} />
+              <button className="btn btn-secondary" type="submit" value="Search">Search</button>
             </span>
+          </form>
         </div>
       );
     }

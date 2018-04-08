@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Modal from '../Modal/Modal';
 import ProdResultItem from './ProdResultItem';
 import {ApiWrapper} from '../../ApiWrapper';
+import { NO_FOLLOWERS } from '../../Errors'
 
 class FollowerModal extends Component {
   constructor(props) {
@@ -33,6 +34,10 @@ class FollowerModal extends Component {
   renderFollowerResults() {
     const { followers, alreadySentFollowers } = this.state;
 
+    if (followers.length < 1) {
+      return <i>{NO_FOLLOWERS}</i>
+    }
+    
     return followers.map(follower => {
       const userId = follower._id.$oid;
 

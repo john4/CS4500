@@ -1,7 +1,7 @@
 """ REVIEWS """
-
-from app import DB
 from bson.objectid import ObjectId
+from app import DB
+
 
 class Review(object):
     """

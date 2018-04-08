@@ -25,8 +25,8 @@ class NavBar extends Component {
     const {session} = this.state;
 
     return (
-      <header className="App-header">
-        <div className="row">
+      <header className="App-header w-100">
+        <div className="row w-100">
           <div className="col">
             <a href="/" className="App-title">
               <h1 className="App-title">Spoiled Tomatillos</h1>

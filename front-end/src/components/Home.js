@@ -14,7 +14,7 @@ class Home extends Component {
       session: null,
       iFollow: [],
       genreRecResults: [],
-      currentMovieResults: []
+      currentMovieResults: [],
     };
 
     this.handleGenreRec = this.handleGenreRec.bind(this);
@@ -27,7 +27,7 @@ class Home extends Component {
     this.setState({session: session});
 
     const genreId = GENRES[session.genre];
-    axios.get(TMDB_URL + 'with_genres=' + genreId + '&sort_by=vote_average.desc&vote_count.gte=100')
+    axios.get(TMDB_URL + 'with_genres=' + genreId + '&sort_by=popularity.desc')
       .then(res => {
         const results = res.data.results;
         this.handleGenreRec(results);
@@ -42,7 +42,7 @@ class Home extends Component {
     const gtDateString = gtDate.getFullYear() + '-' + (gtDate.getMonth() + 1) + '-' + gtDate.getDate();
 
     axios.get(TMDB_URL + 'primary_release_date.gte=' + gtDateString +
-      '&primary_release_date.lte=' + ltDateString + '&sort_by=vote_average.desc&vote_count.gte=15')
+      '&primary_release_date.lte=' + ltDateString + '&sort_by=popularity.desc')
       .then(res => {
         const results = res.data.results;
         this.handleCurrentMovies(results);
@@ -56,11 +56,11 @@ class Home extends Component {
   }
 
   handleGenreRec(results) {
-    this.setState({genreRecResults: results.splice(0, 10)});
+    this.setState({genreRecResults: results.splice(0, 12)});
   }
 
   handleCurrentMovies(results) {
-    this.setState({currentMovieResults: results.splice(0, 10)});
+    this.setState({currentMovieResults: results.splice(0, 12)});
   }
 
   handleGetIFollow(results) {
@@ -69,14 +69,13 @@ class Home extends Component {
 
   render() {
     const {session} = this.state;
-    console.log(this.state);
 
     const genreRecItems = this.state.genreRecResults.map(function(result) {
       var posterPath = 'https://image.tmdb.org/t/p/w200' + result.poster_path;
       var detailURL = '/movie/' + result.id + '/detail/';
       return (
         <a href={detailURL} key={result.id}>
-          <img src={posterPath} className="Home-poster pr-2" />
+          <img src={posterPath} className="Home-poster pr-2 pt-2" />
         </a>
       );
     });
@@ -86,23 +85,23 @@ class Home extends Component {
       var detailURL = '/movie/' + result.id + '/detail';
       return (
         <a href={detailURL} key={result.id}>
-          <img src={posterPath} className="Home-poster pr-2" />
+          <img src={posterPath} className="Home-poster pr-2 pt-2" />
         </a>
       );
     })
 
     var currentlyShowing = (
       <div>
-        <h4>Top rated movies in theatres</h4>
+        <h3>Most popular movies in theatres</h3>
         <div>
           {currentMovieItems}
         </div>
       </div>
-    )
+    );
 
     var genreRecs = (
       <div>
-        <h4>Top rated movies in {session.genre}</h4>
+        <h3>Most popular {session.genre} movies</h3>
         <div>
           {genreRecItems}
         </div>
@@ -111,8 +110,17 @@ class Home extends Component {
 
     return (
       <div className="container-fluid">
-        {session.isLoggedIn && currentlyShowing}
-        {session.isLoggedIn && genreRecs}
+        <div className="row pt-2">
+          <div className="col-8">
+            {currentlyShowing}
+          </div>
+        </div>
+
+        <div className="row pt-4">
+          <div className="col-8">
+            {session.isLoggedIn && genreRecs}
+          </div>
+        </div>
       </div>
     );
   }

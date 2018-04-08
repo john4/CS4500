@@ -191,6 +191,7 @@ def review_movie(movie_id):
 
     new_review.tmdb_id = movie_id
     new_review.user_id = data.get('user_id')
+    new_review.user_name = data.get('user_name')
     new_review.rating = data.get('rating')
     new_review.description = data.get('description')
 
@@ -333,6 +334,21 @@ def i_follow_get_all():
     results, response_code = User.get_users_i_follow(user_id)
     log = Logs('i_follow_get_all', dumps(results), response_code)
     log.create()
+    return make_response(dumps(results), response_code)
+
+@APP.route('/user/i-follow/reviews/', methods=['POST', 'GET'])
+def i_follow_get_all_reviews():
+    """
+    Gets all reviews by people who a user follows, sorted by most recent
+    """
+
+    data = json.loads(request.data)
+
+    if not User.check_session(data.get('session_id')):
+        return make_response(dumps({'error': 'must be logged in to view followers'}), 400)
+
+    user_id = data.get('user_id')
+    results, response_code = Review.for_users_followed_by(user_id)
     return make_response(dumps(results), response_code)
 
 @APP.route('/user/prod/', methods=['POST'])

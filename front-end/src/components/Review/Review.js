@@ -17,13 +17,13 @@ class Review extends Component {
   }
 
   render() {
-    const { userEmail, rating, description } = this.props;
+    const { userName, rating, description } = this.props;
 
     return (
       <div className="Review">
         {this.renderDelete()}
         <div className="Review-user">
-          {userEmail}
+          <span>{userName}</span>
         </div>
         <div className="Review-rating">
           <span>{rating}</span> / 5

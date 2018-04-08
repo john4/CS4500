@@ -52,7 +52,7 @@ class Details extends Component {
 	}
 
 	getReviews() {
-		const { email } = ApiWrapper().getSession();
+		const { userId, email } = ApiWrapper().getSession();
 
 		ApiWrapper().api().getReviews(this.props.match.params.tmdbid).then(res => {
 			this.setState({
@@ -62,8 +62,9 @@ class Details extends Component {
 						rating: review.rating,
 						tmdbId: review.tmdb_id,
 						reviewId: review._id.$oid,
-						userEmail: review.user_email,
-						isUsersReview: email == review.user_email,
+            userId: review.user_id,
+            userName: review.user_name,
+						isUsersReview: userId == review.user_id,
 					};
 				})
 			});

@@ -78,13 +78,14 @@ export const ApiWrapper = (() => {
         return axios.get(API_ENDPOINT + `/movie/${movieId}/rating/`);
       },
       createMovieReview: function (movieId, score, description) {
-        const { sessionId, email } = getSession();
+        const { sessionId, userId, name } = getSession();
 
         return axios.post(
           API_ENDPOINT + '/movie/' + movieId + '/review/',
           {
             session_id: sessionId,
-            user_email: email,
+            user_id: userId,
+            user_name: name,
             rating: score,
             description,
           }

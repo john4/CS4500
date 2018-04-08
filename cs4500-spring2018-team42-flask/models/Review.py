@@ -11,6 +11,7 @@ class Review(object):
     def __init__(self):
         self.tmdb_id = None
         self.user_id = None
+        self.user_name = ''
         self.rating = 0
         self.description = ''
 
@@ -64,4 +65,16 @@ class Review(object):
         """
 
         reviews = DB.Review.find({'user_id': user_id})
+        return reviews, 200
+
+    @staticmethod
+    def for_users_followed_by(user_id):
+        """
+        Get all Spoiled Tomatillos reviews for users follow by user
+        """
+
+        user = DB.User.find_one({'_id': ObjectId(user_id)})
+        followed = user.get('iFollow')
+
+        reviews = list(DB.Review.find({'user_id': {'$in': followed}}))
         return reviews, 200

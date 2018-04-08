@@ -8,7 +8,7 @@ import NavBar from './components/NavBar';
 class App extends Component {
   render() {
     return (
-      <div className="App">
+      <div className="App container-fluid p-0">
         {<NavBar />}
       </div>
     );

@@ -15,6 +15,7 @@ class Profile extends Component {
 
 		this.state = {
 			genre: '',
+			isOwnAccount: this.props.match.params.userId ? false : true,
 			editMode: false
 		};
 
@@ -34,34 +35,32 @@ class Profile extends Component {
 	}
 
 	componentWillMount() {
-		ApiWrapper().api().getAccountDetails().then(res => {
-			this.previousDetails = this.getUserInformation(res.data)
-		}).catch(res => {
-			console.log("Unable to get user data")
-			window.location = '/login'
-		});
+		const api = ApiWrapper().api();
+		if (this.props.match.params.userId) {
+			api.getUserDetails(this.props.match.params.userId).then(res => {
+				this.setState({
+					isOwnAccount: false,
+					...this.getUserInformation(res.data),
+				});
+			});
+		} else {
+			api.getAccountDetails().then(res => {
+				this.setState({
+					isOwnAccount: true,
+					...this.getUserInformation(res.data),
+				});
+			}
+		}
 	}
 
-	getUserInformation(response){
-
-			this.setState({
-				name: response.name,
-				email: response.email,
-				age: response.age,
-				genre: response.genre
-			})
-			if(response.photo_url){
-				this.setState({
-					avatar: response.photo_url
-				})
-			} else {
-				response.photoUrl = defaultAvatar
-				this.setState({
-					avatar: defaultAvatar
-				})
-			}
-
-			return response
+	getUserInformation(response) {
+		return {
+			name: response.name,
+			email: response.email,
+			age: response.age,
+			genre: response.genre,
+			avatar: response.photo_url ? response.photo_url : defaultAvatar,
+		};
 	}
 
 	handleEditClick() {

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { ApiWrapper } from '../ApiWrapper';
 import axios from 'axios';
 import GENRES from '../Genres';
+import Rating from './Rating/Rating';
 import './Home.css';
 
 const TMDB_URL = 'http://api.themoviedb.org/3/discover/movie?include_adult=false&page=1&language=en-US&api_key=020a1282ad51b08df67da919fca9f44e&';
@@ -12,14 +13,14 @@ class Home extends Component {
 
     this.state = {
       session: null,
-      iFollow: [],
+      recentReviewResults: [],
       genreRecResults: [],
       currentMovieResults: [],
     };
 
     this.handleGenreRec = this.handleGenreRec.bind(this);
     this.handleCurrentMovies = this.handleCurrentMovies.bind(this);
-    this.handleGetIFollow = this.handleGetIFollow.bind(this);
+    this.handleRecentReviews = this.handleRecentReviews.bind(this);
   }
 
   componentWillMount() {
@@ -48,11 +49,9 @@ class Home extends Component {
         this.handleCurrentMovies(results);
       });
 
-    ApiWrapper().api().getUsersWhoAreFollowed()
-      .then(res => {
-        const results = res.data;
-        this.handleGetIFollow(results);
-      });
+    var reviews = ApiWrapper().api().getFollowedRecentReviews().then(res => {
+      this.handleRecentReviews(res.data);
+    });
   }
 
   handleGenreRec(results) {
@@ -63,8 +62,8 @@ class Home extends Component {
     this.setState({currentMovieResults: results.splice(0, 12)});
   }
 
-  handleGetIFollow(results) {
-    this.setState({iFollow: results});
+  handleRecentReviews(results) {
+    this.setState({recentReviewResults: results.splice(0, 12)});
   }
 
   render() {
@@ -82,13 +81,26 @@ class Home extends Component {
 
     const currentMovieItems = this.state.currentMovieResults.map(function(result) {
       var posterPath = 'https://image.tmdb.org/t/p/w200' + result.poster_path;
-      var detailURL = '/movie/' + result.id + '/detail';
+      var detailURL = '/movie/' + result.id + '/detail/';
       return (
         <a href={detailURL} key={result.id}>
           <img src={posterPath} className="Home-poster pr-2 pt-2" />
         </a>
       );
-    })
+    });
+
+    const recentRevItems = this.state.recentReviewResults.map(function(result) {
+      var detailURL = '/movie/' + result.tmdb_id + '/detail/';
+      return (
+        <div className="pt-2">
+          <h5 className="border-top border-dark pt-2">
+            {result.user_name} reviewed
+            <a href={detailURL} className="pl-1">{result.movie_title}</a>
+          </h5>
+          <Rating isIMDB={false} score={result.rating} />
+        </div>
+      );
+    });
 
     var currentlyShowing = (
       <div>
@@ -108,17 +120,40 @@ class Home extends Component {
       </div>
     );
 
+    var recentRevs = (
+      <div>
+        <h3>Recent reviews by people you follow</h3>
+        <div>
+          {recentRevItems}
+        </div>
+      </div>
+    );
+
+    var registerPrompt = (
+      <div>
+        <h3>
+          <a href='/login'>Log In</a> or <a href='/register'>Register</a> to see personalized
+          recommendations and reviews by people you follow.
+        </h3>
+      </div>
+    );
+
     return (
       <div className="container-fluid">
-        <div className="row pt-2">
+        <div className="row pt-3 pb-5">
           <div className="col-8">
-            {currentlyShowing}
-          </div>
-        </div>
+            <div className="row px-2">
+              {currentlyShowing}
+            </div>
 
-        <div className="row pt-4">
-          <div className="col-8">
-            {session.isLoggedIn && genreRecs}
+            <div className="row px-2 pt-3">
+              {session.isLoggedIn && genreRecs}
+            </div>
+          </div>
+
+          <div className="col-4">
+              {session.isLoggedIn && recentRevs}
+              {!session.isLoggedIn && registerPrompt}
           </div>
         </div>
       </div>

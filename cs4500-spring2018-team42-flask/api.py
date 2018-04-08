@@ -194,6 +194,7 @@ def review_movie(movie_id):
     new_review.user_name = data.get('user_name')
     new_review.rating = data.get('rating')
     new_review.description = data.get('description')
+    new_review.movie_title = data.get('movie_title')
 
     results, response_code = new_review.create()
     log = Logs('review_movie', dumps(results), response_code)

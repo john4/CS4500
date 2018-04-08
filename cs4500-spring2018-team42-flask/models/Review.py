@@ -12,6 +12,7 @@ class Review(object):
         self.tmdb_id = None
         self.user_id = None
         self.user_name = ''
+        self.movie_title = ''
         self.rating = 0
         self.description = ''
 
@@ -74,7 +75,12 @@ class Review(object):
         """
 
         user = DB.User.find_one({'_id': ObjectId(user_id)})
-        followed = [str(u) for u in user.get('iFollow')]
 
-        reviews = list(DB.Review.find({'user_id': {'$in': followed}}))
+        followed = user.get('iFollow')
+        reviews = []
+        if followed:
+            followed = [str(u) for u in user.get('iFollow')]
+            reviews = list(DB.Review.find({'user_id': {'$in': followed}}))
+            reviews.reverse()
+
         return reviews, 200

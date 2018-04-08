@@ -16,7 +16,7 @@ class WriteReview extends Component {
   }
 
   submitReview() {
-    ApiWrapper().api().createMovieReview(this.props.movieId, this.state.score, this.refs.description.value);
+    ApiWrapper().api().createMovieReview(this.props.movieId, this.props.movieTitle, this.state.score, this.refs.description.value);
   }
 
   render() {

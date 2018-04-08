@@ -77,13 +77,14 @@ export const ApiWrapper = (() => {
       getAverageMovieRating: function (movieId) {
         return axios.get(API_ENDPOINT + `/movie/${movieId}/rating/`);
       },
-      createMovieReview: function (movieId, score, description) {
+      createMovieReview: function (movieId, movieTitle, score, description) {
         const { sessionId, userId, name } = getSession();
 
         return axios.post(
           API_ENDPOINT + '/movie/' + movieId + '/review/',
           {
             session_id: sessionId,
+            movie_title: movieTitle,
             user_id: userId,
             user_name: name,
             rating: score,
@@ -163,6 +164,15 @@ export const ApiWrapper = (() => {
             user_id: lookupUserId,
           }
         );
+      },
+      getFollowedRecentReviews: function () {
+        const { sessionId, userId } = getSession();
+
+        return axios.post(`${API_ENDPOINT}/user/i-follow/reviews/`,
+          {
+            session_id: sessionId,
+            user_id: userId
+          });
       },
       getNotifications: function () {
         const { sessionId, userId } = getSession();

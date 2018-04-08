@@ -14,9 +14,9 @@ class Details extends Component {
 		this.state = {
 			referPanelOpen: false,
 			reviews: [],
-		};
-		this.URL      = 'http://ec2-54-87-191-69.compute-1.amazonaws.com:5000/movie/' + this.props.match.params.tmdbid + '/detail/';
+    };
 
+		this.URL      = 'http://ec2-54-87-191-69.compute-1.amazonaws.com:5000/movie/' + this.props.match.params.tmdbid + '/detail/';
 		this.handleCloseReferPanel = this.handleCloseReferPanel.bind(this);
 		this.handleOpenReferPanel = this.handleOpenReferPanel.bind(this);
 	}
@@ -84,7 +84,7 @@ class Details extends Component {
 	}
 
 	render() {
-		const { referPanelOpen } = this.state;
+    const { referPanelOpen } = this.state;
 		return (
 			<div>
 				{referPanelOpen &&
@@ -95,7 +95,7 @@ class Details extends Component {
 				}
 				<DetailResults {...this.state}/>
 				<button type="button" className="btn btn-secondary" onClick={this.handleOpenReferPanel}>Refer a follower</button>
-				<WriteReview movieId={this.state.id}/>
+				<WriteReview movieId={this.state.id} movieTitle={this.state.original_title} />
 				{this.renderReviews()}
 			</div>
 		);

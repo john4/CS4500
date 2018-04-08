@@ -37,20 +37,11 @@ class Profile extends Component {
 	componentWillMount() {
 		const api = ApiWrapper().api();
 		if (this.props.match.params.userId) {
-			// api.getUserDetails(this.props.match.params.userId).then(res => {
-			// 	this.setState({
-			// 		isOwnAccount: false,
-			// 		...this.getUserInformation(res.data),
-			// 	});
-			// });
-
-			this.setState({
-				isOwnAccount: false,
-				name: 'john',
-				email: 'jophn email',
-				age: 14,
-				genre: "Horror",
-				avatar: defaultAvatar,
+			api.getUserDetails(this.props.match.params.userId).then(res => {
+				this.setState({
+					isOwnAccount: false,
+					...this.getUserInformation(res.data),
+				});
 			});
 		} else {
 			api.getAccountDetails().then(res => {

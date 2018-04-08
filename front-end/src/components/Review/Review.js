@@ -18,12 +18,12 @@ class Review extends Component {
 
   render() {
     const { userName, rating, description } = this.props;
-
+    // <a href={`/user/profile/${userId}`}>{userEmail}</a>
     return (
       <div className="Review">
         {this.renderDelete()}
         <div className="Review-user">
-          <a href=`/user/profile/${userId}`>{userEmail}</a>
+
         </div>
         <div className="Review-rating">
           <span>{rating}</span> / 5

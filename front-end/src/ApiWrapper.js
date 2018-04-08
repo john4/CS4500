@@ -41,8 +41,8 @@ const getSession = function () {
 export const ApiWrapper = (() => {
   let instance;
   function init() {
-    const API_ENDPOINT = "http://ec2-54-87-191-69.compute-1.amazonaws.com:5000";
-    //const API_ENDPOINT = "http://127.0.0.1:5000";
+    // const API_ENDPOINT = "http://ec2-54-87-191-69.compute-1.amazonaws.com:5000";
+    const API_ENDPOINT = "http://127.0.0.1:5000";
 
     return {
       get: function (path) {
@@ -77,14 +77,16 @@ export const ApiWrapper = (() => {
       getAverageMovieRating: function (movieId) {
         return axios.get(API_ENDPOINT + `/movie/${movieId}/rating/`);
       },
-      createMovieReview: function (movieId, score, description) {
-        const { sessionId, email } = getSession();
+      createMovieReview: function (movieId, movieTitle, score, description) {
+        const { sessionId, userId, name } = getSession();
 
         return axios.post(
           API_ENDPOINT + '/movie/' + movieId + '/review/',
           {
             session_id: sessionId,
-            user_email: email,
+            movie_title: movieTitle,
+            user_id: userId,
+            user_name: name,
             rating: score,
             description,
           }
@@ -162,6 +164,15 @@ export const ApiWrapper = (() => {
             user_id: lookupUserId,
           }
         );
+      },
+      getFollowedRecentReviews: function () {
+        const { sessionId, userId } = getSession();
+
+        return axios.post(`${API_ENDPOINT}/user/i-follow/reviews/`,
+          {
+            session_id: sessionId,
+            user_id: userId
+          });
       },
       getNotifications: function () {
         const { sessionId, userId } = getSession();

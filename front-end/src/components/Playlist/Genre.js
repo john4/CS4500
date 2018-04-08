@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import GenrePlaylist from './GenrePlaylist';
-import GENRES from '../../Genres'
+import GENRES from '../../Genres';
 import { ApiWrapper } from '../../ApiWrapper.js';
 
 class Genre extends Component {

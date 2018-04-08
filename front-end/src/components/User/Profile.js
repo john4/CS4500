@@ -35,8 +35,11 @@ class Profile extends Component {
 	}
 
 	componentWillMount() {
+		const { userId } = ApiWrapper().getSession();
 		const api = ApiWrapper().api();
-		if (this.props.match.params.userId) {
+
+		if (this.props.match.params.userId &&
+				this.props.match.params.userId !== userId) {
 			api.getUserDetails(this.props.match.params.userId).then(res => {
 				this.setState({
 					isOwnAccount: false,
@@ -139,7 +142,7 @@ class Profile extends Component {
 
 
 	render() {
-		const { genre, avatar, isOwnAccount } = this.state.genre
+		const { genre, avatar, isOwnAccount } = this.state;
 
 		const details = this.state.editMode ? (
 			<div id="DetailsEdit">

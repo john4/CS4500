@@ -23,7 +23,7 @@ class Review extends Component {
       <div className="Review">
         {this.renderDelete()}
         <div className="Review-user">
-          {userEmail}
+          <a href=`/user/profile/${userId}`>{userEmail}</a>
         </div>
         <div className="Review-rating">
           <span>{rating}</span> / 5

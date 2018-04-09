@@ -139,21 +139,23 @@ class Home extends Component {
     );
 
     return (
-      <div className="container-fluid">
-        <div className="row pt-3 pb-5">
-          <div className="col-8">
-            <div className="row px-2">
-              {currentlyShowing}
+      <div className="container">
+        <div className="container-fluid">
+          <div className="row pt-3 pb-5">
+            <div className="col-8">
+              <div className="row px-2">
+                {currentlyShowing}
+              </div>
+
+              <div className="row px-2 pt-3">
+                {session.isLoggedIn && genreRecs}
+              </div>
             </div>
 
-            <div className="row px-2 pt-3">
-              {session.isLoggedIn && genreRecs}
+            <div className="col-4">
+                {session.isLoggedIn && recentRevs}
+                {!session.isLoggedIn && registerPrompt}
             </div>
-          </div>
-
-          <div className="col-4">
-              {session.isLoggedIn && recentRevs}
-              {!session.isLoggedIn && registerPrompt}
           </div>
         </div>
       </div>

@@ -97,7 +97,7 @@ class Details extends Component {
 	render() {
     const { referPanelOpen } = this.state;
 		return (
-			<div>
+			<div className="container">
 				{referPanelOpen &&
 					<FollowerModal
 						movieId={this.props.match.params.tmdbid}

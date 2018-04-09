@@ -19,7 +19,7 @@ pipeline {
 		$class: 'CoberturaPublisher',
 	        coberturaReportFile: 'coverage.xml',
 		lineCoverageTargets: '98, 98, 50',
-		conditionalCoverageTargets: '90, 90, 50',
+		conditionalCoverageTargets: '93, 93, 50',
 	        failUnhealthy: true,
 	        failUnstable: true
 	    ])

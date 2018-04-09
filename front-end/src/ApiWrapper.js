@@ -211,7 +211,7 @@ export const ApiWrapper = (() => {
         );
       },
       getLogs: function () {
-        const { sessionId, userId } = getSession();
+        const { sessionId } = getSession();
         return axios.post(`${API_ENDPOINT}/logs/`,
         {
           session_id: sessionId

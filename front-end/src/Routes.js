@@ -12,6 +12,7 @@ import Profile from './components/User/Profile';
 import NotificationList from './components/Notification/NotificationList';
 import Genre from './components/Playlist/Genre';
 import Home from './components/Home';
+import Logs from './components/Logs/Logs';
 
 class Routes extends Component {
   render() {
@@ -30,6 +31,7 @@ class Routes extends Component {
           <Route exact path="/user/profile/:userId" component={Profile} />
           <Route exact path="/user/notification/" component={NotificationList} />
           <Route exact path="/playlist/genre/" component={Genre} />
+          <Route exact path="/logs/" component={Logs} />
         </div>
       </Router>
     )

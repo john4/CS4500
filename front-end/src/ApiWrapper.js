@@ -210,6 +210,13 @@ export const ApiWrapper = (() => {
           }
         );
       },
+      getLogs: function () {
+        const { sessionId, userId } = getSession();
+        return axios.post(`${API_ENDPOINT}/logs/`,
+        {
+          session_id: sessionId
+        })
+      },
 	  updateUser: function(data) {
 		return axios.post(`${API_ENDPOINT}/user/update/`,
 		  {

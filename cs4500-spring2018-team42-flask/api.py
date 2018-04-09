@@ -426,7 +426,7 @@ def prod_get_all():
     log.create()
     return make_response(dumps(results), response_code)
 
-@APP.route('/logs/', methods=['GET'])
+@APP.route('/logs/', methods=['POST'])
 def logs_get_all():
     """
     Gets all logs

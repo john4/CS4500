@@ -13,16 +13,22 @@ class NavBar extends Component {
     super(props);
 
     this.state = {
-      session: null
+      session: null,
+      isAdmin: false
     };
   }
 
   componentWillMount() {
-    this.setState({session: ApiWrapper().getSession()});
-  }
+    this.setState({
+      session: ApiWrapper().getSession(),
+      isAdmin: ApiWrapper().api().getAccountDetails().then(res => {
+        return res.data.isAdmin
+      })
+    });
+	}
 
   render() {
-    const {session} = this.state;
+    const {session, isAdmin} = this.state;
 
     return (
       <header className="App-header w-100">
@@ -33,6 +39,9 @@ class NavBar extends Component {
             </a>
           </div>
           <div className="col navbar">
+            {isAdmin && [
+              <a href="/logs">View Logs</a>
+            ]}
             <a href="/search">Movie Search</a>
             {session.isLoggedIn && [
               <a href="/user-search">User Search</a>,

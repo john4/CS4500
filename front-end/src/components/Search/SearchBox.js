@@ -21,17 +21,19 @@ class SearchBox extends Component {
       evt.preventDefault();
       onSearch(this.state.value);
     }
-  
+
     render() {
       const placeholder = this.props.placeholder;
 
       return (
         <div className="SearchBox input-group">
           <form onSubmit={this.onSubmit}>
-            <span className="input-group-append">
-              <input className="form-control" type="text" ref="query" placeholder={placeholder || "Batman..."} onChange={this.onChange} />
-              <button className="btn btn-secondary" type="submit" value="Search">Search</button>
-            </span>
+            <div className="form-group">
+              <span className="input-group-append">
+                <input className="form-control" type="text" ref="query" placeholder={placeholder || "Batman..."} onChange={this.onChange} />
+                <button className="btn btn-secondary" type="submit" value="Search">Search</button>
+              </span>
+            </div>
           </form>
         </div>
       );

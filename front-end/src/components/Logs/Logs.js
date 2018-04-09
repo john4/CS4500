@@ -24,7 +24,7 @@ class Logs extends Component {
         })
       }); 
     }
-	}
+  }
 
   render() {
     const { isAdmin, logs } = this.state

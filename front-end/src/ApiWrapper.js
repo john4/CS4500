@@ -12,6 +12,7 @@ const setSession = function (sessionData) {
   localStorage.setItem("st:genre", user_data.genre);
   localStorage.setItem("st:photo_url", user_data.photo_url);
   localStorage.setItem("st:age", user_data.age);
+  localStorage.setItem("st:isAdmin", user_data.isAdmin);
 }
 
 const removeSession = function () {
@@ -23,6 +24,7 @@ const removeSession = function () {
   localStorage.removeItem("st:genre");
   localStorage.removeItem("st:photo_url");
   localStorage.removeItem("st:age");
+  localStorage.removeItem("st:isAdmin");
 }
 
 const getSession = function () {
@@ -35,6 +37,7 @@ const getSession = function () {
     genre: localStorage.getItem("st:genre"),
     photoUrl: localStorage.getItem("st:photo_url"),
     age: localStorage.getItem("st:age"),
+    isAdmin: localStorage.getItem("st:isAdmin")
   };
 }
 

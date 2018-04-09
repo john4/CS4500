@@ -8,17 +8,15 @@ class Logs extends Component {
     super(props);
 
     this.state = {
-      isAdmin: false,
+      session: null
     };
     this.onDelete = this.onDelete.bind(this)
   }
 
   componentWillMount() {
-    ApiWrapper().api().getAccountDetails().then(res => {
-      this.setState({
-        isAdmin: res.data.isAdmin
-      })
-    });
+    this.setState({
+      session: ApiWrapper().getSession()
+    })
   }
 
   onDelete() {
@@ -28,13 +26,13 @@ class Logs extends Component {
   }
 
   render() {
-    const { isAdmin, logsDeleted, success } = this.state
-    if (isAdmin) {
+    const { session } = this.state
+    if (session.isAdmin == true) {
       return (
         <div className="container">
           <h3>System Logs</h3>
           <button className="btn btn-secondary" type="button" onClick={this.onDelete}>Clear Logs</button>
-          <LogResults isAdmin={isAdmin} />
+          <LogResults isAdmin={session.isAdmin} />
         </div>
       );
     }

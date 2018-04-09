@@ -3,9 +3,9 @@ import './Review.css';
 
 class Review extends Component {
   renderDelete() {
-    const { isUsersReview, onDelete, movieId, reviewId } = this.props;
+    const { isUsersReview, onDelete, movieId, reviewId, session } = this.props;
 
-    if (!isUsersReview) {
+    if (!isUsersReview && session.isAdmin !== "true") {
       return null;
     }
 

@@ -1,42 +1,44 @@
 import React, { Component } from 'react';
 import { ApiWrapper } from '../../ApiWrapper';
+import LogResults from './LogResults'
+
 
 class Logs extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      logs: null,
-      isAdmin: false
+      isAdmin: false,
     };
+    this.onDelete = this.onDelete.bind(this)
   }
 
   componentWillMount() {
-    const isAdmin = ApiWrapper().api().getAccountDetails().then(res => {
-      return res.data.isAdmin
+    ApiWrapper().api().getAccountDetails().then(res => {
+      this.setState({
+        isAdmin: res.data.isAdmin
+      })
     });
+  }
 
-    if (isAdmin) {
-      var logs = ApiWrapper().api().getLogs().then(res => {
-        this.setState({
-          isAdmin: isAdmin,
-          logs: res.data
-        })
-      }); 
-    }
+  onDelete() {
+    ApiWrapper().api().clearLogs().then(res => {
+      window.location.reload()
+    })
   }
 
   render() {
-    const { isAdmin, logs } = this.state
+    const { isAdmin, logsDeleted, success } = this.state
     if (isAdmin) {
       return (
-        <div>
+        <div className="container">
           <h3>System Logs</h3>
-          {JSON.stringify(logs)}
+          <button className="btn btn-secondary" type="button" onClick={this.onDelete}>Clear Logs</button>
+          <LogResults isAdmin={isAdmin} />
         </div>
       );
     }
-    return <div></div>
+    return null
   }
 
 }

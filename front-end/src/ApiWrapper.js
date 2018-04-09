@@ -217,6 +217,13 @@ export const ApiWrapper = (() => {
           session_id: sessionId
         })
       },
+      clearLogs: function () {
+        const { sessionId } = getSession();
+        return axios.post(`${API_ENDPOINT}/logs/clear/`,
+        {
+          session_id: sessionId
+        })
+      },
 	  updateUser: function(data) {
 		return axios.post(`${API_ENDPOINT}/user/update/`,
 		  {

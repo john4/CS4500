@@ -452,3 +452,30 @@ def logs_get_all():
 
     results, response_code = Logs.get_all()
     return make_response(dumps(results), response_code)
+
+@APP.route('/logs/clear/', methods=['POST'])
+def logs_clear_all():
+    """
+    Clear all logs.
+    """
+
+    data = json.loads(request.data)
+    session_id = data.get('session_id')
+
+    if not User.check_session(data.get('session_id')):
+        log = Logs('logs_clear_all', \
+            dumps({'error': 'must be logged in to clear logs'}), 400)
+        log.create()
+        return make_response(dumps({'error': 'must be logged in to clear logs'}), 400)
+
+    current_user, _ = User.get_user_data_from_session(session_id)
+
+    if not current_user.get('isAdmin'):
+        log = Logs('logs_clear_all', \
+            dumps({"error": "you do not have permission to clear logs"}), 401)
+        log.create()
+        return make_response(dumps({"error": "you do not have permission to clear logs"}), \
+            401)
+
+    results, response_code = Logs.clear_all()
+    return make_response(dumps(results), response_code)

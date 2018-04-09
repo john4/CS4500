@@ -17,7 +17,7 @@ class MovieSearch extends Component {
   }
 
   search(query) {
-    const url = 'http://api.themoviedb.org/3/search/movie?include_adult=false&page=1&language=en-US&api_key=020a1282ad51b08df67da919fca9f44e&query=' + query;
+    const url = 'http://api.themoviedb.org/3/search/movie?include_adult=false&page=1&language=en-US&api_key='+ process.env.REACT_APP_TMDB_API_KEY + '&query=' + query;
     axios.get(url)
       .then(this.receiveResults)
   }

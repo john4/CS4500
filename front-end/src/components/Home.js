@@ -5,7 +5,7 @@ import GENRES from '../Genres';
 import Rating from './Rating/Rating';
 import './Home.css';
 
-const TMDB_URL = 'http://api.themoviedb.org/3/discover/movie?include_adult=false&page=1&language=en-US&api_key=020a1282ad51b08df67da919fca9f44e&';
+const TMDB_URL = 'http://api.themoviedb.org/3/discover/movie?include_adult=false&page=1&language=en-US&api_key=' + process.env.REACT_APP_TMDB_API_KEY + '&';
 
 class Home extends Component {
   constructor(props) {

@@ -18,7 +18,7 @@ class GenrePlaylist extends Component {
   }
 
   componentWillMount() {
-    var url = "https://api.themoviedb.org/3/genre/" + this.props.genreID + "/movies?api_key=020a1282ad51b08df67da919fca9f44e&language=en-US&include_adult=false&sort_by=created_at.asc"
+    var url = "https://api.themoviedb.org/3/genre/" + this.props.genreID + "/movies?api_key=" + process.env.REACT_APP_TMDB_API_KEY + "&language=en-US&include_adult=false&sort_by=created_at.asc"
     axios.get(url)
       .then(res => {
         const response = res.data;

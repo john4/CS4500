@@ -8,7 +8,7 @@ class Search extends Component {
     const {onSearch, results, ResultsComponent, placeholder, error} = this.props;
 
     return (
-      <div>
+      <div className="container">
         <SearchBox onSearch={onSearch} placeholder={placeholder} />
         <div className="px-4">
           <i>{error}</i>

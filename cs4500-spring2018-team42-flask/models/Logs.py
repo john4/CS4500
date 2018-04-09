@@ -32,3 +32,16 @@ class Logs(object):
 
         logs = DB.Logs.find({})
         return list(logs), 200
+
+    @staticmethod
+    def clear_all():
+        """
+        Clear all logs
+        """
+
+        result = DB.Logs.delete_many({})
+        return_data = {
+            'success': 'all logs deleted',
+            'logs_deleted': result.deleted_count
+        }
+        return return_data, 200

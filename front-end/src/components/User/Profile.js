@@ -51,6 +51,7 @@ class Profile extends Component {
 					...this.getUserInformation(res.data),
 					session,
 				});
+				this.getUserReviews(this.props.match.params.userId);
 			});
 		} else {
 			api.getAccountDetails().then(res => {
@@ -59,12 +60,9 @@ class Profile extends Component {
 					...this.getUserInformation(res.data),
 					session,
 				});
+				this.getUserReviews(session.userId);
 			});
 		}
-
-		api.getUserReviews(this.props.match.params.userId).then(res => {
-			this.handleRecentReviews(res.data);
-		});
 	}
 
 	getUserInformation(response) {
@@ -76,6 +74,12 @@ class Profile extends Component {
 			avatar: response.photo_url ? response.photo_url : defaultAvatar,
 			isAdmin: response.isAdmin
 		};
+	}
+
+	getUserReviews(userId) {
+		ApiWrapper().api().getUserReviews(userId).then(res => {
+			this.handleRecentReviews(res.data);
+		});
 	}
 
 	handleRecentReviews(results) {
@@ -208,17 +212,18 @@ class Profile extends Component {
 	}
 
 	render() {
-		const { isOwnAccount, session, avatar, isAdmin } = this.state
+		const { name, isOwnAccount, session, avatar, isAdmin } = this.state
 		const { userId } = this.props.match.params
 		return (
 			<div className="container">
-				<div className="row">
+				<div className="row" style={{paddingTop: "1rem"}}>
 					<div className="col-4">
 						<img className="avatar" src={avatar}  />
 						{this.renderDetails()}
 						<PromoteAdmin userId={userId || session.userId} session={session} userIsAdmin={isAdmin}/>
 					</div>
 					<div className="col-8">
+						<h3>Recent reviews by {name}</h3>
 						{this.renderReviews()}
 					</div>
 				</div>

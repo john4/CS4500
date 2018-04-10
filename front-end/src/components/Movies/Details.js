@@ -26,7 +26,7 @@ class Details extends Component {
 	componentWillMount() {
 		this.getDetails(this.URL);
 		this.getSession();
-    	this.getAverageRating();
+		this.getAverageRating();
 		this.getReviews();
 	}
 

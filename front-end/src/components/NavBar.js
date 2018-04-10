@@ -21,7 +21,7 @@ class NavBar extends Component {
     this.setState({
       session: ApiWrapper().getSession()
     });
-	}
+  }
 
   render() {
     const {session} = this.state;

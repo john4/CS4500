@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ApiWrapper } from '../ApiWrapper';
 import axios from 'axios';
 import GENRES from '../Genres';
-import Rating from './Rating/Rating';
+import ReviewNotificationItem from './Review/ReviewNotificationItem';
 import './Home.css';
 
 const TMDB_URL = 'http://api.themoviedb.org/3/discover/movie?include_adult=false&page=1&language=en-US&api_key=' + process.env.REACT_APP_TMDB_API_KEY + '&';
@@ -89,18 +89,14 @@ class Home extends Component {
       );
     });
 
-    const recentRevItems = this.state.recentReviewResults.map(function(result) {
-      var detailURL = '/movie/' + result.tmdb_id + '/detail/';
-      return (
-        <div className="pt-2">
-          <h5 className="border-top border-dark pt-2">
-            {result.user_name} reviewed
-            <a href={detailURL} className="pl-1">{result.movie_title}</a>
-          </h5>
-          <Rating isIMDB={false} score={result.rating} />
-        </div>
-      );
-    });
+    const recentRevItems = this.state.recentReviewResults.map((result) =>
+      <ReviewNotificationItem
+        userName={result.user_name}
+        movieTitle={result.movie_title}
+        movieId={result.tmdb_id}
+        rating={result.rating}
+      />
+    );
 
     var currentlyShowing = (
       <div>

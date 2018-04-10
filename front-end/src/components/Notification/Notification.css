@@ -13,3 +13,12 @@
     min-width: 2em;
     font-weight: bold;
 }
+
+.NotificationItem-img {
+    min-width: 100px;
+    max-width: 100px;
+}
+
+.NotificationItem-body {
+    padding-left: 4rem;
+}

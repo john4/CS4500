@@ -8,16 +8,17 @@ class ProfileDetails extends Component {
 	}
 
 	render(){
+		const { name, email, genre } = this.props.details
 		return (
 			<div>
 				<div className="row">
-					<span>{this.props.details.name} </span>
+					<h3>{name} </h3>
 				</div>
 				<div className="row">
-					<span>{this.props.details.email} </span>
+					<span>{email} </span>
 				</div>
 				<div className="row">
-					<span> {`Likes ${this.props.details.genre}`} </span>
+					<span> {`Likes: ${genre}`} </span>
 				</div>
 
 			</div>

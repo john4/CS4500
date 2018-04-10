@@ -72,6 +72,14 @@ export const ApiWrapper = (() => {
           window.location = "/";
         });
       },
+      deleteAccount: function (data) {
+        axios.post(API_ENDPOINT + "/user/delete/", data).then(res => {
+          removeSession();
+          window.location = "/";
+        });
+
+        removeSession();
+      },
       getAccountDetails: function () {
         const { sessionId } = getSession();
 

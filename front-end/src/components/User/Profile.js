@@ -5,6 +5,7 @@ import ProfileDetailsEdit from './Profile-Details-Edit.js';
 import GENRES from '../../Genres'
 import { ApiWrapper } from '../../ApiWrapper';
 import './Profile.css';
+import PromoteAdmin from './PromoteAdmin'
 
 const defaultAvatar = "https://sites.google.com/a/windermereprep.com/canvas/_/rsrc/1486400406169/home/unknown-user/user-icon.png"
 
@@ -16,30 +17,26 @@ class Profile extends Component {
 		this.state = {
 			genre: '',
 			isOwnAccount: this.props.match.params.userId ? false : true,
-			editMode: false
+			editMode: false,
+			session: null
 		};
 
 		this.handleEditClick = this.handleEditClick.bind(this);
 		this.handleSubmitClick = this.handleSubmitClick.bind(this);
 		this.handleCancelClick = this.handleCancelClick.bind(this);
-		this.renderOptions = this.renderOptions.bind(this);
 		this.deleteAccount = this.deleteAccount.bind(this);
 		this.updateName = this.updateName.bind(this);
 		this.updateEmail = this.updateEmail.bind(this);
-		this.updateAge = this.updateAge.bind(this);
 		this.updateAvatar = this.updateAvatar.bind(this);
 		this.updateGenre = this.updateGenre.bind(this);
 		this.api = ApiWrapper().api()
-		this.getUserInformation = this.getUserInformation.bind(this)
-		this.previousDetails = {}
 	}
 
 	componentWillMount() {
-		const { userId } = ApiWrapper().getSession();
+		const session = ApiWrapper().getSession();
 		const api = ApiWrapper().api();
-
 		if (this.props.match.params.userId &&
-				this.props.match.params.userId !== userId) {
+				this.props.match.params.userId !== session.userId) {
 			api.getUserDetails(this.props.match.params.userId).then(res => {
 				this.setState({
 					isOwnAccount: false,
@@ -54,6 +51,13 @@ class Profile extends Component {
 				});
 			});
 		}
+		this.getSession();
+	}
+
+	getSession() {
+		this.setState({
+			session: ApiWrapper().getSession()
+		})
 	}
 
 	getUserInformation(response) {
@@ -63,6 +67,7 @@ class Profile extends Component {
 			age: response.age,
 			genre: response.genre,
 			avatar: response.photo_url ? response.photo_url : defaultAvatar,
+			isAdmin: response.isAdmin
 		};
 	}
 
@@ -71,28 +76,28 @@ class Profile extends Component {
 	}
 
 	handleSubmitClick() {
-		this.setState({
-					editMode: false})
-
+		const { name, email, age, avatar, genre } = this.state
 		var data = {
-			name: this.state.name,
-			email: this.state.email,
-			age: this.state.age,
-			photoUrl: this.state.avatar,
-			genre: this.state.genre
+			name: name,
+			email: email,
+			age: age,
+			photoUrl: avatar,
+			genre: genre
 		}
+		ApiWrapper().api().updateUser(data).then(res => {
+			this.setState({editMode: false})
+		})
 
-		ApiWrapper().api().updateUser(data)
 	}
 
 	handleCancelClick(){
-		this.setState({
-            name: this.previousDetails.name,
-			email: this.previousDetails.email,
-			age: this.previousDetails.age,
-			genre: this.previousDetails.genre,
-			avatar: this.previousDetails.photo_url,
-			editMode: false
+		const { userId } = this.props.match.params
+
+		ApiWrapper().api().getUserDetails(userId).then(res => {
+			this.setState({
+				...this.getUserInformation(res.data),
+				editMode: false
+			})
 		})
 	}
 
@@ -105,11 +110,7 @@ class Profile extends Component {
 	}
 
 	updateEmail(value){
-		this.setState({ email: value})
-	}
-
-	updateAge(value){
-		this.setState({age: value})
+		this.setState({ email: value })
 	}
 
 	updateAvatar(value){
@@ -123,13 +124,20 @@ class Profile extends Component {
 	}
 
 	deleteAccount(){
-		var data = {email: this.state.email}
-		ApiWrapper().api().post("/user/delete/", data).then(res => {
-			window.location = "/register"
-		})
-		.catch(error => {
-			console.log(error.data)
-		})
+		const { session } = this.state
+		const { userId } = this.props.match.params
+		if(window.confirm("Are you sure you want to delete your account?")) {
+			var data = {
+				user_id: userId || session.userId,
+				session_id: session.sessionId
+			}
+			ApiWrapper().api().deleteAccount(data).then(res => {
+				window.location = "/"
+			})
+			.catch(error => {
+				console.log(error.data)
+			})
+		}
 	}
 
 	renderOptions() {
@@ -140,15 +148,15 @@ class Profile extends Component {
         return opts
     }
 
+	renderDetails() {
+		const { genre, avatar, isOwnAccount, session, editMode } = this.state;
 
-	render() {
-		const { genre, avatar, isOwnAccount } = this.state;
-
-		const details = this.state.editMode ? (
+		if (editMode) {
+			return (
 			<div id="DetailsEdit">
+				<ProfileDetailsEdit details={this.state.avatar} handleChange={this.updateAvatar} what={"Avatar"}/>
 				<ProfileDetailsEdit details={this.state.name} handleChange={this.updateName} what={"Name"}/>
 				<span className="row">Email: {this.state.email}</span>
-				<ProfileDetailsEdit details={this.state.avatar} handleChange={this.updateAvatar} what={"Avatar"}/>
 				<div className="row">
 					<span>Genre: </span>
 					<select name="genre" value={genre} onChange={this.updateGenre} required>
@@ -156,33 +164,38 @@ class Profile extends Component {
 						{this.renderOptions()}
 					</select>
 				</div>
-				<button className="btn-sm" onClick={this.handleCancelClick}>
-					<i class="fas fa-ban"></i>
-				</button>
+				<div className="row">
+					<button className="btn btn-secondary" onClick={this.handleSubmitClick}>Save Changes</button>
+					<button className="btn btn-secondary" onClick={this.handleCancelClick}>Cancel</button>
+				</div>
 			</div>
-		): (
-			 <ProfileDetails details={this.state} />
 			);
+		}
+		return (
+			<div>
+				<ProfileDetails details={this.state} />
+				{(isOwnAccount || session.isAdmin) && (
+					<div className="row">
+						<button className="btn btn-secondary" onClick={this.handleEditClick}>Edit Profile</button>
+						<button className="btn btn-secondary" onClick={this.deleteAccount}>Delete Account</button>
+					</div>
+				)}
+			</div>
+		)
+	}
 
+	render() {
+		const { isOwnAccount, session, avatar, isAdmin } = this.state
+		const { userId } = this.props.match.params
 		return (
 			<div className="container">
 				<div className="row">
-					<img className="avatar" src={this.state.avatar}  />
+					<img className="avatar" src={avatar}  />
 				</div>
-				{details}
-				{isOwnAccount && (
-					<div className="row">
-						<button className="btn-sm" onClick={this.handleEditClick}>
-							<i className="fas fa-edit"></i>
-						</button>
-						<button className="btn-sm" onClick={this.handleSubmitClick}>
-							<i className="fas fa-check-square"></i>
-						</button>
-						<button className="btn-sm" onClick={() => { if(window.confirm("Are you sure you want to delete your account?")){this.deleteAccount}}}>
-							<i className="fas fa-trash"></i>
-						</button>
-					</div>
-				)}
+				{this.renderDetails()}
+				<div className="row">
+					<PromoteAdmin userId={userId || session.userId} session={session} userIsAdmin={isAdmin}/>
+				</div>
 			</div>
 		)
 	}

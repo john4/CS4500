@@ -12,6 +12,7 @@ const setSession = function (sessionData) {
   localStorage.setItem("st:genre", user_data.genre);
   localStorage.setItem("st:photo_url", user_data.photo_url);
   localStorage.setItem("st:age", user_data.age);
+  localStorage.setItem("st:isAdmin", user_data.isAdmin);
 }
 
 const removeSession = function () {
@@ -23,6 +24,7 @@ const removeSession = function () {
   localStorage.removeItem("st:genre");
   localStorage.removeItem("st:photo_url");
   localStorage.removeItem("st:age");
+  localStorage.removeItem("st:isAdmin");
 }
 
 const getSession = function () {
@@ -35,6 +37,7 @@ const getSession = function () {
     genre: localStorage.getItem("st:genre"),
     photoUrl: localStorage.getItem("st:photo_url"),
     age: localStorage.getItem("st:age"),
+    isAdmin: localStorage.getItem("st:isAdmin") === "true"
   };
 }
 
@@ -68,6 +71,25 @@ export const ApiWrapper = (() => {
           removeSession();
           window.location = "/";
         });
+      },
+      deleteAccount: function (sessionId, userId) {
+        const data = {
+          session_id: sessionId,
+          user_id: userId
+        }
+        axios.post(API_ENDPOINT + "/user/delete/", data).then(res => {
+          removeSession();
+          window.location = "/";
+        });
+
+        removeSession();
+      },
+      promoteToAdmin: function(sessionId, userId) {
+        const data = {
+          session_id: sessionId,
+          user_id: userId
+        }
+        return axios.post(API_ENDPOINT + "/user/make-admin/", data)
       },
       getAccountDetails: function () {
         const { sessionId } = getSession();
@@ -209,6 +231,20 @@ export const ApiWrapper = (() => {
             message: "",
           }
         );
+      },
+      getLogs: function () {
+        const { sessionId } = getSession();
+        return axios.post(`${API_ENDPOINT}/logs/`,
+        {
+          session_id: sessionId
+        })
+      },
+      clearLogs: function () {
+        const { sessionId } = getSession();
+        return axios.post(`${API_ENDPOINT}/logs/clear/`,
+        {
+          session_id: sessionId
+        })
       },
 	  updateUser: function(data) {
 		return axios.post(`${API_ENDPOINT}/user/update/`,

@@ -14,16 +14,19 @@ class Details extends Component {
 		this.state = {
 			referPanelOpen: false,
 			reviews: [],
-    };
+			session: null
+   	 	};
 
 		this.URL      = 'http://ec2-54-87-191-69.compute-1.amazonaws.com:5000/movie/' + this.props.match.params.tmdbid + '/detail/';
 		this.handleCloseReferPanel = this.handleCloseReferPanel.bind(this);
 		this.handleOpenReferPanel = this.handleOpenReferPanel.bind(this);
+		this.handleDelete = this.handleDelete.bind(this);
 	}
 
 	componentWillMount() {
 		this.getDetails(this.URL);
-    this.getAverageRating();
+		this.getSession();
+		this.getAverageRating();
 		this.getReviews();
 	}
 
@@ -41,6 +44,12 @@ class Details extends Component {
 			const response = res.data;
 			this.setState({ ...response });
 		});
+	}
+
+	getSession() {
+		this.setState({
+			session: ApiWrapper().getSession()
+		})
 	}
 
 	getAverageRating() {
@@ -62,8 +71,8 @@ class Details extends Component {
 						rating: review.rating,
 						tmdbId: review.tmdb_id,
 						reviewId: review._id.$oid,
-            userId: review.user_id,
-            userName: review.user_name,
+            			userId: review.user_id,
+            			userName: review.user_name,
 						isUsersReview: userId === review.user_id,
 					};
 				})
@@ -82,15 +91,26 @@ class Details extends Component {
 		return result;
 	}
 
+	handleDelete(reviewId, sessionId) {
+		ApiWrapper().api().deleteReview(reviewId, sessionId).then(res => {
+			window.location.reload()
+		})
+	}
+
 	renderReviews() {
-		const { reviews } = this.state;
+		const { reviews, session } = this.state;
 
 		if (!reviews) {
 			return null;
 		}
 
 		return reviews.map(review => {
-			return <Review { ...review } movieId={this.props.match.params.tmdbid} onDelete={ ApiWrapper().api().deleteReview } />;
+			return <Review
+				{ ...review }
+				movieId={this.props.match.params.tmdbid}
+				onDelete={this.handleDelete}
+				session={session}
+			/>;
 		});
 	}
 

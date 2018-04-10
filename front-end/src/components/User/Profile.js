@@ -92,8 +92,9 @@ class Profile extends Component {
 
 	handleCancelClick(){
 		const { userId } = this.props.match.params
+		const { session } = this.state
 
-		ApiWrapper().api().getUserDetails(userId).then(res => {
+		ApiWrapper().api().getUserDetails(userId || session.userId).then(res => {
 			this.setState({
 				...this.getUserInformation(res.data),
 				editMode: false

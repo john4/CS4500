@@ -27,7 +27,7 @@ class Logs extends Component {
 
   render() {
     const { session } = this.state
-    if (session.isAdmin === "true") {
+    if (session.isAdmin) {
       return (
         <div className="container">
           <h3>System Logs</h3>

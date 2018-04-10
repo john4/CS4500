@@ -35,7 +35,7 @@ class NavBar extends Component {
             </a>
           </div>
           <div className="col navbar">
-            {session.isLoggedIn && session.isAdmin === "true" && [
+            {session.isLoggedIn && session.isAdmin === true && [
               <a href="/logs">View Logs</a>
             ]}
             <a href="/search">Movie Search</a>

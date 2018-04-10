@@ -12,7 +12,7 @@ class LogResults extends Component {
 
   componentWillMount() {
     const { session } = this.props
-    if (session.isAdmin === "true") {
+    if (session.isAdmin) {
       ApiWrapper().api().getLogs().then(res => {
         this.setState({
           logs: res.data

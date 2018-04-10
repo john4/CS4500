@@ -15,12 +15,12 @@ class PromoteAdmin extends Component {
     }
 
     render() {
-        const { session, userIsAdmin } = this.props
+        const { sessionIsAdmin, userIsAdmin } = this.props
         
-        if (session.isAdmin === "true" && userIsAdmin === true) {
+        if (sessionIsAdmin && userIsAdmin) {
             return <span>This user is a system administrator.</span>
         }
-        if (session.isAdmin === "true") {
+        if (sessionIsAdmin) {
             return <button className="btn btn-secondary" onClick={this.promoteToAdmin}>Give This User Admin Rights</button>
         }
         return <div></div>

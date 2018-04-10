@@ -37,7 +37,7 @@ const getSession = function () {
     genre: localStorage.getItem("st:genre"),
     photoUrl: localStorage.getItem("st:photo_url"),
     age: localStorage.getItem("st:age"),
-    isAdmin: localStorage.getItem("st:isAdmin")
+    isAdmin: localStorage.getItem("st:isAdmin") === "true"
   };
 }
 

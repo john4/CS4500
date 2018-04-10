@@ -30,7 +30,6 @@ class Profile extends Component {
 		this.updateAvatar = this.updateAvatar.bind(this);
 		this.updateGenre = this.updateGenre.bind(this);
 		this.api = ApiWrapper().api()
-		this.previousDetails = {}
 	}
 
 	componentWillMount() {
@@ -94,7 +93,7 @@ class Profile extends Component {
 	handleCancelClick(){
 		const { userId } = this.props.match.params
 
-		ApiWrapper().api().getAccountDetails(userId).then(res => {
+		ApiWrapper().api().getUserDetails(userId).then(res => {
 			this.setState({
 				...this.getUserInformation(res.data),
 				editMode: false
@@ -175,7 +174,7 @@ class Profile extends Component {
 		return (
 			<div>
 				<ProfileDetails details={this.state} />
-				{(isOwnAccount || session.isAdmin === "true") && (
+				{(isOwnAccount || session.isAdmin) && (
 					<div className="row">
 						<button className="btn btn-secondary" onClick={this.handleEditClick}>Edit Profile</button>
 						<button className="btn btn-secondary" onClick={this.deleteAccount}>Delete Account</button>

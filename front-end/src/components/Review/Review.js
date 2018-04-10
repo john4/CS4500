@@ -5,7 +5,7 @@ class Review extends Component {
   renderDelete() {
     const { isUsersReview, onDelete, movieId, reviewId, session } = this.props;
 
-    if (!isUsersReview && session.isAdmin !== "true") {
+    if (!isUsersReview && !session.isAdmin) {
       return null;
     }
 

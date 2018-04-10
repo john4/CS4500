@@ -27,12 +27,12 @@ class Logs extends Component {
 
   render() {
     const { session } = this.state
-    if (session.isAdmin == true) {
+    if (session.isAdmin === "true") {
       return (
         <div className="container">
           <h3>System Logs</h3>
           <button className="btn btn-secondary" type="button" onClick={this.onDelete}>Clear Logs</button>
-          <LogResults isAdmin={session.isAdmin} />
+          <LogResults session={session} />
         </div>
       );
     }

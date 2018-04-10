@@ -11,7 +11,8 @@ class LogResults extends Component {
   }
 
   componentWillMount() {
-    if (this.props.isAdmin) {
+    const { session } = this.props
+    if (session.isAdmin === "true") {
       ApiWrapper().api().getLogs().then(res => {
         this.setState({
           logs: res.data
@@ -20,13 +21,11 @@ class LogResults extends Component {
     } 
   }
 
-
   render() {
     const {logs} = this.state
-    const {isAdmin} = this.props
     return (
       <div>
-        {isAdmin && JSON.stringify(logs)}
+        {JSON.stringify(logs)}
       </div>
     );
   }

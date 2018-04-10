@@ -130,6 +130,9 @@ export const ApiWrapper = (() => {
           }
         );
       },
+      getUserReviews: function (userId) {
+        return axios.get(`${API_ENDPOINT}/user/${userId}/get-reviews/`);
+      },
       searchUser: function (query) {
         return axios.get(`${API_ENDPOINT}/user/search/?name=${query}`);
       },

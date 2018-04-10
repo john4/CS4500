@@ -12,7 +12,6 @@ class MovieResultItem extends Component {
             <div><strong>Rating: {this.props.average} / 10</strong></div>
             <div>{this.props.overview}</div>
           </div>
-          <div> Id: {this.props.id}</div>
         </li>
       );
     }

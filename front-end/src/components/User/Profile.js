@@ -5,7 +5,8 @@ import ProfileDetailsEdit from './Profile-Details-Edit.js';
 import GENRES from '../../Genres'
 import { ApiWrapper } from '../../ApiWrapper';
 import './Profile.css';
-import PromoteAdmin from './PromoteAdmin'
+import PromoteAdmin from './PromoteAdmin';
+import ReviewNotificationItem from '../Review/ReviewNotificationItem';
 
 const defaultAvatar = "https://sites.google.com/a/windermereprep.com/canvas/_/rsrc/1486400406169/home/unknown-user/user-icon.png"
 
@@ -18,29 +19,37 @@ class Profile extends Component {
 			genre: '',
 			isOwnAccount: this.props.match.params.userId ? false : true,
 			editMode: false,
-			session: null
+			session: null,
+			recentReviews: [],
+			name: '',
+			email: '',
+			age: 18,
+			avatar: defaultAvatar,
+			isAdmin: false,
 		};
 
 		this.handleEditClick = this.handleEditClick.bind(this);
 		this.handleSubmitClick = this.handleSubmitClick.bind(this);
 		this.handleCancelClick = this.handleCancelClick.bind(this);
+		this.handleRecentReviews = this.handleRecentReviews.bind(this);
 		this.deleteAccount = this.deleteAccount.bind(this);
 		this.updateName = this.updateName.bind(this);
 		this.updateEmail = this.updateEmail.bind(this);
 		this.updateAvatar = this.updateAvatar.bind(this);
 		this.updateGenre = this.updateGenre.bind(this);
-		this.api = ApiWrapper().api()
 	}
 
 	componentWillMount() {
 		const session = ApiWrapper().getSession();
 		const api = ApiWrapper().api();
+
 		if (this.props.match.params.userId &&
 				this.props.match.params.userId !== session.userId) {
 			api.getUserDetails(this.props.match.params.userId).then(res => {
 				this.setState({
 					isOwnAccount: false,
 					...this.getUserInformation(res.data),
+					session,
 				});
 			});
 		} else {
@@ -48,16 +57,14 @@ class Profile extends Component {
 				this.setState({
 					isOwnAccount: true,
 					...this.getUserInformation(res.data),
+					session,
 				});
 			});
 		}
-		this.getSession();
-	}
 
-	getSession() {
-		this.setState({
-			session: ApiWrapper().getSession()
-		})
+		api.getUserReviews(this.props.match.params.userId).then(res => {
+			this.handleRecentReviews(res.data);
+		});
 	}
 
 	getUserInformation(response) {
@@ -70,6 +77,10 @@ class Profile extends Component {
 			isAdmin: response.isAdmin
 		};
 	}
+
+	handleRecentReviews(results) {
+    this.setState({recentReviews: results.splice(0, 12)});
+  }
 
 	handleEditClick() {
 		this.setState({editMode:true})
@@ -184,17 +195,31 @@ class Profile extends Component {
 		)
 	}
 
+	renderReviews() {
+		return this.state.recentReviews.map((result) =>
+      <ReviewNotificationItem
+        userName={result.user_name}
+        movieTitle={result.movie_title}
+        movieId={result.tmdb_id}
+        rating={result.rating}
+      />
+    );
+	}
+
 	render() {
 		const { isOwnAccount, session, avatar, isAdmin } = this.state
 		const { userId } = this.props.match.params
 		return (
 			<div className="container">
 				<div className="row">
-					<img className="avatar" src={avatar}  />
-				</div>
-				{this.renderDetails()}
-				<div className="row">
-					<PromoteAdmin userId={userId || session.userId} session={session} userIsAdmin={isAdmin}/>
+					<div className="col-4">
+						<img className="avatar" src={avatar}  />
+						{this.renderDetails()}
+						<PromoteAdmin userId={userId || session.userId} session={session} userIsAdmin={isAdmin}/>
+					</div>
+					<div className="col-8">
+						{this.renderReviews()}
+					</div>
 				</div>
 			</div>
 		)

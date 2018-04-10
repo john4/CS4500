@@ -72,13 +72,24 @@ export const ApiWrapper = (() => {
           window.location = "/";
         });
       },
-      deleteAccount: function (data) {
+      deleteAccount: function (sessionId, userId) {
+        const data = {
+          session_id: sessionId,
+          user_id: userId
+        }
         axios.post(API_ENDPOINT + "/user/delete/", data).then(res => {
           removeSession();
           window.location = "/";
         });
 
         removeSession();
+      },
+      promoteToAdmin: function(sessionId, userId) {
+        const data = {
+          session_id: sessionId,
+          user_id: userId
+        }
+        return axios.post(API_ENDPOINT + "/user/make-admin/", data)
       },
       getAccountDetails: function () {
         const { sessionId } = getSession();

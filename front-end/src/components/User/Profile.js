@@ -5,6 +5,7 @@ import ProfileDetailsEdit from './Profile-Details-Edit.js';
 import GENRES from '../../Genres'
 import { ApiWrapper } from '../../ApiWrapper';
 import './Profile.css';
+import PromoteAdmin from './PromoteAdmin'
 
 const defaultAvatar = "https://sites.google.com/a/windermereprep.com/canvas/_/rsrc/1486400406169/home/unknown-user/user-icon.png"
 
@@ -66,7 +67,8 @@ class Profile extends Component {
 			email: response.email,
 			age: response.age,
 			genre: response.genre,
-			avatar: response.photo_url ? response.photo_url : defaultAvatar
+			avatar: response.photo_url ? response.photo_url : defaultAvatar,
+			isAdmin: response.isAdmin
 		};
 	}
 
@@ -125,7 +127,6 @@ class Profile extends Component {
 	deleteAccount(){
 		const { session } = this.state
 		const { userId } = this.props.match.params
-		console.log(this.props.match)
 		if(window.confirm("Are you sure you want to delete your account?")) {
 			var data = {
 				user_id: userId || session.userId,
@@ -185,13 +186,17 @@ class Profile extends Component {
 	}
 
 	render() {
-		const { isOwnAccount, session, avatar } = this.state
+		const { isOwnAccount, session, avatar, isAdmin } = this.state
+		const { userId } = this.props.match.params
 		return (
 			<div className="container">
 				<div className="row">
 					<img className="avatar" src={avatar}  />
 				</div>
 				{this.renderDetails()}
+				<div className="row">
+					<PromoteAdmin userId={userId || session.userId} session={session} userIsAdmin={isAdmin}/>
+				</div>
 			</div>
 		)
 	}

@@ -19,7 +19,7 @@ class Profile extends Component {
 			genre: '',
 			isOwnAccount: this.props.match.params.userId ? false : true,
 			editMode: false,
-			session: null,
+			session: {},
 			recentReviews: [],
 			name: '',
 			email: '',

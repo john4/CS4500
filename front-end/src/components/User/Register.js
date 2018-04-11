@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ApiWrapper } from '../../ApiWrapper';
 import GENRES from '../../Genres'
 import { OOPS } from '../../Errors'
-
+import axios from 'axios';
 
 class Register extends Component {
     constructor(props) {
@@ -14,7 +14,8 @@ class Register extends Component {
             password: '',
             age: 0,
             genre: '',
-            error: ''
+            error: '',
+            avatar: ''
         }
 
         this.submit = this.submit.bind(this);
@@ -28,6 +29,17 @@ class Register extends Component {
 
         this.setState({[fieldName]: val});
     }
+    
+    updateAvatar(e) {
+        if(e.target.value.includes("http") || (e.target.value.length > 5)){
+            axios.get(e)
+                .then(success => {
+                    this.setState({avatar: e.target.value});
+                }).catch(error => {
+                    this.setState({error: OOPS + error.response.data.error});
+                });
+        }
+    }
 
     submit(e) {
         var data = {
@@ -35,7 +47,8 @@ class Register extends Component {
             'email': this.state.email,
             'password': this.state.password,
             'age': this.state.age,
-            'genre': this.state.genre
+            'genre': this.state.genre,
+            'photoUrl': this.state.avatar
         }
 
         ApiWrapper().api().post('/user/register/', data)
@@ -75,6 +88,12 @@ class Register extends Component {
                         <label>Email</label>
                         <input type="email" placeholder="myemail@example.com" name="email" value={this.state.email}
                             onChange={this.handleInputChange} required/>
+                    </div>
+                    
+                    <div>
+                        <label>Avatar</label>
+                        <input type="text" name="avatar" value={this.state.avatar}
+                            onChange={this.updateAvatar} required/>
                     </div>
 
                     <div>

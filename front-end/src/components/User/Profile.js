@@ -102,15 +102,15 @@ class Profile extends Component {
         
         axios.get(avatar).then(success => {
                 ApiWrapper().api().updateUser(data).then(res => {
-                    this.setState({editMode: false})
+                    this.setState({editMode: false});
                 }).catch(error => {
-                  window.alert("Unable to update profile!")
-                  console.log(error)
-                })
+                  window.alert("Unable to update profile!");
+                  console.log(error);
+                });
 			}).catch(error => {
                 window.alert("Avatar image not available. Please try a different image!");
-                console.log("Error updating avatar");
-			})
+				console.log("Error updating avatar");
+			});
 	}
 
 	handleCancelClick(){
@@ -140,14 +140,14 @@ class Profile extends Component {
 	updateAvatar(value){
 		var update = false;
         
-        if(value.includes("http") && (value.length > 5)){
+        if(value.includes("http") || (value.length > 5)){
             axios.get(value)
                 .then(success => {
-                    this.setState({avatar: value})
+                    this.setState({avatar: value});
                 }).catch(error => {
-                    window.alert("Avatar image not available!")
-                    console.log("Error updating avatar")
-                })
+                    window.alert("Avatar image not available!");
+                    console.log("Error updating avatar");
+                });
         }
 	}
 

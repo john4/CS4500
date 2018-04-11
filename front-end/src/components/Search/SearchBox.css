@@ -1,3 +1,7 @@
 .SearchBox {
-  padding: 1rem;  
+  padding: 1rem;
+}
+
+form {
+  width: 100%
 }

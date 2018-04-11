@@ -18,7 +18,9 @@ class NavBar extends Component {
   }
 
   componentWillMount() {
-    this.setState({session: ApiWrapper().getSession()});
+    this.setState({
+      session: ApiWrapper().getSession()
+    });
   }
 
   render() {
@@ -39,6 +41,10 @@ class NavBar extends Component {
                 <a href="/search">Movie Search</a>
             </button>
             
+            {session.isLoggedIn && session.isAdmin === true && [
+              <a href="/logs">View Logs</a>
+            ]}
+            <a href="/search">Movie Search</a>
             {session.isLoggedIn && [
               <button className="spt-btn">
               <a className="" href="/user-search">User Search</a>

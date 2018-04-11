@@ -75,7 +75,7 @@ def make_admin():
 
     current_user, _status = User.get_user_data_from_session(session_id)
 
-    if not (current_user.get('isAdmin')):
+    if not current_user.get('isAdmin'):
         log = Logs('make_admin', dumps({"error": "you do not have permission to make admin"}), 401)
         log.create()
         return make_response(dumps({"error": "you do not have permission to make admin"}), 401)
@@ -107,7 +107,8 @@ def delete_user():
     current_user, _status = User.get_user_data_from_session(session_id)
 
     if not (str(current_user.get('_id')) == user_id or current_user.get('isAdmin')):
-        log = Logs('delete_user', dumps({"error": "you cannot delete an account you do not own"}), 401)
+        log = Logs('delete_user', \
+            dumps({"error": "you cannot delete an account you do not own"}), 401)
         log.create()
         return make_response(dumps({"error": "you cannot delete an account you do not own"}), 401)
 
@@ -221,7 +222,8 @@ def delete_movie_reviews(movie_id):
     session_id = data.get('session_id')
 
     if not (data.get('session_id') and User.check_session(data.get('session_id'))):
-        log = Logs('delete_movie_reviews', dumps({'error': 'must be logged in to delete review'}), 400)
+        log = Logs('delete_movie_reviews', \
+            dumps({'error': 'must be logged in to delete review'}), 400)
         log.create()
         return make_response(dumps({'error': 'must be logged in to delete review'}), 400)
 
@@ -316,7 +318,8 @@ def follow_me_get_all():
     data = json.loads(request.data)
 
     if not User.check_session(data.get('session_id')):
-        log = Logs('follow_me_get_all', dumps({'error': 'must be logged in to view followers'}), 400)
+        log = Logs('follow_me_get_all', \
+            dumps({'error': 'must be logged in to view followers'}), 400)
         log.create()
         return make_response(dumps({'error': 'must be logged in to view followers'}), 400)
 
@@ -380,9 +383,11 @@ def prod_users():
     message = data.get('message')
 
     if not receivers or not sender or not tmdb_id:
-        log = Logs('prod_users', dumps({'error': 'sender, receiver, and tmdb id required for prod'}), 400)
+        log = Logs('prod_users', \
+            dumps({'error': 'sender, receiver, and tmdb id required for prod'}), 400)
         log.create()
-        return make_response(dumps({'error': 'sender, receiver, and tmdb id required for prod'}), 400)
+        return make_response(dumps({'error': 'sender, receiver, and tmdb id required for prod'}), \
+         400)
 
     results = {}
     for recv in receivers:
@@ -421,7 +426,7 @@ def prod_get_all():
     log.create()
     return make_response(dumps(results), response_code)
 
-@APP.route('/logs/', methods=['GET'])
+@APP.route('/logs/', methods=['POST'])
 def logs_get_all():
     """
     Gets all logs
@@ -431,16 +436,46 @@ def logs_get_all():
     session_id = data.get('session_id')
 
     if not User.check_session(data.get('session_id')):
-        log = Logs('logs_get_all', dumps({'error': 'must be logged in to view logs'}), 400)
+        log = Logs('logs_get_all', \
+            dumps({'error': 'must be logged in to view logs'}), 400)
         log.create()
         return make_response(dumps({'error': 'must be logged in to view logs'}), 400)
 
     current_user, _status = User.get_user_data_from_session(session_id)
 
-    if not (current_user.get('isAdmin')):
-        log = Logs('logs_get_all', dumps({"error": "you do not have permission to view logs"}), 401)
+    if not current_user.get('isAdmin'):
+        log = Logs('logs_get_all', \
+            dumps({"error": "you do not have permission to view logs"}), 401)
         log.create()
-        return make_response(dumps({"error": "you do not have permission to view logs"}), 401)
+        return make_response(dumps({"error": "you do not have permission to view logs"}), \
+            401)
 
     results, response_code = Logs.get_all()
+    return make_response(dumps(results), response_code)
+
+@APP.route('/logs/clear/', methods=['POST'])
+def logs_clear_all():
+    """
+    Clear all logs.
+    """
+
+    data = json.loads(request.data)
+    session_id = data.get('session_id')
+
+    if not User.check_session(data.get('session_id')):
+        log = Logs('logs_clear_all', \
+            dumps({'error': 'must be logged in to clear logs'}), 400)
+        log.create()
+        return make_response(dumps({'error': 'must be logged in to clear logs'}), 400)
+
+    current_user, _ = User.get_user_data_from_session(session_id)
+
+    if not current_user.get('isAdmin'):
+        log = Logs('logs_clear_all', \
+            dumps({"error": "you do not have permission to clear logs"}), 401)
+        log.create()
+        return make_response(dumps({"error": "you do not have permission to clear logs"}), \
+            401)
+
+    results, response_code = Logs.clear_all()
     return make_response(dumps(results), response_code)

@@ -2,6 +2,7 @@ import requests
 from flask import json
 
 from app import DB
+from app import config
 
 
 class Movie(object):
@@ -25,7 +26,7 @@ class Movie(object):
         """get details from TMDB for a movie of id movie_id"""
 
         url = "https://api.themoviedb.org/3/movie/" + \
-              str(movie_id) + "?api_key=020a1282ad51b08df67da919fca9f44e&language=en-US"
+              str(movie_id) + "?api_key=" + config.FLASK_TMDB_API_KEY + "&language=en-US"
 
         # results = DB.Movie.find({"tmdb_id": str(movie_id)})
 

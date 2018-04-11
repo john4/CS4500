@@ -4,14 +4,15 @@
 from flask import Flask
 from flask_cors import CORS
 from pymongo import MongoClient
+import config
 
 
 APP = Flask(__name__)
 CORS(APP)
 
 if not APP.config['TESTING'] and not APP.config['DEBUG']:
-    CLIENT = MongoClient('mongodb://%s:%s@ec2-54-197-196-20.compute-1.amazonaws.com' \
-                     % ('admin', 'team42root'))
+    CLIENT = MongoClient(config.FLASK_DB_URI \
+                     % (config.FLASK_DB_USERNAME, config.FLASK_DB_SECRET))
     DB = CLIENT.SpoiledTomatillos
 else:
     CLIENT = MongoClient('mongodb://localhost:27017')

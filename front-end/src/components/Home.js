@@ -2,10 +2,10 @@ import React, { Component } from 'react';
 import { ApiWrapper } from '../ApiWrapper';
 import axios from 'axios';
 import GENRES from '../Genres';
-import Rating from './Rating/Rating';
+import ReviewNotificationItem from './Review/ReviewNotificationItem';
 import './Home.css';
 
-const TMDB_URL = 'http://api.themoviedb.org/3/discover/movie?include_adult=false&page=1&language=en-US&api_key=020a1282ad51b08df67da919fca9f44e&';
+const TMDB_URL = 'http://api.themoviedb.org/3/discover/movie?include_adult=false&page=1&language=en-US&api_key=' + process.env.REACT_APP_TMDB_API_KEY + '&';
 
 class Home extends Component {
   constructor(props) {
@@ -89,18 +89,14 @@ class Home extends Component {
       );
     });
 
-    const recentRevItems = this.state.recentReviewResults.map(function(result) {
-      var detailURL = '/movie/' + result.tmdb_id + '/detail/';
-      return (
-        <div className="pt-2">
-          <h5 className="border-top border-dark pt-2">
-            {result.user_name} reviewed
-            <a href={detailURL} className="pl-1">{result.movie_title}</a>
-          </h5>
-          <Rating isIMDB={false} score={result.rating} />
-        </div>
-      );
-    });
+    const recentRevItems = this.state.recentReviewResults.map((result) =>
+      <ReviewNotificationItem
+        userName={result.user_name}
+        movieTitle={result.movie_title}
+        movieId={result.tmdb_id}
+        rating={result.rating}
+      />
+    );
 
     var currentlyShowing = (
       <div>
@@ -139,21 +135,23 @@ class Home extends Component {
     );
 
     return (
-      <div className="container-fluid">
-        <div className="row pt-3 pb-5">
-          <div className="col-8">
-            <div className="row px-2">
-              {currentlyShowing}
+      <div className="container">
+        <div className="container-fluid">
+          <div className="row pt-3 pb-5">
+            <div className="col-8">
+              <div className="row px-2">
+                {currentlyShowing}
+              </div>
+
+              <div className="row px-2 pt-3">
+                {session.isLoggedIn && genreRecs}
+              </div>
             </div>
 
-            <div className="row px-2 pt-3">
-              {session.isLoggedIn && genreRecs}
+            <div className="col-4">
+                {session.isLoggedIn && recentRevs}
+                {!session.isLoggedIn && registerPrompt}
             </div>
-          </div>
-
-          <div className="col-4">
-              {session.isLoggedIn && recentRevs}
-              {!session.isLoggedIn && registerPrompt}
           </div>
         </div>
       </div>

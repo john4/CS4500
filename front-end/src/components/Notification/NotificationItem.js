@@ -44,14 +44,13 @@ class NotificationItem extends Component {
       var dateString = day + ' ' + monthNames[monthIndex] + ' ' + year;
       var movieDetailString = `/movie/${this.props.tmdbId}/detail/`;
       return (
-        <div className="NotificationItem row border-top border-dark mx-1">
+        <div className="NotificationItem row border-top border-dark mx-1 mb-2">
           <div className="col-1 pt-2">
             <a href={movieDetailString}>
-              <img src={this.state.moviePosterSrc} className="rounded"
-                style={{height:'50%',width: 'auto'}} />
+              <img src={this.state.moviePosterSrc} className="NotificationItem-img" />
             </a>
           </div>
-          <div className="col-10 pt-2 pl-5">
+          <div className="col-10 pt-2 NotificationItem-body">
             <p><span className="font-weight-bold">{this.props.sender} </span>
               recommended
               <a href={movieDetailString} className="px-1">

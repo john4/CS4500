@@ -34,14 +34,13 @@ class NotificationList extends Component {
                   timestamp={result.timestamp.$date} />)
       });
 
-      console.log(notificationItems);
-
       if (this.state.notifications.length > 0) {
         return (
-          <div className="container-fluid pt-2">
-            <h2 className="pb-2">My Notifications</h2>
-
-            {notificationItems}
+          <div className="container">
+            <div className="container-fluid pt-2">
+              <h2 className="pb-2">My Notifications</h2>
+              {notificationItems}
+            </div>
           </div>
         )
       } else {

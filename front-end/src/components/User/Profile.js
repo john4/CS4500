@@ -5,111 +5,130 @@ import ProfileDetailsEdit from './Profile-Details-Edit.js';
 import GENRES from '../../Genres'
 import { ApiWrapper } from '../../ApiWrapper';
 import './Profile.css';
+import PromoteAdmin from './PromoteAdmin';
+import ReviewNotificationItem from '../Review/ReviewNotificationItem';
 
 const defaultAvatar = "https://sites.google.com/a/windermereprep.com/canvas/_/rsrc/1486400406169/home/unknown-user/user-icon.png"
 
 class Profile extends Component {
-	
+
 	constructor(props) {
 		super(props);
-		
+
 		this.state = {
 			genre: '',
-			editMode: false
+			isOwnAccount: this.props.match.params.userId ? false : true,
+			editMode: false,
+			session: {},
+			recentReviews: [],
+			name: '',
+			email: '',
+			age: 18,
+			avatar: defaultAvatar,
+			isAdmin: false,
 		};
-		
+
 		this.handleEditClick = this.handleEditClick.bind(this);
 		this.handleSubmitClick = this.handleSubmitClick.bind(this);
 		this.handleCancelClick = this.handleCancelClick.bind(this);
-		this.renderOptions = this.renderOptions.bind(this);
+		this.handleRecentReviews = this.handleRecentReviews.bind(this);
 		this.deleteAccount = this.deleteAccount.bind(this);
 		this.updateName = this.updateName.bind(this);
 		this.updateEmail = this.updateEmail.bind(this);
-		this.updateAge = this.updateAge.bind(this);
 		this.updateAvatar = this.updateAvatar.bind(this);
 		this.updateGenre = this.updateGenre.bind(this);
-		this.api = ApiWrapper().api()
-		this.getUserInformation = this.getUserInformation.bind(this)
-		this.previousDetails = {}
 	}
-	
+
 	componentWillMount() {
-		ApiWrapper().api().getAccountDetails().then(res => {
-			this.previousDetails = this.getUserInformation(res.data)
-		}).catch(res => {
-			console.log("Unable to get user data")
-			window.location = '/login'
+		const session = ApiWrapper().getSession();
+		const api = ApiWrapper().api();
+
+		if (this.props.match.params.userId &&
+				this.props.match.params.userId !== session.userId) {
+			api.getUserDetails(this.props.match.params.userId).then(res => {
+				this.setState({
+					isOwnAccount: false,
+					...this.getUserInformation(res.data),
+					session,
+				});
+				this.getUserReviews(this.props.match.params.userId);
+			});
+		} else {
+			api.getAccountDetails().then(res => {
+				this.setState({
+					isOwnAccount: true,
+					...this.getUserInformation(res.data),
+					session,
+				});
+				this.getUserReviews(session.userId);
+			});
+		}
+	}
+
+	getUserInformation(response) {
+		return {
+			name: response.name,
+			email: response.email,
+			age: response.age,
+			genre: response.genre,
+			avatar: response.photo_url ? response.photo_url : defaultAvatar,
+			isAdmin: response.isAdmin
+		};
+	}
+
+	getUserReviews(userId) {
+		ApiWrapper().api().getUserReviews(userId).then(res => {
+			this.handleRecentReviews(res.data);
 		});
 	}
-	
-	getUserInformation(response){
 
-			this.setState({
-				name: response.name,
-				email: response.email,
-				age: response.age,
-				genre: response.genre
-			})
-			if(response.photo_url){
-				this.setState({
-					avatar: response.photo_url
-				})
-			} else {
-				response.photoUrl = defaultAvatar
-				this.setState({
-					avatar: defaultAvatar
-				})
-			}
-					
-			return response
-	}
-	
+	handleRecentReviews(results) {
+    this.setState({recentReviews: results.splice(0, 12)});
+  }
+
 	handleEditClick() {
 		this.setState({editMode:true})
 	}
-	
-	handleSubmitClick() {
-		this.setState({
-					editMode: false})
 
+	handleSubmitClick() {
+		const { name, email, age, avatar, genre } = this.state
 		var data = {
-			name: this.state.name,
-			email: this.state.email,
-			age: this.state.age,
-			photoUrl: this.state.avatar,
-			genre: this.state.genre
+			name: name,
+			email: email,
+			age: age,
+			photoUrl: avatar,
+			genre: genre
 		}
-		
-		ApiWrapper().api().updateUser(data)
+		ApiWrapper().api().updateUser(data).then(res => {
+			this.setState({editMode: false})
+		})
+
 	}
-	
+
 	handleCancelClick(){
-		this.setState({
-            name: this.previousDetails.name,
-			email: this.previousDetails.email,
-			age: this.previousDetails.age,
-			genre: this.previousDetails.genre,
-			avatar: this.previousDetails.photo_url,
-			editMode: false
+		const { userId } = this.props.match.params
+		const { session } = this.state
+
+		ApiWrapper().api().getUserDetails(userId || session.userId).then(res => {
+			this.setState({
+				...this.getUserInformation(res.data),
+				editMode: false
+			})
 		})
 	}
-	
+
 	updateGenre(value){
 		this.setState({ genre: value.target.value })
 	}
-	
+
 	updateName(value){
 		this.setState({ name: value })
 	}
-	
+
 	updateEmail(value){
-		this.setState({ email: value})
+		this.setState({ email: value })
 	}
-	
-	updateAge(value){
-		this.setState({age: value})
-	}
-	
+
 	updateAvatar(value){
 		var update = false;
 		axios.get(value)
@@ -119,17 +138,24 @@ class Profile extends Component {
 				console.log("Error updating avatar")
 			})
 	}
-	
+
 	deleteAccount(){
-		var data = {email: this.state.email}
-		ApiWrapper().api().post("/user/delete/", data).then(res => {
-			window.location = "/register"
-		})
-		.catch(error => {
-			console.log(error.data)
-		})
+		const { session } = this.state
+		const { userId } = this.props.match.params
+		if(window.confirm("Are you sure you want to delete your account?")) {
+			var data = {
+				user_id: userId || session.userId,
+				session_id: session.sessionId
+			}
+			ApiWrapper().api().deleteAccount(data).then(res => {
+				window.location = "/"
+			})
+			.catch(error => {
+				console.log(error.data)
+			})
+		}
 	}
-	
+
 	renderOptions() {
         var opts = []
         for (var genre in GENRES) {
@@ -138,17 +164,15 @@ class Profile extends Component {
         return opts
     }
 
+	renderDetails() {
+		const { genre, avatar, isOwnAccount, session, editMode } = this.state;
 
-	render() {
-		
-		const genre = this.state.genre
-		
-		const details = this.state.editMode ? (
+		if (editMode) {
+			return (
 			<div id="DetailsEdit">
+				<ProfileDetailsEdit details={this.state.avatar} handleChange={this.updateAvatar} what={"Avatar"}/>
 				<ProfileDetailsEdit details={this.state.name} handleChange={this.updateName} what={"Name"}/>
 				<span className="row">Email: {this.state.email}</span>
-				<ProfileDetailsEdit details={this.state.age} handleChange={this.updateAge} what={"Age"}/>
-				<ProfileDetailsEdit details={this.state.avatar} handleChange={this.updateAvatar} what={"Avatar"}/>
 				<div className="row">
 					<span>Genre: </span>
 					<select name="genre" value={genre} onChange={this.updateGenre} required>
@@ -156,32 +180,52 @@ class Profile extends Component {
 						{this.renderOptions()}
 					</select>
 				</div>
-				<button className="btn-sm" onClick={this.handleCancelClick}>
-					<i class="fas fa-ban"></i>
-				</button>
-			</div> 
-		): (
-			 <ProfileDetails details={this.state} /> 
-			);
-			 
-		const avatar = this.state.avatar
-		
-		return ( 
-			<div className="container">
 				<div className="row">
-					<img className="avatar" src={this.state.avatar}  />
+					<button className="btn btn-secondary" onClick={this.handleSubmitClick}>Save Changes</button>
+					<button className="btn btn-secondary" onClick={this.handleCancelClick}>Cancel</button>
 				</div>
-					{details}
-				<div className="row">
-					<button className="btn-sm" onClick={this.handleEditClick}> 
-						<i className="fas fa-edit"></i> 
-					</button>
-					<button className="btn-sm" onClick={this.handleSubmitClick}>
-						<i className="fas fa-check-square"></i>
-					</button>
-					<button className="btn-sm" onClick={() => { if(window.confirm("Are you sure you want to delete your account?")){this.deleteAccount}}}>
-						<i className="fas fa-trash"></i>
-					</button>
+			</div>
+			);
+		}
+		return (
+			<div>
+				<ProfileDetails details={this.state} />
+				{(isOwnAccount || session.isAdmin) && (
+					<div className="row">
+						<button className="btn btn-secondary" onClick={this.handleEditClick}>Edit Profile</button>
+						<button className="btn btn-secondary" onClick={this.deleteAccount}>Delete Account</button>
+					</div>
+				)}
+			</div>
+		)
+	}
+
+	renderReviews() {
+		return this.state.recentReviews.map((result) =>
+      <ReviewNotificationItem
+        userName={result.user_name}
+        movieTitle={result.movie_title}
+        movieId={result.tmdb_id}
+        rating={result.rating}
+      />
+    );
+	}
+
+	render() {
+		const { name, isOwnAccount, session, avatar, isAdmin } = this.state
+		const { userId } = this.props.match.params
+		return (
+			<div className="container">
+				<div className="row" style={{paddingTop: "1rem"}}>
+					<div className="col-4">
+						<img className="avatar" src={avatar}  />
+						{this.renderDetails()}
+						<PromoteAdmin userId={userId || session.userId} session={session} userIsAdmin={isAdmin}/>
+					</div>
+					<div className="col-8">
+						<h3>Recent reviews by {name}</h3>
+						{this.renderReviews()}
+					</div>
 				</div>
 			</div>
 		)

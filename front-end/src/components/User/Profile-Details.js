@@ -2,35 +2,29 @@ import React, { Component } from 'react';
 import axios from 'axios';
 
 class ProfileDetails extends Component {
-	
+
 	constructor(props) {
 		super(props)
 	}
-	
+
 	render(){
+		const { name, email, genre } = this.props.details
 		return (
 			<div>
 				<div className="row">
-					<span>Name: </span>
-					<span>{this.props.details.name} </span>
+					<h3>{name} </h3>
 				</div>
 				<div className="row">
-					<span>Email: </span>
-					<span>{this.props.details.email} </span>
+					<span>{email} </span>
 				</div>
 				<div className="row">
-					<span>Age: </span>
-					<span> {this.props.details.age} </span>
+					<span> {`Likes: ${genre}`} </span>
 				</div>
-				<div className="row">
-					<span>Genre: </span>
-					<span> {this.props.details.genre} </span>
-				</div>
-				
+
 			</div>
 		);
 	};
-	
+
 };
 
 export default ProfileDetails;

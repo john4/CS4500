@@ -12,6 +12,7 @@ const setSession = function (sessionData) {
   localStorage.setItem("st:genre", user_data.genre);
   localStorage.setItem("st:photo_url", user_data.photo_url);
   localStorage.setItem("st:age", user_data.age);
+  localStorage.setItem("st:isAdmin", user_data.isAdmin);
 }
 
 const removeSession = function () {
@@ -23,6 +24,7 @@ const removeSession = function () {
   localStorage.removeItem("st:genre");
   localStorage.removeItem("st:photo_url");
   localStorage.removeItem("st:age");
+  localStorage.removeItem("st:isAdmin");
 }
 
 const getSession = function () {
@@ -35,14 +37,15 @@ const getSession = function () {
     genre: localStorage.getItem("st:genre"),
     photoUrl: localStorage.getItem("st:photo_url"),
     age: localStorage.getItem("st:age"),
+    isAdmin: localStorage.getItem("st:isAdmin") === "true"
   };
 }
 
 export const ApiWrapper = (() => {
   let instance;
   function init() {
-    // const API_ENDPOINT = "http://ec2-54-87-191-69.compute-1.amazonaws.com:5000";
-    const API_ENDPOINT = "http://127.0.0.1:5000";
+    const API_ENDPOINT = process.env.REACT_APP_API_ENDPOINT;
+    // const API_ENDPOINT = "http://127.0.0.1:5000";
 
     return {
       get: function (path) {
@@ -69,10 +72,32 @@ export const ApiWrapper = (() => {
           window.location = "/";
         });
       },
+      deleteAccount: function (sessionId, userId) {
+        const data = {
+          session_id: sessionId,
+          user_id: userId
+        }
+        axios.post(API_ENDPOINT + "/user/delete/", data).then(res => {
+          removeSession();
+          window.location = "/";
+        });
+
+        removeSession();
+      },
+      promoteToAdmin: function(sessionId, userId) {
+        const data = {
+          session_id: sessionId,
+          user_id: userId
+        }
+        return axios.post(API_ENDPOINT + "/user/make-admin/", data)
+      },
       getAccountDetails: function () {
         const { sessionId } = getSession();
 
         return axios.get(API_ENDPOINT + `/user/detail/?sessionId=${sessionId}`);
+      },
+      getUserDetails: function (userId) {
+        return axios.get(API_ENDPOINT + `/user/${userId}/detail`);
       },
       getAverageMovieRating: function (movieId) {
         return axios.get(API_ENDPOINT + `/movie/${movieId}/rating/`);
@@ -104,6 +129,9 @@ export const ApiWrapper = (() => {
             session_id: sessionId,
           }
         );
+      },
+      getUserReviews: function (userId) {
+        return axios.get(`${API_ENDPOINT}/user/${userId}/get-reviews/`);
       },
       searchUser: function (query) {
         return axios.get(`${API_ENDPOINT}/user/search/?name=${query}`);
@@ -206,6 +234,20 @@ export const ApiWrapper = (() => {
             message: "",
           }
         );
+      },
+      getLogs: function () {
+        const { sessionId } = getSession();
+        return axios.post(`${API_ENDPOINT}/logs/`,
+        {
+          session_id: sessionId
+        })
+      },
+      clearLogs: function () {
+        const { sessionId } = getSession();
+        return axios.post(`${API_ENDPOINT}/logs/clear/`,
+        {
+          session_id: sessionId
+        })
       },
 	  updateUser: function(data) {
 		return axios.post(`${API_ENDPOINT}/user/update/`,

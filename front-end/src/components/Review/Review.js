@@ -3,9 +3,9 @@ import './Review.css';
 
 class Review extends Component {
   renderDelete() {
-    const { isUsersReview, onDelete, movieId, reviewId } = this.props;
+    const { isUsersReview, onDelete, movieId, reviewId, session } = this.props;
 
-    if (!isUsersReview) {
+    if (!isUsersReview && !session.isAdmin) {
       return null;
     }
 
@@ -17,13 +17,13 @@ class Review extends Component {
   }
 
   render() {
-    const { userName, rating, description } = this.props;
+    const { userName, userId, rating, description } = this.props;
 
     return (
       <div className="Review">
         {this.renderDelete()}
         <div className="Review-user">
-          <span>{userName}</span>
+          <a href={`/user/profile/${userId}`}>{userName}</a>
         </div>
         <div className="Review-rating">
           <span>{rating}</span> / 5

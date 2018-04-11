@@ -12,7 +12,7 @@ class Account extends Component {
       menuOpen: false,
     };
   }
-
+  
   render() {
     const username = this.props.username;
     const { menuOpen } = this.state;
@@ -20,20 +20,24 @@ class Account extends Component {
 
     if (username) {
       return (
-        <div className={`AccountNav-dropdown dropdown ${openClass}`}>
-          <a className="btn btn-secondary dropdown-toggle" onClick={() => this.setState({menuOpen: !menuOpen})} href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded={menuOpen}>
-            { username }
-          </a>
-          <div style={{right: 0, left: 'auto'}} className={`dropdown-menu dropdown-menu-right ${openClass}`} aria-labelledby="dropdownMenuLink">
+        <div className={`AccountNav-dropdown dropdown  ${openClass}`}>
+          
+            <a onClick={() => this.setState({menuOpen: !menuOpen})} href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded={menuOpen}>
+                <span className="fa-stack">
+                    <i class="fa fa-circle fa-stack-2x" />
+                    <i class="fas fa-user fa-stack-1x fa-inverse" />
+                </span>
+            </a>
+          <ul className={`dropdown-menu dropdown-menu-right ${openClass}`} aria-labelledby="dropdownMenuLink">
             <a className="dropdown-item" href="/user/profile">Profile</a>
             <a className="dropdown-item" href="/logout">Log out</a>
-          </div>
+          </ul>
         </div>
       );
     } else {
       return ([
-        <a className="AccountNav-loginItem" href="/login">Log in</a>,
-        <a className="AccountNav-loginItem" href="/register">Register</a>
+        <a className="AccountNav-loginItem" href="/register">Sign-Up</a>,
+        <a className="AccountNav-loginItem" href="/login">Log In</a>
       ]);
     }
   }

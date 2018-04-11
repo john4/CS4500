@@ -24,25 +24,29 @@ class NotificationIcon extends Component {
     render() {
       if (this.state.notificationCount != undefined && this.state.notificationCount > 0) {
         return (
-          <a href="/user/notification/">
+          
             <div>
-              <span class="fa-stack has-badge" data-count={this.state.notificationCount}>
-                <i class="fa fa-circle fa-stack-2x"></i>
-                <i class="fa fa-bell fa-stack-1x fa-inverse"></i>
-              </span>
+              <a href="/user/notification/">
+                <span class="fa-stack has-badge" data-count={this.state.notificationCount}>
+                  <i class="fa fa-circle fa-stack-2x"></i>
+                  <i class="fa fa-bell fa-stack-1x fa-inverse"></i>
+                </span>
+              </a>
             </div>
-          </a>
+          
         );
       } else {
         return (
-          <a href="/user/notification/">
+          
             <div>
-              <span class="fa-stack">
-                <i class="fa fa-circle fa-stack-2x"></i>
-                <i class="fa fa-bell fa-stack-1x fa-inverse"></i>
-              </span>
+              <a href="/user/notification/">
+                  <span class="fa-stack">
+                    <i class="fa fa-circle fa-stack-2x"></i>
+                    <i class="fa fa-bell fa-stack-1x fa-inverse"></i>
+                  </span>
+              </a>
             </div>
-          </a>
+          
         );
       }
     }

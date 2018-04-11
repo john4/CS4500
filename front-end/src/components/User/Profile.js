@@ -108,8 +108,8 @@ class Profile extends Component {
                   console.log(error)
                 })
 			}).catch(error => {
-                window.alert("Avatar image not available. Please try a different image!")
-				console.log("Error updating avatar")
+                window.alert("Avatar image not available. Please try a different image!");
+                console.log("Error updating avatar");
 			})
 	}
 
@@ -140,7 +140,7 @@ class Profile extends Component {
 	updateAvatar(value){
 		var update = false;
         
-        if(value.includes("http") || (value.length > 5)){
+        if(value.includes("http") && (value.length > 5)){
             axios.get(value)
                 .then(success => {
                     this.setState({avatar: value})

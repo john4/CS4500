@@ -8,16 +8,9 @@
 }
 
 .App-header {
-  background-color: #bf354d;
+  background-color: #F7FFF5;
   height: 50px;
-  padding: 10px;
-  color: #f0c853;
-}
-
-.App-title-link:hover{
-    background-color: #575757;
-    border: px;
-    border-radius: 4px;
+  color: #B51700;
 }
 
 .App-title {
@@ -29,8 +22,18 @@
   text-decoration: none !important;
 }
 
+.navbar-link {
+    font-family: 'Arial','Verdana';
+    font-weight: bold;
+}
+
 a {
   text-decoration: none !important;
+}
+
+.no-gutters {
+    margin-left: 0px !important;
+    margin-right: 0px !important;
 }
 
 .App-intro {
@@ -39,12 +42,6 @@ a {
 
 .navbar a {
   margin: 0 2px;
-}
-
-.spt-btn {
-    border: 0px;
-    background-color: #858585;
-    border-radius: 4px;
 }
 
 .spt-btn:hover{

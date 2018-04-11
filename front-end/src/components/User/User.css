@@ -10,3 +10,8 @@
 .AccountNav-dropdown {
   float: right;
 }
+
+.dropdown-menu-right {
+  left: auto;
+  right: 0px;  
+}

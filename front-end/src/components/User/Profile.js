@@ -7,6 +7,7 @@ import { ApiWrapper } from '../../ApiWrapper';
 import './Profile.css';
 import PromoteAdmin from './PromoteAdmin';
 import ReviewNotificationItem from '../Review/ReviewNotificationItem';
+import { INVALID_LINK, OOPS } from '../../Errors.js';
 
 const defaultAvatar = "https://sites.google.com/a/windermereprep.com/canvas/_/rsrc/1486400406169/home/unknown-user/user-icon.png"
 
@@ -26,6 +27,7 @@ class Profile extends Component {
 			age: 18,
 			avatar: defaultAvatar,
 			isAdmin: false,
+            error: ''
 		};
 
 		this.handleEditClick = this.handleEditClick.bind(this);
@@ -103,13 +105,12 @@ class Profile extends Component {
         axios.get(avatar).then(success => {
                 ApiWrapper().api().updateUser(data).then(res => {
                     this.setState({editMode: false});
+                    this.setState({error: ''})
                 }).catch(error => {
-                  window.alert("Unable to update profile!");
-                  console.log(error);
+                  this.setState({error: INVALID_LINK})
                 });
 			}).catch(error => {
-                window.alert("Avatar image not available. Please try a different image!");
-				console.log("Error updating avatar");
+                this.setState({error: INVALID_LINK})
 			});
 	}
 
@@ -120,7 +121,8 @@ class Profile extends Component {
 		ApiWrapper().api().getUserDetails(userId || session.userId).then(res => {
 			this.setState({
 				...this.getUserInformation(res.data),
-				editMode: false
+				editMode: false,
+                error: ''
 			})
 		})
 	}
@@ -145,8 +147,7 @@ class Profile extends Component {
                 .then(success => {
                     this.setState({avatar: value});
                 }).catch(error => {
-                    window.alert("Avatar image not available!");
-                    console.log("Error updating avatar");
+                    this.setState({error: INVALID_LINK})
                 });
         }
 	}
@@ -163,7 +164,7 @@ class Profile extends Component {
 				window.location = "/"
 			})
 			.catch(error => {
-				console.log(error.data)
+				this.setState({error: OOPS + "unable to delete account"})
 			})
 		}
 	}
@@ -230,6 +231,9 @@ class Profile extends Component {
 			<div className="container">
 				<div className="row" style={{paddingTop: "1rem"}}>
 					<div className="col-4">
+                        <div>
+                            <i>{this.state.error}</i>
+                        </div>
 						<img className="avatar" src={avatar}  />
 						{this.renderDetails()}
 						<PromoteAdmin userId={userId || session.userId} session={session} userIsAdmin={isAdmin}/>

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { ApiWrapper } from '../../ApiWrapper';
 import GENRES from '../../Genres'
 import { OOPS } from '../../Errors'
-
+import axios from 'axios';
 
 class Register extends Component {
     constructor(props) {
@@ -14,12 +14,14 @@ class Register extends Component {
             password: '',
             age: 0,
             genre: '',
-            error: ''
+            error: '',
+            avatar: ''
         }
 
         this.submit = this.submit.bind(this);
         this.renderOptions = this.renderOptions.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.updateAvatar = this.updateAvatar.bind(this);
       }
 
     handleInputChange(e) {
@@ -28,6 +30,21 @@ class Register extends Component {
 
         this.setState({[fieldName]: val});
     }
+    
+    updateAvatar(e) {
+        if(e.target.value.includes("http") || (e.target.value.length > 5)){
+            axios.get(e.target.value)
+                .then(success => {
+                    this.setState({avatar: e.target.value});
+                    this.setState({error: ''});
+                }).catch(err => {
+                    this.setState({error: OOPS + err});
+                    
+                });
+        }
+        
+        e.persist();
+    }
 
     submit(e) {
         var data = {
@@ -35,14 +52,14 @@ class Register extends Component {
             'email': this.state.email,
             'password': this.state.password,
             'age': this.state.age,
-            'genre': this.state.genre
+            'genre': this.state.genre,
+            'photoUrl': this.state.avatar
         }
 
         ApiWrapper().api().post('/user/register/', data)
         .then(res => {
             window.location = "/login";
-        })
-        .catch(err => {
+        }).catch(err => {
             this.setState({error: OOPS + err.response.data.error});
         });
 
@@ -75,6 +92,11 @@ class Register extends Component {
                         <label>Email</label>
                         <input type="email" placeholder="myemail@example.com" name="email" value={this.state.email}
                             onChange={this.handleInputChange} required/>
+                    </div>
+                    
+                    <div>
+                        <label>Avatar</label>
+                        <input type="link" name="avatar" onChange={this.updateAvatar} />
                     </div>
 
                     <div>

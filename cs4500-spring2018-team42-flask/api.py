@@ -480,7 +480,7 @@ def logs_clear_all():
     results, response_code = Logs.clear_all()
     return make_response(dumps(results), response_code)
 
-@APP.route('/user/<user_id>/recommendation/', methods=['GET'])
+@APP.route('/user/<user_id>/recommender/', methods=['GET'])
 def get_user_to_user_recomendations(user_id):
     """
     Get recommendations for movies similar to ones you like based on

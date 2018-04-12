@@ -88,4 +88,4 @@ class Recommender(object):
 
         user_recommendations.sort(key=lambda tup: tup[1], reverse=True)
         movies_to_recommend = [tup[0] for tup in user_recommendations]
-        return movies_to_recommend, 200
+        return movies_to_recommend[:10], 200

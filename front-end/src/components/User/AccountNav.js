@@ -15,7 +15,7 @@ class Account extends Component {
   
   renderUserImage() {
       if(this.props.photoUrl){
-        return (<img src={this.props.photoUrl} class="" />);
+        return (<img src={this.props.photoUrl} class="AccountIcon" />);
       } else {
         return (<span className="fa-stack">
                     <i class="fa fa-circle fa-stack-2x" />

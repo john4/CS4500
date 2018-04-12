@@ -9,7 +9,7 @@ import PromoteAdmin from './PromoteAdmin';
 import ReviewNotificationItem from '../Review/ReviewNotificationItem';
 import Modal from '../Modal/Modal'
 import FollowerResults from '../FollowerSearch/FollowerResults'
-import { NO_FOLLOWERS, NO_FOLLOWING, NO_FOLLOWERS_OTHER, NO_FOLLOWING_OTHER, NO_RECENT_REVIEWS } from '../../Errors.js';
+import { NO_FOLLOWERS, NO_FOLLOWING, NO_FOLLOWERS_OTHER, NO_FOLLOWING_OTHER, NO_RECENT_REVIEWS, INVALID_LINK, OOPS } from '../../Errors.js';
 import FollowListModal from '../FollowerModal/FollowListModal.js';
 
 const defaultAvatar = "https://sites.google.com/a/windermereprep.com/canvas/_/rsrc/1486400406169/home/unknown-user/user-icon.png"
@@ -30,6 +30,7 @@ class Profile extends Component {
 			age: 18,
 			avatar: defaultAvatar,
 			isAdmin: false,
+      error: '',
 			followerPanelOpen: false,
 			followingPanelOpen: false,
 			followers: [],
@@ -120,10 +121,17 @@ class Profile extends Component {
 			photoUrl: avatar,
 			genre: genre
 		}
-		ApiWrapper().api().updateUser(data).then(res => {
-			this.setState({editMode: false})
-		})
-
+        
+        axios.get(avatar).then(success => {
+                ApiWrapper().api().updateUser(data).then(res => {
+                    this.setState({editMode: false});
+                    this.setState({error: ''})
+                }).catch(error => {
+                  this.setState({error: INVALID_LINK})
+                });
+			}).catch(error => {
+                this.setState({error: INVALID_LINK})
+			});
 	}
 
 	handleCancelClick(){
@@ -133,7 +141,8 @@ class Profile extends Component {
 		ApiWrapper().api().getUserDetails(userId || session.userId).then(res => {
 			this.setState({
 				...this.getUserInformation(res.data),
-				editMode: false
+				editMode: false,
+                error: ''
 			})
 		})
 	}
@@ -152,12 +161,15 @@ class Profile extends Component {
 
 	updateAvatar(value){
 		var update = false;
-		axios.get(value)
-			.then(success => {
-				this.setState({avatar: value})
-			}).catch(error => {
-				console.log("Error updating avatar")
-			})
+        
+        if(value.includes("http") && (value.length > 5)){
+            axios.get(value)
+                .then(success => {
+                    this.setState({avatar: value});
+                }).catch(error => {
+                    this.setState({error: INVALID_LINK})
+                });
+        }
 	}
 
 	deleteAccount(){
@@ -172,7 +184,7 @@ class Profile extends Component {
 				window.location = "/"
 			})
 			.catch(error => {
-				console.log(error.data)
+				this.setState({error: OOPS + "unable to delete account"})
 			})
 		}
 	}
@@ -272,6 +284,9 @@ class Profile extends Component {
 						onClose={this.onClose} />}
 				<div className="row" style={{paddingTop: "1rem"}}>
 					<div className="col-4">
+                        <div>
+                            <i>{this.state.error}</i>
+                        </div>
 						<img className="avatar" src={avatar}  />
 						{this.renderDetails()}
 					</div>

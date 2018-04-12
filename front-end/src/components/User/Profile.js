@@ -7,6 +7,10 @@ import { ApiWrapper } from '../../ApiWrapper';
 import './Profile.css';
 import PromoteAdmin from './PromoteAdmin';
 import ReviewNotificationItem from '../Review/ReviewNotificationItem';
+import Modal from '../Modal/Modal'
+import FollowerResults from '../FollowerSearch/FollowerResults'
+import { NO_FOLLOWERS, NO_FOLLOWING, NO_FOLLOWERS_OTHER, NO_FOLLOWING_OTHER, NO_RECENT_REVIEWS } from '../../Errors.js';
+import FollowListModal from '../FollowerModal/FollowListModal.js';
 
 const defaultAvatar = "https://sites.google.com/a/windermereprep.com/canvas/_/rsrc/1486400406169/home/unknown-user/user-icon.png"
 
@@ -26,12 +30,19 @@ class Profile extends Component {
 			age: 18,
 			avatar: defaultAvatar,
 			isAdmin: false,
+			followerPanelOpen: false,
+			followingPanelOpen: false,
+			followers: [],
+			following: [],
 		};
 
 		this.handleEditClick = this.handleEditClick.bind(this);
 		this.handleSubmitClick = this.handleSubmitClick.bind(this);
 		this.handleCancelClick = this.handleCancelClick.bind(this);
 		this.handleRecentReviews = this.handleRecentReviews.bind(this);
+		this.viewFollowers = this.viewFollowers.bind(this);
+		this.viewFollowing = this.viewFollowing.bind(this);
+		this.onClose = this.onClose.bind(this);
 		this.deleteAccount = this.deleteAccount.bind(this);
 		this.updateName = this.updateName.bind(this);
 		this.updateEmail = this.updateEmail.bind(this);
@@ -42,27 +53,36 @@ class Profile extends Component {
 	componentWillMount() {
 		const session = ApiWrapper().getSession();
 		const api = ApiWrapper().api();
+		const { userId } = this.props.match.params
 
-		if (this.props.match.params.userId &&
-				this.props.match.params.userId !== session.userId) {
-			api.getUserDetails(this.props.match.params.userId).then(res => {
+		const profileUserId = userId || session.userId
+		
+		this.getFollowing(profileUserId)
+		this.getFollowers(profileUserId)
+
+		api.getUserDetails(profileUserId).then(res => {
 				this.setState({
-					isOwnAccount: false,
+					isOwnAccount: (profileUserId === session.userId),
 					...this.getUserInformation(res.data),
 					session,
 				});
-				this.getUserReviews(this.props.match.params.userId);
-			});
-		} else {
-			api.getAccountDetails().then(res => {
-				this.setState({
-					isOwnAccount: true,
-					...this.getUserInformation(res.data),
-					session,
-				});
-				this.getUserReviews(session.userId);
-			});
-		}
+				this.getUserReviews(profileUserId);
+		});
+	}
+
+	getFollowing(userId) {
+		ApiWrapper().api().getUsersWhoAreFollowed(userId).then(res => {
+			this.setState({
+				following: res.data
+			})
+		})
+	}
+	getFollowers(userId) {
+		ApiWrapper().api().getUsersWhoFollow(userId).then(res => {
+			this.setState({
+				followers: res.data
+			})
+		})
 	}
 
 	getUserInformation(response) {
@@ -72,9 +92,10 @@ class Profile extends Component {
 			age: response.age,
 			genre: response.genre,
 			avatar: response.photo_url ? response.photo_url : defaultAvatar,
-			isAdmin: response.isAdmin
+			isAdmin: response.isAdmin,
 		};
 	}
+
 
 	getUserReviews(userId) {
 		ApiWrapper().api().getUserReviews(userId).then(res => {
@@ -83,8 +104,8 @@ class Profile extends Component {
 	}
 
 	handleRecentReviews(results) {
-    this.setState({recentReviews: results.splice(0, 12)});
-  }
+    	this.setState({recentReviews: results.splice(0, 12)});
+  	}
 
 	handleEditClick() {
 		this.setState({editMode:true})
@@ -156,6 +177,25 @@ class Profile extends Component {
 		}
 	}
 
+	onClose() {
+		this.setState({
+			followersPanelOpen: false,
+			followingPanelOpen: false
+		})
+	}
+
+	viewFollowers() {
+		this.setState({
+			followersPanelOpen: true
+		})
+	}
+
+	viewFollowing() {
+		this.setState({
+			followingPanelOpen: true
+		})
+	}
+
 	renderOptions() {
         var opts = []
         for (var genre in GENRES) {
@@ -165,7 +205,8 @@ class Profile extends Component {
     }
 
 	renderDetails() {
-		const { genre, avatar, isOwnAccount, session, editMode } = this.state;
+		const { genre, avatar, isOwnAccount, session, editMode, isAdmin } = this.state;
+		const { userId } = this.props.match.params		
 
 		if (editMode) {
 			return (
@@ -189,11 +230,13 @@ class Profile extends Component {
 		}
 		return (
 			<div>
-				<ProfileDetails details={this.state} />
+				<ProfileDetails details={this.state} viewFollowers={this.viewFollowers} viewFollowing={this.viewFollowing}/>
 				{(isOwnAccount || session.isAdmin) && (
 					<div className="row">
 						<button className="btn btn-secondary" onClick={this.handleEditClick}>Edit Profile</button>
 						<button className="btn btn-secondary" onClick={this.deleteAccount}>Delete Account</button>
+						{session.isAdmin && 
+							<PromoteAdmin userId={userId || session.userId} session={session} userIsAdmin={isAdmin}/>}
 					</div>
 				)}
 			</div>
@@ -212,18 +255,29 @@ class Profile extends Component {
 	}
 
 	render() {
-		const { name, isOwnAccount, session, avatar, isAdmin } = this.state
-		const { userId } = this.props.match.params
+		const { name, isOwnAccount, session, avatar, followingPanelOpen, followersPanelOpen, 
+			recentReviews, followers, following } = this.state
+
 		return (
 			<div className="container">
+				{followersPanelOpen && 
+					<FollowListModal 
+						followData={followers} 
+						error={isOwnAccount ? NO_FOLLOWERS : NO_FOLLOWERS_OTHER} 
+						onClose={this.onClose} />}
+				{followingPanelOpen && 
+					<FollowListModal 
+						followData={following} 
+						error={isOwnAccount ? NO_FOLLOWING : NO_FOLLOWING_OTHER} 
+						onClose={this.onClose} />}
 				<div className="row" style={{paddingTop: "1rem"}}>
 					<div className="col-4">
 						<img className="avatar" src={avatar}  />
 						{this.renderDetails()}
-						<PromoteAdmin userId={userId || session.userId} session={session} userIsAdmin={isAdmin}/>
 					</div>
 					<div className="col-8">
 						<h3>Recent reviews by {name}</h3>
+						<i>{recentReviews.length < 1 && NO_RECENT_REVIEWS}</i>
 						{this.renderReviews()}
 					</div>
 				</div>

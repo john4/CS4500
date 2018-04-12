@@ -79,6 +79,7 @@ class MovieReviewTest(unittest.TestCase):
     def test_recommender(self):
         response = self.app.get('/user/{}/recommender/'.format(str(self.user_two.get('_id'))))
         data = json.loads(response.get_data(as_text=True))
+        data = [item.get('id') for item in data]
         self.assertEqual(data, [2, 3])
 
     def test_bad_user(self):

@@ -112,14 +112,14 @@ class UserTests(unittest.TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertEqual(data, {'error': 'missing required fields'})
 
-
     def test_user_register_short_pass(self):
         user = {
             'name': 'Test User',
             'email': 'notarealemail@notarealplace.com',
             'password': 'root',
             'age': 22,
-            'genre': 'Horror'
+            'genre': 'Horror',
+            'photoUrl': 'http://notareallink.com'
         }
 
         response = self.app.post('/user/register/', data=json.dumps(user))
@@ -137,13 +137,15 @@ class UserTests(unittest.TestCase):
         self.assertEqual(data.get('email'), 'notarealemail1@notarealplace.com')
         self.assertEqual(data.get('age'), 22)
         self.assertEqual(data.get('genre'), 'Horror')
+        self.assertEqual(data.get('photo_url'), 'http://notareallink.com')
 
         user_two = {
             'name': 'Test User 2',
             'email': 'notarealemail1@notarealplace.com',
             'password': 'password',
             'age': 22,
-            'genre': 'Action'
+            'genre': 'Action',
+            'photoUrl': 'http://notareallink.com'
         }
 
         response = self.app.post('/user/register/', data=json.dumps(user_two))
@@ -431,7 +433,8 @@ class UserTests(unittest.TestCase):
             'email': email,
             'password': 'password',
             'age': 22,
-            'genre': 'Horror'
+            'genre': 'Horror',
+            'photoUrl': 'http://notareallink.com'
         }
         return user
 

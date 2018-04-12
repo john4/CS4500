@@ -28,7 +28,7 @@ class FollowerResultItem extends Component {
 
     componentDidMount() {
       if (this.props.followMe != undefined && this.props.followMe.length > 0) {
-        var loggedInUserId = localStorage.getItem("spoiledUserId");
+        var loggedInUserId = localStorage.getItem("st:userId");
         var followerIds = this.props.followMe.map(follower => follower.$oid);
         this.setState({isFollowing: followerIds.includes(loggedInUserId)});
       }
@@ -36,15 +36,15 @@ class FollowerResultItem extends Component {
 
     render() {
       const {email, genre, name, photoUrl, userId, followMe } = this.props;
-
-      if (this.state.isFollowing) {
-        var followButton = (
+      var followButton
+      if (this.state.isFollowing && localStorage.getItem("st:userId") !== userId) {
+        followButton = (
           <div className="FollowerResultItem-add" onClick={() => this.handleUnfollow(userId)}>
             <i className="fas fa-check"></i>
           </div>
         );
-      } else {
-        var followButton = (
+      } else if (localStorage.getItem("st:userId") !== userId) {
+        followButton = (
           <div className="FollowerResultItem-add" onClick={() => this.handleFollow(userId)}>
             <i className="fas fa-user-plus"></i>
           </div>

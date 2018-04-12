@@ -21,6 +21,7 @@ class Register extends Component {
         this.submit = this.submit.bind(this);
         this.renderOptions = this.renderOptions.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.updateAvatar = this.updateAvatar.bind(this);
       }
 
     handleInputChange(e) {
@@ -32,11 +33,12 @@ class Register extends Component {
     
     updateAvatar(e) {
         if(e.target.value.includes("http") || (e.target.value.length > 5)){
-            axios.get(e)
+            axios.get(e.target.value)
                 .then(success => {
                     this.setState({avatar: e.target.value});
-                }).catch(error => {
-                    this.setState({error: OOPS + error.response.data.error});
+                    this.setState({error: ''});
+                }).catch(err => {
+                    this.setState({error: OOPS + err});
                 });
         }
     }
@@ -54,8 +56,7 @@ class Register extends Component {
         ApiWrapper().api().post('/user/register/', data)
         .then(res => {
             window.location = "/login";
-        })
-        .catch(err => {
+        }).catch(err => {
             this.setState({error: OOPS + err.response.data.error});
         });
 
@@ -92,8 +93,7 @@ class Register extends Component {
                     
                     <div>
                         <label>Avatar</label>
-                        <input type="text" name="avatar" value={this.state.avatar}
-                            onChange={this.updateAvatar} required/>
+                        <input type="text" name="avatar" onChange={this.updateAvatar} />
                     </div>
 
                     <div>

@@ -32,9 +32,15 @@ class MovieReviewTest(unittest.TestCase):
             'email': 'three@three.three'
         })
 
+        DB.User.insert_one({
+            'name': 'Four',
+            'email': 'four@four.four'
+        })
+
         self.user_one = DB.User.find_one({'email': 'one@one.one'})
         self.user_two = DB.User.find_one({'email': 'two@two.two'})
         self.user_three = DB.User.find_one({'email': 'three@three.three'})
+        self.user_four = DB.User.find_one({'email': 'four@four.four'})
 
         DB.Review.insert_one({
             'tmdb_id': 1,
@@ -71,14 +77,21 @@ class MovieReviewTest(unittest.TestCase):
         DB.User.delete_many({})
 
     def test_recommender(self):
+
+        response = self.app.get('/user/{}/recommender/'.format(str(self.user_two.get('_id'))))
+        data = json.loads(response.get_data(as_text=True))
+        self.assertEqual(data, [2, 3])
+
+    def test_bad_user(self):
         response = self.app.get('/user/{}/recommender/'.format('hello'))
         data = json.loads(response.get_data(as_text=True))
         self.assertEqual(response.status_code, 400)
         self.assertEqual(data.get('error'), 'invalid user_id')
 
-        response = self.app.get('/user/{}/recommender/'.format(str(self.user_two.get('_id'))))
+    def test_user_no_reviews(self):
+        response = self.app.get('/user/{}/recommender/'.format(str(self.user_four.get('_id'))))
         data = json.loads(response.get_data(as_text=True))
-        self.assertEqual(data, [2, 3])
+        self.assertEqual(len(data), 0)
 
 if __name__ == "__main__":
     unittest.main()

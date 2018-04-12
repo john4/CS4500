@@ -16,10 +16,12 @@ class Home extends Component {
       recentReviewResults: [],
       genreRecResults: [],
       currentMovieResults: [],
+      recommenderResults: []
     };
 
     this.handleGenreRec = this.handleGenreRec.bind(this);
     this.handleCurrentMovies = this.handleCurrentMovies.bind(this);
+    this.handleRecommenderMovies = this.handleRecommenderMovies.bind(this);
     this.handleRecentReviews = this.handleRecentReviews.bind(this);
   }
 
@@ -49,6 +51,12 @@ class Home extends Component {
         this.handleCurrentMovies(results);
       });
 
+    ApiWrapper().api().getRecommendations(session.userId)
+      .then(res => {
+        const results = res.data;
+        this.handleRecommenderMovies(results);
+      });
+
     var reviews = ApiWrapper().api().getFollowedRecentReviews().then(res => {
       this.handleRecentReviews(res.data);
     });
@@ -60,6 +68,10 @@ class Home extends Component {
 
   handleCurrentMovies(results) {
     this.setState({currentMovieResults: results.splice(0, 12)});
+  }
+
+  handleRecommenderMovies(results) {
+    this.setState({recommenderResults: results.splice(0, 12)});
   }
 
   handleRecentReviews(results) {
@@ -87,6 +99,16 @@ class Home extends Component {
           <img src={posterPath} className="Home-poster pr-2 pt-2" />
         </a>
       );
+    });
+
+    const recommenderMovieItems = this.state.recommenderResults.map(function(result) {
+      var posterPath = 'https://image.tmdb.org/t/p/w200' + result.poster_path;
+      var detailURL = '/movie/' + result.id + '/detail/';
+      return (
+        <a href={detailURL} key={result.id}>
+          <img src={posterPath} className="Home-poster pr-2 pt-2" />
+        </a>
+      )
     });
 
     const recentRevItems = this.state.recentReviewResults.map((result) =>
@@ -125,6 +147,20 @@ class Home extends Component {
       </div>
     );
 
+    var noRecommenderPrompt = (
+      <p><i>We don't have any recommendations for you :( try rating some movies!</i></p>
+    );
+
+    var recommender = (
+      <div>
+        <h3>Movies recommended for you</h3>
+        <div>
+          {recommenderMovieItems.length > 0 && recommenderMovieItems}
+          {recommenderMovieItems.length == 0 && noRecommenderPrompt}
+        </div>
+      </div>
+    );
+
     var registerPrompt = (
       <div>
         <h3>
@@ -145,6 +181,10 @@ class Home extends Component {
 
               <div className="row px-2 pt-3">
                 {session.isLoggedIn && genreRecs}
+              </div>
+
+              <div className="row px-2 pt-3">
+                {session.isLoggedIn && recommender}
               </div>
             </div>
 

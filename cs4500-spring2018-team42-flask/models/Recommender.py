@@ -59,7 +59,8 @@ class Recommender(object):
                 return 0
 
             user_rating_df_dict = {
-                user_id: [user_ratings_dict[user_id][movie_one_id], user_ratings_dict[user_id][movie_two_id]] for user_id in relevant_users
+                user_id: [user_ratings_dict[user_id][movie_one_id], user_ratings_dict[user_id][movie_two_id]]
+                    for user_id in relevant_users
             }
 
             DF_var = pd.DataFrame.from_dict(user_rating_df_dict)
@@ -88,4 +89,4 @@ class Recommender(object):
 
         user_recommendations.sort(key=lambda tup: tup[1], reverse=True)
         movies_to_recommend = [tup[0] for tup in user_recommendations]
-        return movies_to_recommend[:10], 200
+        return movies_to_recommend[:12], 200

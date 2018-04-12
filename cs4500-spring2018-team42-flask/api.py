@@ -491,4 +491,6 @@ def get_user_to_user_recomendations(user_id):
         return make_response(dumps({'error': 'invalid user_id'}), 400)
 
     results, response_code = Recommender.get_recommended_movies_for_user(user_id)
-    return make_response(dumps(results), response_code)
+    movie_detail_list = [Movie.get_movie_details(movie_id)[0] for movie_id in results]
+
+    return make_response(dumps(movie_detail_list), response_code)

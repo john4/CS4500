@@ -249,17 +249,20 @@ export const ApiWrapper = (() => {
           session_id: sessionId
         })
       },
-	  updateUser: function(data) {
-		return axios.post(`${API_ENDPOINT}/user/update/`,
-		  {
-			name: data.name,
-			age: data.age,
-			photoUrl: data.photoUrl,
-			genre: data.genre,
-			email: data.email
-		  }
-		);
-	  },
+      updateUser: function(data) {
+        return axios.post(`${API_ENDPOINT}/user/update/`,
+          {
+          name: data.name,
+          age: data.age,
+          photoUrl: data.photoUrl,
+          genre: data.genre,
+          email: data.email
+          }
+        );
+      },
+      getRecommendations: function(userId) {
+        return axios.get(`${API_ENDPOINT}/user/${userId}/recommender/`);
+      }
     }
   };
 

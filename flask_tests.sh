@@ -5,7 +5,6 @@ pip install virtualenv
 virtualenv venv
 . venv/bin/activate
 
-pip install --trusted-host pypi.python.org pandas numpy
 pip install -r ./cs4500-spring2018-team42-flask/requirements.txt
 
 # run test database

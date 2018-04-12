@@ -121,17 +121,21 @@ class Profile extends Component {
 			photoUrl: avatar,
 			genre: genre
 		}
+
         
         axios.get(avatar).then(success => {
-                ApiWrapper().api().updateUser(data).then(res => {
-                    this.setState({editMode: false});
-                    this.setState({error: ''})
-                }).catch(error => {
-                  this.setState({error: INVALID_LINK})
-                });
-			}).catch(error => {
-                this.setState({error: INVALID_LINK})
-			});
+            ApiWrapper().api().updateUser(data).then(res => {
+                this.setState({editMode: false});
+                this.setState({error: ''});
+                localStorage.setItem("st:photo_url", data.photoUrl);
+                window.location.reload();
+            }).catch(error => {
+              this.setState({error: INVALID_LINK})
+            });
+        }).catch(error => {
+            this.setState({error: INVALID_LINK})
+        });
+        
 	}
 
 	handleCancelClick(){

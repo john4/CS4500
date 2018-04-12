@@ -13,14 +13,8 @@ class NavBar extends Component {
     super(props);
 
     this.state = {
-      session: null
+      session: this.props.session
     };
-  }
-
-  componentWillMount() {
-    this.setState({
-      session: ApiWrapper().getSession()
-    });
   }
 
   render() {
@@ -49,7 +43,7 @@ class NavBar extends Component {
               <div className="col-6" />
               <div className="col-5 navbar">
                   {session.isLoggedIn && [<NotificationIcon />]}
-                  <AccountNav username={session.name} />
+                  <AccountNav photoUrl={session.photoUrl} />
               </div>
               <div className="col-1" />
             </div>

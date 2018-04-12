@@ -148,7 +148,9 @@ class Home extends Component {
     );
 
     var noRecommenderPrompt = (
-      <p><i>We don't have any recommendations for you :( try rating some movies!</i></p>
+      <div>
+        <p><i>We don't have any recommendations for you :( try rating some movies!</i></p>
+      </div>
     );
 
     var recommender = (

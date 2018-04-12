@@ -39,8 +39,11 @@ class Register extends Component {
                     this.setState({error: ''});
                 }).catch(err => {
                     this.setState({error: OOPS + err});
+                    
                 });
         }
+        
+        e.persist();
     }
 
     submit(e) {
@@ -93,7 +96,7 @@ class Register extends Component {
                     
                     <div>
                         <label>Avatar</label>
-                        <input type="text" name="avatar" onChange={this.updateAvatar} />
+                        <input type="link" name="avatar" onChange={this.updateAvatar} />
                     </div>
 
                     <div>

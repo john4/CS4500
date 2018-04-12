@@ -100,7 +100,9 @@ class Profile extends Component {
 			genre: genre
 		}
 		ApiWrapper().api().updateUser(data).then(res => {
-			this.setState({editMode: false})
+			this.setState({editMode: false});
+            localStorage.setItem("st:photo_url", data.photoUrl)
+            window.location.reload()
 		})
 
 	}

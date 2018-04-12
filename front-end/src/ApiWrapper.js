@@ -60,7 +60,7 @@ export const ApiWrapper = (() => {
         return axios.post(API_ENDPOINT + LOGIN_PATH, { email, password })
           .then(res => {
             setSession(res.data);
-            window.location = "/playlist/genre";
+            window.location = "/";
           });
       },
       removeSession: function () {

@@ -3,6 +3,13 @@
   height: 60px;
 }
 
+.AccountIcon {
+  width: 2rem;
+  height: 2rem;
+  border: solid;
+  border-radius: 20px;
+}
+
 .AccountNav-loginItem {
   margin-left: 1rem;
 }

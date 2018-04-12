@@ -27,7 +27,7 @@
 
 .ProdResultItem-icon {
   padding-top: 1rem;
-  position: fixed;
-  right: 4rem;
+  position: absolute;
+  right: 1rem;
   color: #818182;
 }

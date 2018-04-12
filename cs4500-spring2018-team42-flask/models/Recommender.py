@@ -56,7 +56,7 @@ class Recommender(object):
 
             relevant_users = list(set(movie_one_reviewed_by) & set(movie_two_reviewed_by))
             if not relevant_users:
-                return 0
+                return 1
 
             user_rating_df_dict = {
                 user_id: [user_ratings_dict[user_id][movie_one_id], user_ratings_dict[user_id][movie_two_id]]
@@ -88,5 +88,6 @@ class Recommender(object):
             user_recommendations.append((movie, numerator / denominator))
 
         user_recommendations.sort(key=lambda tup: tup[1], reverse=True)
-        movies_to_recommend = [tup[0] for tup in user_recommendations]
+        movies_to_recommend = [tup[0] for tup in user_recommendations if tup[1] > 3]
+
         return movies_to_recommend[:12], 200

@@ -77,7 +77,6 @@ class MovieReviewTest(unittest.TestCase):
         DB.User.delete_many({})
 
     def test_recommender(self):
-
         response = self.app.get('/user/{}/recommender/'.format(str(self.user_two.get('_id'))))
         data = json.loads(response.get_data(as_text=True))
         self.assertEqual(data, [2, 3])

@@ -13,42 +13,41 @@ class NavBar extends Component {
     super(props);
 
     this.state = {
-      session: null
+      session: this.props.session
     };
-  }
-
-  componentWillMount() {
-    this.setState({
-      session: ApiWrapper().getSession()
-    });
   }
 
   render() {
     const {session} = this.state;
 
     return (
-      <header className="App-header w-100">
-        <div className="row w-100">
-          <div className="col">
+      <header className="App-header row no-gutters">
+          <div className="col-4">
             <a href="/" className="App-title">
-              <h1 className="App-title">Spoiled Tomatillos</h1>
+                <img src={"/logo.png"} />
             </a>
           </div>
-          <div className="col navbar">
+          <div className="col-4 navbar " >
             {session.isLoggedIn && session.isAdmin === true && [
-              <a href="/logs">View Logs</a>
+              <a href="/logs" className="navbar-link">View Logs</a>
             ]}
-            <a href="/search">Movie Search</a>
+            <a href="/search" className="navbar-link">Movie Search</a>
             {session.isLoggedIn && [
-              <a href="/user-search">User Search</a>,
-              <NotificationIcon />
+              <a className="navbar-link" href="/user-search">Find Users</a>
             ]}
+            <a href="/" className="navbar-link">Home</a>
           </div>
-          <div className="col">
-            <AccountNav username={session.name} />
+          <div className="col-2" />
+          <div className="col-2">
+            <div className="row no-gutters ">
+              <div className="col-6" />
+              <div className="col-5 navbar">
+                  {session.isLoggedIn && [<NotificationIcon />]}
+                  <AccountNav photoUrl={session.photoUrl} />
+              </div>
+              <div className="col-1" />
+            </div>
           </div>
-        </div>
-
       </header>
     );
   }

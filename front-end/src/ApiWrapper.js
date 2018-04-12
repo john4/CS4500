@@ -60,7 +60,7 @@ export const ApiWrapper = (() => {
         return axios.post(API_ENDPOINT + LOGIN_PATH, { email, password })
           .then(res => {
             setSession(res.data);
-            window.location = "/playlist/genre";
+            window.location = "/";
           });
       },
       removeSession: function () {
@@ -129,6 +129,9 @@ export const ApiWrapper = (() => {
             session_id: sessionId,
           }
         );
+      },
+      getUserReviews: function (userId) {
+        return axios.get(`${API_ENDPOINT}/user/${userId}/get-reviews/`);
       },
       searchUser: function (query) {
         return axios.get(`${API_ENDPOINT}/user/search/?name=${query}`);

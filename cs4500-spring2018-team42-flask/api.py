@@ -29,6 +29,7 @@ def register_user():
     new_user.age = data.get('age')
     new_user.password = data.get('password')
     new_user.genre = data.get('genre')
+    new_user.photo_url = data.get('photoUrl')
 
     new_user, response_status = new_user.register()
 

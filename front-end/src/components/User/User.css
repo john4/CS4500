@@ -3,10 +3,22 @@
   height: 60px;
 }
 
+.AccountIcon {
+  width: 2rem;
+  height: 2rem;
+  border: solid;
+  border-radius: 20px;
+}
+
 .AccountNav-loginItem {
   margin-left: 1rem;
 }
 
 .AccountNav-dropdown {
   float: right;
+}
+
+.dropdown-menu-right {
+  left: auto;
+  right: 0px;  
 }

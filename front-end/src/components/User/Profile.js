@@ -5,7 +5,12 @@ import ProfileDetailsEdit from './Profile-Details-Edit.js';
 import GENRES from '../../Genres'
 import { ApiWrapper } from '../../ApiWrapper';
 import './Profile.css';
-import PromoteAdmin from './PromoteAdmin'
+import PromoteAdmin from './PromoteAdmin';
+import ReviewNotificationItem from '../Review/ReviewNotificationItem';
+import Modal from '../Modal/Modal'
+import FollowerResults from '../FollowerSearch/FollowerResults'
+import { NO_FOLLOWERS, NO_FOLLOWING, NO_FOLLOWERS_OTHER, NO_FOLLOWING_OTHER, NO_RECENT_REVIEWS, INVALID_LINK, OOPS } from '../../Errors.js';
+import FollowListModal from '../FollowerModal/FollowListModal.js';
 
 const defaultAvatar = "https://sites.google.com/a/windermereprep.com/canvas/_/rsrc/1486400406169/home/unknown-user/user-icon.png"
 
@@ -18,45 +23,66 @@ class Profile extends Component {
 			genre: '',
 			isOwnAccount: this.props.match.params.userId ? false : true,
 			editMode: false,
-			session: null
+			session: {},
+			recentReviews: [],
+			name: '',
+			email: '',
+			age: 18,
+			avatar: defaultAvatar,
+			isAdmin: false,
+      error: '',
+			followerPanelOpen: false,
+			followingPanelOpen: false,
+			followers: [],
+			following: [],
 		};
 
 		this.handleEditClick = this.handleEditClick.bind(this);
 		this.handleSubmitClick = this.handleSubmitClick.bind(this);
 		this.handleCancelClick = this.handleCancelClick.bind(this);
+		this.handleRecentReviews = this.handleRecentReviews.bind(this);
+		this.viewFollowers = this.viewFollowers.bind(this);
+		this.viewFollowing = this.viewFollowing.bind(this);
+		this.onClose = this.onClose.bind(this);
 		this.deleteAccount = this.deleteAccount.bind(this);
 		this.updateName = this.updateName.bind(this);
 		this.updateEmail = this.updateEmail.bind(this);
 		this.updateAvatar = this.updateAvatar.bind(this);
 		this.updateGenre = this.updateGenre.bind(this);
-		this.api = ApiWrapper().api()
 	}
 
 	componentWillMount() {
 		const session = ApiWrapper().getSession();
 		const api = ApiWrapper().api();
-		if (this.props.match.params.userId &&
-				this.props.match.params.userId !== session.userId) {
-			api.getUserDetails(this.props.match.params.userId).then(res => {
+		const { userId } = this.props.match.params
+
+		const profileUserId = userId || session.userId
+		
+		this.getFollowing(profileUserId)
+		this.getFollowers(profileUserId)
+
+		api.getUserDetails(profileUserId).then(res => {
 				this.setState({
-					isOwnAccount: false,
+					isOwnAccount: (profileUserId === session.userId),
 					...this.getUserInformation(res.data),
+					session,
 				});
-			});
-		} else {
-			api.getAccountDetails().then(res => {
-				this.setState({
-					isOwnAccount: true,
-					...this.getUserInformation(res.data),
-				});
-			});
-		}
-		this.getSession();
+				this.getUserReviews(profileUserId);
+		});
 	}
 
-	getSession() {
-		this.setState({
-			session: ApiWrapper().getSession()
+	getFollowing(userId) {
+		ApiWrapper().api().getUsersWhoAreFollowed(userId).then(res => {
+			this.setState({
+				following: res.data
+			})
+		})
+	}
+	getFollowers(userId) {
+		ApiWrapper().api().getUsersWhoFollow(userId).then(res => {
+			this.setState({
+				followers: res.data
+			})
 		})
 	}
 
@@ -67,9 +93,20 @@ class Profile extends Component {
 			age: response.age,
 			genre: response.genre,
 			avatar: response.photo_url ? response.photo_url : defaultAvatar,
-			isAdmin: response.isAdmin
+			isAdmin: response.isAdmin,
 		};
 	}
+
+
+	getUserReviews(userId) {
+		ApiWrapper().api().getUserReviews(userId).then(res => {
+			this.handleRecentReviews(res.data);
+		});
+	}
+
+	handleRecentReviews(results) {
+    	this.setState({recentReviews: results.splice(0, 12)});
+  	}
 
 	handleEditClick() {
 		this.setState({editMode:true})
@@ -84,19 +121,32 @@ class Profile extends Component {
 			photoUrl: avatar,
 			genre: genre
 		}
-		ApiWrapper().api().updateUser(data).then(res => {
-			this.setState({editMode: false})
-		})
 
+        
+        axios.get(avatar).then(success => {
+            ApiWrapper().api().updateUser(data).then(res => {
+                this.setState({editMode: false});
+                this.setState({error: ''});
+                localStorage.setItem("st:photo_url", data.photoUrl);
+                window.location.reload();
+            }).catch(error => {
+              this.setState({error: INVALID_LINK})
+            });
+        }).catch(error => {
+            this.setState({error: INVALID_LINK})
+        });
+        
 	}
 
 	handleCancelClick(){
 		const { userId } = this.props.match.params
+		const { session } = this.state
 
-		ApiWrapper().api().getUserDetails(userId).then(res => {
+		ApiWrapper().api().getUserDetails(userId || session.userId).then(res => {
 			this.setState({
 				...this.getUserInformation(res.data),
-				editMode: false
+				editMode: false,
+                error: ''
 			})
 		})
 	}
@@ -115,12 +165,15 @@ class Profile extends Component {
 
 	updateAvatar(value){
 		var update = false;
-		axios.get(value)
-			.then(success => {
-				this.setState({avatar: value})
-			}).catch(error => {
-				console.log("Error updating avatar")
-			})
+        
+        if(value.includes("http") && (value.length > 5)){
+            axios.get(value)
+                .then(success => {
+                    this.setState({avatar: value});
+                }).catch(error => {
+                    this.setState({error: INVALID_LINK})
+                });
+        }
 	}
 
 	deleteAccount(){
@@ -135,9 +188,28 @@ class Profile extends Component {
 				window.location = "/"
 			})
 			.catch(error => {
-				console.log(error.data)
+				this.setState({error: OOPS + "unable to delete account"})
 			})
 		}
+	}
+
+	onClose() {
+		this.setState({
+			followersPanelOpen: false,
+			followingPanelOpen: false
+		})
+	}
+
+	viewFollowers() {
+		this.setState({
+			followersPanelOpen: true
+		})
+	}
+
+	viewFollowing() {
+		this.setState({
+			followingPanelOpen: true
+		})
 	}
 
 	renderOptions() {
@@ -149,7 +221,8 @@ class Profile extends Component {
     }
 
 	renderDetails() {
-		const { genre, avatar, isOwnAccount, session, editMode } = this.state;
+		const { genre, avatar, isOwnAccount, session, editMode, isAdmin } = this.state;
+		const { userId } = this.props.match.params		
 
 		if (editMode) {
 			return (
@@ -173,28 +246,59 @@ class Profile extends Component {
 		}
 		return (
 			<div>
-				<ProfileDetails details={this.state} />
+				<ProfileDetails details={this.state} viewFollowers={this.viewFollowers} viewFollowing={this.viewFollowing}/>
 				{(isOwnAccount || session.isAdmin) && (
 					<div className="row">
 						<button className="btn btn-secondary" onClick={this.handleEditClick}>Edit Profile</button>
 						<button className="btn btn-secondary" onClick={this.deleteAccount}>Delete Account</button>
+						{session.isAdmin && 
+							<PromoteAdmin userId={userId || session.userId} session={session} userIsAdmin={isAdmin}/>}
 					</div>
 				)}
 			</div>
 		)
 	}
 
+	renderReviews() {
+		return this.state.recentReviews.map((result) =>
+      <ReviewNotificationItem
+        userName={result.user_name}
+        movieTitle={result.movie_title}
+        movieId={result.tmdb_id}
+        rating={result.rating}
+      />
+    );
+	}
+
 	render() {
-		const { isOwnAccount, session, avatar, isAdmin } = this.state
-		const { userId } = this.props.match.params
+		const { name, isOwnAccount, session, avatar, followingPanelOpen, followersPanelOpen, 
+			recentReviews, followers, following } = this.state
+
 		return (
 			<div className="container">
-				<div className="row">
-					<img className="avatar" src={avatar}  />
-				</div>
-				{this.renderDetails()}
-				<div className="row">
-					<PromoteAdmin userId={userId || session.userId} session={session} userIsAdmin={isAdmin}/>
+				{followersPanelOpen && 
+					<FollowListModal 
+						followData={followers} 
+						error={isOwnAccount ? NO_FOLLOWERS : NO_FOLLOWERS_OTHER} 
+						onClose={this.onClose} />}
+				{followingPanelOpen && 
+					<FollowListModal 
+						followData={following} 
+						error={isOwnAccount ? NO_FOLLOWING : NO_FOLLOWING_OTHER} 
+						onClose={this.onClose} />}
+				<div className="row" style={{paddingTop: "1rem"}}>
+					<div className="col-4">
+                        <div>
+                            <i>{this.state.error}</i>
+                        </div>
+						<img className="avatar" src={avatar}  />
+						{this.renderDetails()}
+					</div>
+					<div className="col-8">
+						<h3>Recent reviews by {name}</h3>
+						<i>{recentReviews.length < 1 && NO_RECENT_REVIEWS}</i>
+						{this.renderReviews()}
+					</div>
 				</div>
 			</div>
 		)

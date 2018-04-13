@@ -156,7 +156,7 @@ class Home extends Component {
 
     var recommender = (
       <div>
-        <h3>Movies recommended for you</h3>
+        <h3>Personalized movie recommendations for you</h3>
         <div>
           {recommenderMovieItems.length > 0 && recommenderMovieItems}
           {recommenderMovieItems.length == 0 && noRecommenderPrompt}
@@ -178,6 +178,10 @@ class Home extends Component {
         <div className="container-fluid">
           <div className="row pt-3 pb-5">
             <div className="col-8">
+              <div className="row px-2 pt-3">
+                {session.isLoggedIn && recommender}
+              </div>
+
               <div className="row px-2">
                 {currentlyShowing}
               </div>
@@ -186,9 +190,6 @@ class Home extends Component {
                 {session.isLoggedIn && genreRecs}
               </div>
 
-              <div className="row px-2 pt-3">
-                {session.isLoggedIn && recommender}
-              </div>
             </div>
 
             <div className="col-4">

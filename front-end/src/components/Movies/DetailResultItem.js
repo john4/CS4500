@@ -16,7 +16,7 @@ class DetailResultItem extends Component {
 				<div>Critic Rating: <Rating isIMDB={true} score={this.props.average / 2} /></div>
 				<div>Spoiled Tomatillos Rating: <Rating isIMDB={false} score={this.props.averageRating} /></div>
 				<div>Release Date: {this.props.release_date} </div>
-				<span>Movie Length: {this.props.length} </span>
+				<span>Movie Length: {this.props.length} min </span>
       </div>
     }
   }

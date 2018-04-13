@@ -27,15 +27,14 @@ class NavBar extends Component {
                 <img src={"/logo.png"} />
             </a>
           </div>
-          <div className="col-4 navbar " >
-            {session.isLoggedIn && session.isAdmin === true && [
-              <a href="/logs" className="navbar-link">View Logs</a>
-            ]}
+          <div className="col-4 navbar">
             <a href="/search" className="navbar-link">Movie Search</a>
             {session.isLoggedIn && [
               <a className="navbar-link" href="/user-search">Find Users</a>
             ]}
-            <a href="/" className="navbar-link">Home</a>
+            {session.isLoggedIn && session.isAdmin === true && [
+              <a href="/logs" className="navbar-link">View Logs</a>
+            ]}
           </div>
           <div className="col-2" />
           <div className="col-2">

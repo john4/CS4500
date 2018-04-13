@@ -3,7 +3,7 @@
 from flask import json, make_response, request, jsonify
 from bson.json_util import dumps
 from app import APP
-from models import Logs, Movie, User, Review, Prod
+from models import Logs, Movie, User, Recommender, Review, Prod
 
 
 @APP.route('/')
@@ -85,7 +85,6 @@ def make_admin():
     log = Logs('make_admin', dumps(result), response_status)
     log.create()
     return make_response(dumps(result), response_status)
-
 
 @APP.route('/user/delete/', methods=['POST'])
 def delete_user():
@@ -480,3 +479,18 @@ def logs_clear_all():
 
     results, response_code = Logs.clear_all()
     return make_response(dumps(results), response_code)
+
+@APP.route('/user/<user_id>/recommender/', methods=['GET'])
+def get_user_to_user_recomendations(user_id):
+    """
+    Get recommendations for movies similar to ones you like based on
+    your ratings and other users' ratings
+    """
+
+    if len(user_id) != 24:
+        return make_response(dumps({'error': 'invalid user_id'}), 400)
+
+    results, response_code = Recommender.get_recommended_movies_for_user(user_id)
+    movie_detail_list = [Movie.get_movie_details(movie_id)[0] for movie_id in results]
+
+    return make_response(dumps(movie_detail_list), response_code)

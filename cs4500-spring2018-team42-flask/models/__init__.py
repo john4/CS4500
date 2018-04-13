@@ -1,8 +1,9 @@
 """Import all models here so they can be seen outside the module"""
 
-from .User import User
+from .Logs import Logs
 from .Movie import Movie
 from .Prod import Prod
+from .Recommender import Recommender
 from .Review import Review
-from .Logs import Logs
+from .User import User
 

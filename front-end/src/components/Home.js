@@ -4,6 +4,7 @@ import axios from 'axios';
 import GENRES from '../Genres';
 import ReviewNotificationItem from './Review/ReviewNotificationItem';
 import './Home.css';
+import { NO_RECOMMENDATIONS } from '../Errors';
 
 const TMDB_URL = 'http://api.themoviedb.org/3/discover/movie?include_adult=false&page=1&language=en-US&api_key=' + process.env.REACT_APP_TMDB_API_KEY + '&';
 
@@ -149,7 +150,7 @@ class Home extends Component {
 
     var noRecommenderPrompt = (
       <div>
-        <p><i>We don&#8217;t have any recommendations for you :( try rating some movies!</i></p>
+        <p><i>{NO_RECOMMENDATIONS}</i></p>
       </div>
     );
 

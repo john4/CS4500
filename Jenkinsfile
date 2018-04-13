@@ -9,7 +9,7 @@ pipeline {
       stage ( 'Test Back End' ) {
 	 agent {
             docker {
-              image 'losoak/python3-mongodb'
+              image 'losoak/python3-mongodb:latest'
             }
          }
          steps {

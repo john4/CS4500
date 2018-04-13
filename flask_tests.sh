@@ -5,6 +5,7 @@ pip install virtualenv
 virtualenv venv
 . venv/bin/activate
 
+ln -s venv/lib/python3.4/site-packages/ /usr/local/lib/python3.4/site-packages
 pip install -r ./cs4500-spring2018-team42-flask/requirements.txt
 
 # run test database

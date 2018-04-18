@@ -1,0 +1,47 @@
+CS4500 Software Development
+
+------------------------------------------------
+Sprint 5 Group Grade Team 42:
+------------------------------------------------
+
+Expectations Achieved:
+-----------------------------------------------
+
+1. Did you have a  vertically integrated prototype/system deployed to AWS that works. 
+   The TA’s and Professors are expecting to use their machines to access the system:
+   
+    Yes
+
+2. Testing coverage minimum:
+
+    100% Statement Coverage AND 85+% Branch Coverage
+
+3. Project report identifying how far the team is from completion. 
+   The metric could be the number of use cases completed versus specified,
+   the number of tasks completed versus specified for a release, and so on. 
+   Jira can produce reports like this for you: 
+   
+   Detailed
+
+Comments on Expectations: The team identifies each others work. Are very well organized.
+
+Stretches Achieved:
+-----------------------------------------------
+
+(1) Stretch: Multi-platform/browser/database/whatever deployment and testing; (1) Stretch: UI-based testing or more usability testing
+Stretch: other structural test coverage criteria included manually but expected by team as part of code promotion process.
+Bigger stretch: other structural test coverage criteria included automatically.
+Stretch: innovative software design or particularly good use of design patterns. There’s obviously a base expectation that you are doing good design. This is for something that is over and above.
+
+
+Comments: "Good coding practice followed by the team throughout. Even the less experienced members of the team are doing great following coding standards. 
+Has linting quality checks which is adhered by most of the team.
+Manually tested on different browser. Usability testing report was quite detailed and has measurements. React code broken down into components enabling the code to be DRY"
+
+------------------------------------------------
+Team GRADE: 95
+------------------------------------------------
+
+Extra Comments: UI Overhaul. Admin functions. Adding users as admin. admin logs. Most of the team has developed a habit of using smart commits and linking Jira tickets
+
+Grader: Amit

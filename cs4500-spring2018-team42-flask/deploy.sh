@@ -3,7 +3,6 @@
 # Note: you must have python3, pip3, and the pandas 
 # package installed on the machine in order
 # to run this script.
-cd app/cs4500-spring2018-team42-flask
 export FLASK_APP=app.py
 export FLASK_DEBUG=0
 virtualenv -p python3 venv --system-site-packages

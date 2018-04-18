@@ -1,0 +1,13 @@
+.DetailsResultItem {
+  display: flex;
+  padding: 2rem 0;
+}
+
+.DetailsResultItem-image {
+  display: contents;
+}
+
+.DetailsResultItem-details {
+  display: inline-block;
+  padding-left: 1rem;
+}

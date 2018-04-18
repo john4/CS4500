@@ -16,7 +16,7 @@ class Recommender(object):
     @staticmethod
     def get_recommended_movies_for_user(user_id):
         def similarity(u, v):
-            return 1 / (1 + euclidean(u, v))
+            return 1 / (1 + euclidean(float(u), float(v)))
 
         user = DB.User.find_one({'_id': ObjectId(user_id)})
         all_reviews = list(DB.Review.find({}))

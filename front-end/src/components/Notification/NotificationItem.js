@@ -11,16 +11,6 @@ class NotificationItem extends Component {
       }
     }
 
-    componentDidMount() {
-      var deets = ApiWrapper().api().getMovieDetails(this.props.tmdbId)
-        .then(res => {
-          this.setState({
-            movieName: res.data.original_title,
-            moviePosterSrc: 'https://image.tmdb.org/t/p/w200' + res.data.poster_path
-          });
-        });
-    }
-
     onDelete() {
       ApiWrapper().api().markNotificationRead(this.props.id)
         .then(res => {
@@ -47,7 +37,7 @@ class NotificationItem extends Component {
         <div className="NotificationItem row border-top border-dark mx-1 mb-2">
           <div className="col-1 pt-2">
             <a href={movieDetailString}>
-              <img src={this.state.moviePosterSrc} className="NotificationItem-img" />
+              <img alt="" src={this.state.moviePosterSrc} className="NotificationItem-img" />
             </a>
           </div>
           <div className="col-10 pt-2 NotificationItem-body">

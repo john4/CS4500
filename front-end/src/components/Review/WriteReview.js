@@ -26,7 +26,7 @@ class WriteReview extends Component {
   render() {
     return (
       <div className="WriteReview">
-        <label for="rating" className="WriteReview-label">Review Score:</label>
+        <label for="rating" className="WriteReview-label">Your review:</label>
         <div className="input-group">
           <EditableRating onScoreClick={this.handleScoreUpdate} score={this.state.score} />
           <input id="description" type="text" className="form-control" ref="description" placeholder="What did you think?" />

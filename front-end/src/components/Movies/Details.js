@@ -105,29 +105,31 @@ class Details extends Component {
 		}
 
 		return reviews.map(review => {
-			return <Review
+			return (<Review
 				{ ...review }
 				movieId={this.props.match.params.tmdbid}
 				onDelete={this.handleDelete}
 				session={session}
-			/>;
+			/>);
 		});
 	}
 
 	render() {
     const { referPanelOpen } = this.state;
 		return (
-			<div className="container">
+			<div>
 				{referPanelOpen &&
 					<FollowerModal
 						movieId={this.props.match.params.tmdbid}
 						onClose={this.handleCloseReferPanel}
 					/>
 				}
-				<DetailResults {...this.state}/>
-				<button type="button" className="btn btn-secondary" onClick={this.handleOpenReferPanel}>Refer a follower</button>
-				{!this.hasOwnReview() && <WriteReview movieId={this.state.id} movieTitle={this.state.original_title} />}
-				{this.renderReviews()}
+				<div className="container">
+					<DetailResults {...this.state}/>
+					<button type="button" className="btn btn-secondary" onClick={this.handleOpenReferPanel}>Refer a follower</button>
+					{!this.hasOwnReview() && <WriteReview movieId={this.state.id} movieTitle={this.state.original_title} />}
+					{this.renderReviews()}
+				</div>
 			</div>
 		);
 	}

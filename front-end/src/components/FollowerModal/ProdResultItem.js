@@ -14,7 +14,7 @@ class ProdResultItem extends Component {
         <li>
           <div className={`ProdResultItem ${alreadySentClass}`} onClick={onClick}>
             <div className="ProdResultItem-image">
-              <img className="UserImage" src={photoUrl} />
+              <img alt="" className="UserImage" src={photoUrl} />
             </div>
             <div className="ProdResultItem-body">
               <b>{name}</b>

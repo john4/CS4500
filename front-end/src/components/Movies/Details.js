@@ -61,7 +61,7 @@ class Details extends Component {
 	}
 
 	getReviews() {
-		const { userId, email } = ApiWrapper().getSession();
+		const { userId } = ApiWrapper().getSession();
 
 		ApiWrapper().api().getReviews(this.props.match.params.tmdbid).then(res => {
 			this.setState({

@@ -4,7 +4,6 @@ import React, { Component } from 'react';
 import '../App.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'react-bootstrap';
-import {ApiWrapper} from '../ApiWrapper';
 import AccountNav from './User/AccountNav';
 import NotificationIcon from './Notification/NotificationIcon';
 
@@ -24,7 +23,7 @@ class NavBar extends Component {
       <header className="App-header row no-gutters">
           <div className="col-4">
             <a href="/" className="App-title">
-                <img src={"/logo.png"} />
+                <img alt="" src={"/logo.png"} />
             </a>
           </div>
           <div className="col-4 navbar">

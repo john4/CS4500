@@ -1,13 +1,7 @@
 import React, { Component } from 'react';
 import './Profile-Details.css';
-import axios from 'axios';
 
 class ProfileDetails extends Component {
-
-	constructor(props) {
-		super(props)
-	}
-
 	render(){
 		const { name, email, genre, followers, following } = this.props.details
 		const { viewFollowers, viewFollowing } = this.props

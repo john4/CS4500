@@ -2,8 +2,6 @@ import React, { Component } from 'react';
 import { ApiWrapper } from '../ApiWrapper';
 import { INVALID_LOGIN } from '../Errors'
 
-const LOGIN_PATH = "/user/login/";
-
 class Login extends Component {
     constructor(props) {
       super(props);
@@ -18,7 +16,7 @@ class Login extends Component {
       const password = this.refs.password.value;
       ApiWrapper().api().login(email, password)
         .catch(err => {
-          if (err.response.status == 400) {
+          if (err.response.status === 400) {
             this.setState({error: INVALID_LOGIN})
           }
         });

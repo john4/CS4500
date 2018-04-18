@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import Search from '../Search/Search';
 import FollowerResults from './FollowerResults'
-import axios from 'axios';
 import { ApiWrapper } from '../../ApiWrapper'
 import { NO_USER_RESULTS } from '../../Errors'
 
@@ -47,7 +46,7 @@ class FollowerSearch extends Component {
     const {results, error} = this.state;
     const placeholder = "Search user by username...";
     return (
-      <Search onSearch={this.search} results={results} ResultsComponent={FollowerResults} 
+      <Search onSearch={this.search} results={results} ResultsComponent={FollowerResults}
         placeholder={placeholder} error={error}/>
     );
   }

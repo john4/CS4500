@@ -11,6 +11,16 @@ class NotificationItem extends Component {
       }
     }
 
+    componentDidMount() {
+      var deets = ApiWrapper().api().getMovieDetails(this.props.tmdbId)
+        .then(res => {
+          this.setState({
+            movieName: res.data.original_title,
+            moviePosterSrc: 'https://image.tmdb.org/t/p/w200' + res.data.poster_path
+        });
+      });
+    }
+
     onDelete() {
       ApiWrapper().api().markNotificationRead(this.props.id)
         .then(res => {

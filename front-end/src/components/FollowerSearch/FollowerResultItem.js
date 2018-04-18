@@ -27,7 +27,7 @@ class FollowerResultItem extends Component {
     }
 
     componentDidMount() {
-      if (this.props.followMe != undefined && this.props.followMe.length > 0) {
+      if (this.props.followMe !== undefined && this.props.followMe.length > 0) {
         var loggedInUserId = localStorage.getItem("st:userId");
         var followerIds = this.props.followMe.map(follower => follower.$oid);
         this.setState({isFollowing: followerIds.includes(loggedInUserId)});
@@ -35,8 +35,9 @@ class FollowerResultItem extends Component {
     }
 
     render() {
-      const {email, genre, name, photoUrl, userId, followMe } = this.props;
-      var followButton
+      const {genre, name, photoUrl, userId } = this.props;
+      var followButton;
+
       if (this.state.isFollowing && localStorage.getItem("st:userId") !== userId) {
         followButton = (
           <div className="FollowerResultItem-add" onClick={() => this.handleUnfollow(userId)}>
@@ -54,7 +55,7 @@ class FollowerResultItem extends Component {
         <li className="FollowerResultItem">
           {followButton}
           <div className="FollowerResultItem-image">
-            <img className="UserImage" src={photoUrl} />
+            <img alt="" className="UserImage" src={photoUrl} />
           </div>
           <div className="FollowerResultItem-body">
             <b><a href={`/user/profile/${userId}`}>{name}</a></b>

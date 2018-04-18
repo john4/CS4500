@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
 import './App.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'react-bootstrap';
@@ -8,7 +7,7 @@ import { ApiWrapper } from './ApiWrapper';
 
 
 class App extends Component {
-    
+
   constructor(props) {
     super(props);
 

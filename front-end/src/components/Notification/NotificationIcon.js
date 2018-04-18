@@ -22,9 +22,9 @@ class NotificationIcon extends Component {
     }
 
     render() {
-      if (this.state.notificationCount != undefined && this.state.notificationCount > 0) {
+      if (this.state.notificationCount !== undefined && this.state.notificationCount > 0) {
         return (
-          
+
             <div>
               <a href="/user/notification/">
                 <span class="fa-stack has-badge" data-count={this.state.notificationCount}>
@@ -33,11 +33,11 @@ class NotificationIcon extends Component {
                 </span>
               </a>
             </div>
-          
+
         );
       } else {
         return (
-          
+
             <div>
               <a href="/user/notification/">
                   <span class="fa-stack">
@@ -46,7 +46,7 @@ class NotificationIcon extends Component {
                   </span>
               </a>
             </div>
-          
+
         );
       }
     }

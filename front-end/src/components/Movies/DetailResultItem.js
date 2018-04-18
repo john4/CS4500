@@ -6,7 +6,7 @@ class DetailResultItem extends Component {
     render() {
 			return <div>
 				<h2>{this.props.title}</h2>
-	 			<img src={this.props.posterSrc}/>
+	 			<img alt="" src={this.props.posterSrc}/>
 				<div>
 					<h5>
 						{this.props.tagline}

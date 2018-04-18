@@ -7,8 +7,6 @@ import { ApiWrapper } from '../../ApiWrapper';
 import './Profile.css';
 import PromoteAdmin from './PromoteAdmin';
 import ReviewNotificationItem from '../Review/ReviewNotificationItem';
-import Modal from '../Modal/Modal'
-import FollowerResults from '../FollowerSearch/FollowerResults'
 import { NO_FOLLOWERS, NO_FOLLOWING, NO_FOLLOWERS_OTHER, NO_FOLLOWING_OTHER, NO_RECENT_REVIEWS, INVALID_LINK, OOPS } from '../../Errors.js';
 import FollowListModal from '../FollowerModal/FollowListModal.js';
 
@@ -57,7 +55,7 @@ class Profile extends Component {
 		const { userId } = this.props.match.params
 
 		const profileUserId = userId || session.userId
-		
+
 		this.getFollowing(profileUserId)
 		this.getFollowers(profileUserId)
 
@@ -122,7 +120,7 @@ class Profile extends Component {
 			genre: genre
 		}
 
-        
+
         axios.get(avatar).then(success => {
             ApiWrapper().api().updateUser(data).then(res => {
                 this.setState({editMode: false});
@@ -135,7 +133,7 @@ class Profile extends Component {
         }).catch(error => {
             this.setState({error: INVALID_LINK})
         });
-        
+
 	}
 
 	handleCancelClick(){
@@ -164,16 +162,14 @@ class Profile extends Component {
 	}
 
 	updateAvatar(value){
-		var update = false;
-        
-        if(value.includes("http") && (value.length > 5)){
-            axios.get(value)
-                .then(success => {
-                    this.setState({avatar: value});
-                }).catch(error => {
-                    this.setState({error: INVALID_LINK})
-                });
-        }
+    if(value.includes("http") && (value.length > 5)){
+      axios.get(value)
+        .then(success => {
+          this.setState({avatar: value});
+        }).catch(error => {
+          this.setState({error: INVALID_LINK})
+        });
+    }
 	}
 
 	deleteAccount(){
@@ -221,8 +217,8 @@ class Profile extends Component {
     }
 
 	renderDetails() {
-		const { genre, avatar, isOwnAccount, session, editMode, isAdmin } = this.state;
-		const { userId } = this.props.match.params		
+		const { genre, isOwnAccount, session, editMode, isAdmin } = this.state;
+		const { userId } = this.props.match.params
 
 		if (editMode) {
 			return (
@@ -251,7 +247,7 @@ class Profile extends Component {
 					<div className="row">
 						<button className="btn btn-secondary" onClick={this.handleEditClick}>Edit Profile</button>
 						<button className="btn btn-secondary" onClick={this.deleteAccount}>Delete Account</button>
-						{session.isAdmin && 
+						{session.isAdmin &&
 							<PromoteAdmin userId={userId || session.userId} session={session} userIsAdmin={isAdmin}/>}
 					</div>
 				)}
@@ -271,27 +267,27 @@ class Profile extends Component {
 	}
 
 	render() {
-		const { name, isOwnAccount, session, avatar, followingPanelOpen, followersPanelOpen, 
+		const { name, isOwnAccount, avatar, followingPanelOpen, followersPanelOpen,
 			recentReviews, followers, following } = this.state
 
 		return (
 			<div className="container">
-				{followersPanelOpen && 
-					<FollowListModal 
-						followData={followers} 
-						error={isOwnAccount ? NO_FOLLOWERS : NO_FOLLOWERS_OTHER} 
+				{followersPanelOpen &&
+					<FollowListModal
+						followData={followers}
+						error={isOwnAccount ? NO_FOLLOWERS : NO_FOLLOWERS_OTHER}
 						onClose={this.onClose} />}
-				{followingPanelOpen && 
-					<FollowListModal 
-						followData={following} 
-						error={isOwnAccount ? NO_FOLLOWING : NO_FOLLOWING_OTHER} 
+				{followingPanelOpen &&
+					<FollowListModal
+						followData={following}
+						error={isOwnAccount ? NO_FOLLOWING : NO_FOLLOWING_OTHER}
 						onClose={this.onClose} />}
 				<div className="row" style={{paddingTop: "1rem"}}>
 					<div className="col-4">
                         <div>
                             <i>{this.state.error}</i>
                         </div>
-						<img className="avatar" src={avatar}  />
+						<img alt="" className="avatar" src={avatar}  />
 						{this.renderDetails()}
 					</div>
 					<div className="col-8">

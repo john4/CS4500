@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { ApiWrapper } from '../../ApiWrapper';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'react-bootstrap';
 import './User.css';
@@ -12,10 +11,10 @@ class Account extends Component {
       menuOpen: false,
     };
   }
-  
+
   renderUserImage() {
       if(this.props.photoUrl){
-        return (<img src={this.props.photoUrl} class="AccountIcon" />);
+        return (<img alt="" src={this.props.photoUrl} class="AccountIcon" />);
       } else {
         return (<span className="fa-stack">
                     <i class="fa fa-circle fa-stack-2x" />
@@ -23,7 +22,7 @@ class Account extends Component {
                 </span>);
       }
   }
-  
+
   render() {
     const photoUrl = this.props.photoUrl;
     const { menuOpen } = this.state;
@@ -32,7 +31,7 @@ class Account extends Component {
     if (photoUrl) {
       return (
         <div className={`AccountNav-dropdown dropdown  ${openClass}`}>
-          
+
           <a onClick={() => this.setState({menuOpen: !menuOpen})} href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded={menuOpen}>
             {this.renderUserImage()}
           </a>

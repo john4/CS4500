@@ -58,7 +58,7 @@ class Home extends Component {
         this.handleRecommenderMovies(results);
       });
 
-    var reviews = ApiWrapper().api().getFollowedRecentReviews().then(res => {
+    ApiWrapper().api().getFollowedRecentReviews().then(res => {
       this.handleRecentReviews(res.data);
     });
   }
@@ -87,7 +87,7 @@ class Home extends Component {
       var detailURL = '/movie/' + result.id + '/detail/';
       return (
         <a href={detailURL} key={result.id}>
-          <img src={posterPath} className="Home-poster pr-2 pt-2" />
+          <img alt="" src={posterPath} className="Home-poster pr-2 pt-2" />
         </a>
       );
     });
@@ -97,7 +97,7 @@ class Home extends Component {
       var detailURL = '/movie/' + result.id + '/detail/';
       return (
         <a href={detailURL} key={result.id}>
-          <img src={posterPath} className="Home-poster pr-2 pt-2" />
+          <img alt="" src={posterPath} className="Home-poster pr-2 pt-2" />
         </a>
       );
     });
@@ -107,7 +107,7 @@ class Home extends Component {
       var detailURL = '/movie/' + result.id + '/detail/';
       return (
         <a href={detailURL} key={result.id}>
-          <img src={posterPath} className="Home-poster pr-2 pt-2" />
+          <img alt="" src={posterPath} className="Home-poster pr-2 pt-2" />
         </a>
       )
     });
@@ -159,7 +159,7 @@ class Home extends Component {
         <h3>Personalized movie recommendations for you</h3>
         <div>
           {recommenderMovieItems.length > 0 && recommenderMovieItems}
-          {recommenderMovieItems.length == 0 && noRecommenderPrompt}
+          {recommenderMovieItems.length === 0 && noRecommenderPrompt}
         </div>
       </div>
     );

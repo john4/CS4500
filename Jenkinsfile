@@ -48,7 +48,11 @@ pipeline {
               unstableTotalAll           : '25',
               usePreviousBuildAsReference: true
             ])
-	    deleteDir();
+	 }
+	 post {
+	    always {
+	      deleteDir();
+	    }
 	 }
       }
       stage ( 'Test Front End' ) {
@@ -88,6 +92,11 @@ pipeline {
 	      useStableBuildAsReference: true
 	    ])
          }
+	 post {
+	    always {
+	      deleteDir();
+	    }
+	 }
       }
       stage ( 'Build Front End' ) {
 	 agent {

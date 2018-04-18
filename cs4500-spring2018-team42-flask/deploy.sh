@@ -10,6 +10,3 @@ virtualenv -p python3 venv --system-site-packages
 pip3 install -r requirements.txt
 pip3 install gunicorn
 gunicorn -w 3 app:APP -b 0.0.0.0:5000 &
-echo DISCONNECTING
-
-exit 0

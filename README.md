@@ -6,9 +6,9 @@
 
 ## Final Presentation Videos
 
-[Final Presentation](LINK)
+[Final Presentation](https://youtu.be/QsDqcTKxCn0)
 
-[System Demo](LINK)
+[System Demo](https://youtu.be/fI1ByMfESw8)
 
-[System Setup](LINK)
+[System Setup](https://youtu.be/G7m3iqZ_V6M)
 

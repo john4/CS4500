@@ -1,8 +1,9 @@
-# team-42-spring18
- Arianna Tang, Ben Campbell, John Martin, Lisa Oakley, Peter Battinelli
+# Spoiled Tomatillos
+### CS4500 Software Development Spring 2018
 
-## Final App
-[Spoiled Tomatillos](http://spoiled-tomatillos.s3-website-us-east-1.amazonaws.com/)
+_This is an academic project that is no longer hosted or maintained._
+
+Arianna Tang, Ben Campbell, John Martin, Lisa Oakley, Peter Battinelli
 
 ## Final Presentation Videos
 
